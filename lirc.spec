@@ -12,12 +12,12 @@ Summary(pl):	Serwery do zdalnego sterowania Linuksem za pomoc± podczerwieni
 Name:		lirc
 Version:	0.7.1
 %define	_rel	0.1
-%define _pre    pre1
+%define _pre    pre2
 Release:        0.%{_pre}.%{_rel}
 License:	GPL
 Group:		Daemons
-Source0:	http://www.lirc.org/software/snapshots/%{name}-%{version}pre1.tar.bz2
-# Source0-md5:	6999975444c06d92466d5cd9d07b74ab
+Source0:	http://www.lirc.org/software/snapshots/%{name}-%{version}%{_pre}.tar.bz2
+# Source0-md5:	35ff6b27863eb0ce5b9d0e3c4d4641d7
 Source1:	http://lirc.sourceforge.net/remotes.tar.bz2
 # Source1-md5:	b612ef58275e1e5d00f6b14a2a3f9b82
 Source2:	%{name}d.sysconfig
