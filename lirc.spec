@@ -1,4 +1,4 @@
-%define		_kernel_ver %(grep UTS_RELEASE /usr/src/linux/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
+%define		_kernel_ver %(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
 %define		smpstr	%{?_with_smp:smp}%{!?_with_smp:up}
 %define		smp	%{?_with_smp:1}%{!?_with_smp:0}
 
@@ -6,7 +6,7 @@ Summary:	Linux Infrared Remote Control daemons
 Summary(pl):	Serwery do zdalnej kontroli Linuxa za pomoc± podczerwieni
 Name:		lirc
 Version:	0.6.3 
-Release:	2
+Release:	3
 Source0:	http://download.sourceforge.net/LIRC/%{name}-%{version}.tar.gz
 Source2:	%{name}.sysconfig
 Source3:	%{name}d.init
@@ -17,6 +17,7 @@ Patch2:		%{name}-anydriver.patch
 Patch3:		%{name}-foo.patch
 Patch4:		%{name}-spinlock.patch
 Patch5:		%{name}-tmp.patch
+Patch6:		%{name}-devfs.patch
 License:	GPL
 URL:		http://www.lirc.org/
 Group:		Daemons
@@ -29,11 +30,7 @@ BuildRequires:	automake
 BuildRequires:	libtool
 BuildRequires:	XFree86-devel
 BuildRequires:	egcs
-Prereq:		/sbin/depmod
 Prereq:		chkconfig
-Requires:	dev >= 2.8.0-3
-Requires:	modutils >= 2.4.6-4
-Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
 # didn't use /tmp/.lircd
 Conflicts:	lirc-libs < 0.6.3-3
 
@@ -48,18 +45,22 @@ LIRC to program pozwalaj±cy na dekodowanie nadchodz±cych oraz
 wysy³anie sygna³ów w podczerwieni za pomoc± wielu (ale nie wszystkich)
 popularnych urz±dzeñ do zdalnej kontroli
 
-%package modules-%{smpstr}
+%package modules
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
-Release:	%{release}@%{_kernel_ver}
-Provides:	lirc-modules = %{version}
+Release:	%{release}@%{_kernel_ver}%{smpstr}
+Prereq:		modutils >= 2.4.6-4
+Requires:	dev >= 2.8.0-3
+Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
+Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}
+Requires:	%{name} = %{version}
 
-%description modules-%{smpstr}
+%description modules
 This package contains the kernel modules necessary to operate some 
 infrared remote control devices (such as the ones bundled with TV cards).
 
-%description modules-%{smpstr} -l pl
+%description modules -l pl
 Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych pilotów na 
 podczerwieñ (w tym tych dostarczanych z kartami TV).
 
@@ -136,6 +137,7 @@ na LIRC.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
 
 %build
 echo '#' > drivers/Makefile.am
@@ -147,7 +149,7 @@ autoconf
 
 %configure \
 	--with-driver=any \
-	--with-kerneldir=/usr/src/linux \
+	--with-kerneldir=%{_kernelsrcdir} \
 	--with-x \
 	--with-port=0x2f8 \
 	--with-irq=3 \
@@ -160,7 +162,7 @@ SMP="-D__KERNEL_SMP=1"
 cd drivers
 for drv in lirc_*; do
 	kgcc %{rpmcflags} -D__KERNEL__ -DMODULE -DHAVE_CONFIG_H $SMP \
-	-DIRCTL_DEV_MAJOR=61 -I.. -I/usr/src/linux/include \
+	-DIRCTL_DEV_MAJOR=61 -I.. -I%{_kernelsrcdir}/include \
 	-fno-strict-aliasing -fno-common \
 	-c -o $drv/$drv.o $drv/$drv.c || true
 done
@@ -212,7 +214,7 @@ else
 	echo "Run \"/etc/rc.d/init.d/lircmd start\" to start lircmd." >&2
 fi
 echo "If you are using a kernel-module-based driver, don't forget to"
-echo "install the lirc-modules-up or lirc-modules-smp package. See"
+echo "install the lirc-modules package. See"
 echo "%{_docdir}/%{name}-%{version}/DRIVERS.gz for details."
 
 %preun
@@ -229,12 +231,14 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del lircmd
 fi
 
-%post modules-%{smpstr}
+%post modules
 /sbin/depmod -a
-echo "Don't forget to add an 'alias lirc <your_driver>' line to your 
-echo "/etc/modules.conf."
+if [ "$1" = "1" ]; then
+	echo "Don't forget to add an 'alias lirc <your_driver>' line to your"
+	echo "/etc/modules.conf."
+fi
 
-%postun modules-%{smpstr}
+%postun modules
 /sbin/depmod -a
 
 %files
@@ -249,7 +253,7 @@ echo "/etc/modules.conf."
 %doc *.gz remotes/remotes contrib/*.gz
 %doc doc/*.gz doc/doc.html doc/html doc/images
 
-%files modules-%{smpstr}
+%files modules
 %defattr(644,root,root,755)
 /lib/modules/*/*/*
 
