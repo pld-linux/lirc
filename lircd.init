@@ -18,6 +18,7 @@
 # Get service config
 [ -f /etc/sysconfig/lircd ] && . /etc/sysconfig/lircd
 
+RETVAL=0
 # See how we were called.
 case "$1" in
   start)
@@ -33,7 +34,6 @@ case "$1" in
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/lircd
 	else
 		msg_already_running "Linux Infrared Remote Control daemon"
-		exit 1
 	fi
 	;;
   stop)
@@ -44,33 +44,33 @@ case "$1" in
 		rm -f /var/lock/subsys/lircd >/dev/null 2>&1
 	else
 		msg_not_running "Linux Infrared Remote Control daemon"
-		exit 1
 	fi
 	;;
   status)
 	status lircd
+	exit $?
 	;;
   restart)
 	test -f /var/lock/subsys/lircmd && RESTART_LIRCMD=yes
 	test -n "$RESTART_LIRCMD" && /etc/rc.d/init.d/lircmd stop
 	$0 stop
 	$0 start
+	RETVAL=$?
 	test -n "$RESTART_LIRCMD" && /etc/rc.d/init.d/lircmd start
 	;;
-  reload)
+  reload|force-reload)
 	if [ -f /var/lock/subsys/lircd ]; then
 		msg_reloading "Linux Infrared Remote Control daemon"
 		killproc lircd -HUP
 		RETVAL=$?
 	else
-		msg_not_running fwlogwatch
-		exit 1
+		msg_not_running fwlogwatch >&2
+		exit 7
 	fi
 	;;
   *)
-	msg_usage "$0 {start|stop|restart|reload|status}"
-	exit 1
-	;;
+	msg_usage "$0 {start|stop|restart|reload|force-reload|status}"
+	exit 3
 esac
 
 exit $RETVAL
