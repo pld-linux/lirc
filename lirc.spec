@@ -32,8 +32,8 @@ BuildRequires:	libtool
 BuildRequires:	XFree86-devel
 BuildRequires:	egcs
 Prereq:		chkconfig
-# didn't use /tmp/.lircd
 Conflicts:	%{name}-libs < 0.6.3-3
+# didn't use /tmp/.lircd
 
 %define		_x11bindir	%{_prefix}/X11R6/bin
 
@@ -50,6 +50,8 @@ popularnych urz±dzeÒ do zdalnej kontroli
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu≥y j±dra dla zdalnej obs≥ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
+Group(de):	Grunds‰tzlich/Kern
+Group(pl):	Podstawowe/J±dro
 Release:	%{release}@%{_kernel_ver}%{smpstr}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
@@ -58,12 +60,13 @@ Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}
 Requires:	%{name} = %{version}
 
 %description modules
-This package contains the kernel modules necessary to operate some 
-infrared remote control devices (such as the ones bundled with TV cards).
+This package contains the kernel modules necessary to operate some
+infrared remote control devices (such as the ones bundled with TV
+cards).
 
 %description modules -l pl
-Ten pakiet zawiera modu≥y j±dra niezbÍdne do obs≥ugi niektÛrych pilotÛw na 
-podczerwieÒ (w tym tych dostarczanych z kartami TV).
+Ten pakiet zawiera modu≥y j±dra niezbÍdne do obs≥ugi niektÛrych
+pilotÛw na podczerwieÒ (w tym tych dostarczanych z kartami TV).
 
 %package X11
 Summary:	Linux Infrared Remote Control - X11 utilities
@@ -86,8 +89,11 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-# didn't use /tmp/.lircd
+Group(pt_BR):	Bibliotecas
+Group(ru):	‚…¬Ã…œ‘≈À…
+Group(uk):	‚¶¬Ã¶œ‘≈À…
 Conflicts:	%{name} < 0.6.3-3
+# didn't use /tmp/.lircd
 
 %description libs
 This package provides the libraries necessary to run lirc client
@@ -101,8 +107,12 @@ Summary:	Header and library files for LIRC development
 Summary(pl):	Pliki nag≥Ûwkowe i biblioteki dla tworzenia programÛw z obs≥ug± LIRC
 Group:		Development/Libraries
 Group(de):	Entwicklung/Libraries
+Group(es):	Desarrollo/Bibliotecas
 Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
+Group(pt_BR):	Desenvolvimento/Bibliotecas
+Group(ru):	Ú¡⁄“¡¬œ‘À¡/‚…¬Ã…œ‘≈À…
+Group(uk):	Úœ⁄“œ¬À¡/‚¶¬Ã¶œ‘≈À…
 Requires:	%{name}-libs = %{version}
 
 %description devel
@@ -118,8 +128,12 @@ Summary:	Static library for LIRC development
 Summary(pl):	Biblioteka statyczna LIRC
 Group:		Development/Libraries
 Group(de):	Entwicklung/Libraries
+Group(es):	Desarrollo/Bibliotecas
 Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
+Group(pt_BR):	Desenvolvimento/Bibliotecas
+Group(ru):	Ú¡⁄“¡¬œ‘À¡/‚…¬Ã…œ‘≈À…
+Group(uk):	Úœ⁄“œ¬À¡/‚¶¬Ã¶œ‘≈À…
 Requires:	%{name}-devel = %{version}
 
 %description static
@@ -198,7 +212,7 @@ install -d $RPM_BUILD_ROOT%{_localstatedir}/log
 	sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir}
 
 install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
-install -m644 drivers/*/*.o $RPM_BUILD_ROOT/lib/modules/*/misc
+cp drivers/*/*.o $RPM_BUILD_ROOT/lib/modules/*/misc
 
 # this files would also suit good in "remotes" package
 cat remotes/*/lircd.conf.* > $RPM_BUILD_ROOT%{_sysconfdir}/lircd.conf
@@ -277,8 +291,8 @@ fi
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_sbindir}/*
 %attr(754,root,root) %{_sysconfdir}/rc.d/init.d/*
-%config %{_sysconfdir}/sysconfig/*
-%config %{_sysconfdir}/*.conf
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/sysconfig/*
+%config(noreplace) %{_sysconfdir}/*.conf
 %ghost %attr(600,root,root) %{_localstatedir}/log/lircd
 %doc *.gz remotes/remotes contrib/*.gz
 %doc doc/*.gz doc/doc.html doc/html doc/images
