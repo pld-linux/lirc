@@ -1,0 +1,3769 @@
+diff -Nur lirc-0.6.3.orig/DRIVERS lirc-0.6.3/DRIVERS
+--- lirc-0.6.3.orig/DRIVERS	Thu Jan  1 01:00:00 1970
++++ lirc-0.6.3/DRIVERS	Sat Jul 21 15:15:23 2001
+@@ -0,0 +1,65 @@
++The lirc daemon (and irrecord as well) provided in PLD supports various
++hardware drivers. In order to make use of this feature, you need to
++perform some additional configuration, choosing the driver to use. The
++list of available drivers is included at the end of this file.
++
++In order to choose a driver for lircd, change the appropriate entry in the
++/etc/sysconfig/lirc file. The choice you make there makes it obsolete to
++make any changes to the /etc/lircd.conf and /etc/lircmd.conf files. The
++/etc/lircd.conf file provided in the distribution contains settings for 
++all supported remotes. The lircmd.conf files for different remotes are
++placed in /usr/share/lircmd/lircmd.conf.*; the appropriate one is chosen
++at run-time depending on the contents of /etc/sysconfig/lirc.
++
++In order to choose a driver for irrecord, use the --driver=<sth>
++command-line option. Most drivers run with the default setting, which is
++(surprisingly) --driver=default. You might also need to use the
++--device=<sth> option to choose the device node your remote driver is
++listening on.
++
++Some drivers need support from a kernel module. You choose the appropriate
++module by inserting the "alias lirc <module_name>" line in your
++/etc/modules.conf file. Don't worry, the /etc/rc.d/init.d/lircd script
++will remind you to do it when it starts. It will also show you the module
++name you need to use.
++
++------------------------------------------------------------------------
++The drivers available are:
++
++serial		- Home-brew (16x50 UART compatible serial port)
++parallel	- Home-brew (parallel port)
++sir		- SIR IrDA (built-in IR ports)
++
++Other serial port devices:
++
++animax		- Anir Multimedia Magic
++creative	- Creative Infra Receiver
++irdeo		- IRdeo
++logitech	- Logitech/AST
++pctv		- Miro PCTV / Pinnacle Systems PCTV (pro) receiver
++packard_bell	- Packard Bell receiver
++remotemaster	- PixelView RemoteMaster RC2000/RC3000
++realmagic	- REALmagic (bundled with Hollywood Plus DVD card)
++slinke		- Slink-e
++silitek		- Silitek SM-1000
++tekram		- Tekram Irmate 210 (16x50 UART compatible serial port)
++
++TV card:
++cph03x		- Askey/Dynalink Magic TView CPH03x (card=1/48)
++cph06x		- Askey/Typhoon/Anubis Magic TView CPH051/061 (bt878) (card=24)
++		  or Phoebe Tv Master + FM (card=22)
++		  or TView99 CPH063 (card=38)
++avermedia	- AverMedia TV card (TVCapture, TVPhone) (card=6)
++avermedia98	- AverMedia TV card (TVCapture98, TVPhone98) (card=13/41)
++bestbuy		- BestBuy Easy TV (card=55)
++chronos		- Chronos Video Shuttle II (card=35)
++fly98		- Fly98 TV card
++hauppauge	- Hauppauge TV card (new I2C layer required)
++pixelview_pro	- Pixelview PlayTV pro (card=37)
++pixelview_bt878	- Pixelview PlayTV (bt878) (Prolink PV-BT878P+, card=16)
++pixelview_pak	- Prolink PV-BT878P+4E (PixelView PlayTV PAK) (card=50)
++provideo	- ProVideo PV951 (card=42)
++mediafocusI	- Technisat MediaFocus I
++
++-----
++by Pawel Sakowski <pawel@sakowski.eu.org>
+diff -Nur lirc-0.6.3.orig/configure.in lirc-0.6.3/configure.in
+--- lirc-0.6.3.orig/configure.in	Sat Jul 21 14:45:48 2001
++++ lirc-0.6.3/configure.in	Sat Jul 21 15:16:11 2001
+@@ -73,6 +73,9 @@
+ 
+ AC_PATH_KERNEL_SOURCE
+ 
++kernel_ver=$(grep UTS_RELEASE ${kerneldir}/include/linux/version.h|cut -d\" -f2)
++echo ${kernel_ver}|grep ^2\\.2>/dev/zero || kernel_2_4=yes
++
+ dnl here we see what drivers we could possibly even hope to run.
+ dnl this could be _much_ more sophisticated!  especially the lirc ones.
+ 
+@@ -322,6 +325,11 @@
+   lircd_conf="creative/lircd.conf.creative"
+ #  lircmd_conf="creative/lircmd.conf.creative"
+ fi
++if test "$driver" = "any"; then
++  lirc_driver="lirc_serial lirc_sir"
++  test -n "$kernel_2_4" && lirc_driver="$lirc_driver lirc_gpio lirc_dev lirc_i2c"
++  hw_module="hw_pixelview.o serial.o hw_pinsys.o hw_logitech.o hw_slinke.o hw_silitek.o hw_creative.o receive.o transmit.o hw_default.o"
++fi
+ 
+ dnl now check to see if the user is behaving himself
+ 
+@@ -329,29 +337,6 @@
+   AC_MSG_ERROR([no driver specified, try ./configure --help])
+ fi
+ 
+-if echo ${possible_drivers} | grep "($lirc_driver)" >/dev/null 2>&1; then
+-  dummy=
+-else
+-  case $lirc_driver in
+-  irman*)
+-    AC_MSG_ERROR([*** you need to first install the libirman package
+-	(libirman-0.4.2 or better) before you can use this driver])
+-    ;;
+-  caraca*)
+-    AC_MSG_ERROR([*** you need to first install the caraca package
+-	before you can use this driver])
+-    ;;
+-  lirc_*)
+-    AC_MSG_ERROR([*** you need to have the Linux kernel source installed
+-	for this driver])
+-    ;;
+-  *)
+-    AC_MSG_ERROR([*** it is not possible to install the specified driver
+-	on this system])
+-    ;;
+-  esac
+-fi
+-
+ dnl now we've checked, we can rename things for the drivers/Makefile
+ 
+ if test "$lirc_driver" = "none" || test "$lirc_driver" = "irman" || test "$lirc_driver" = "irman_sw" || test "$lirc_driver" = "caraca"; then
+@@ -383,9 +368,9 @@
+ devdir=${withval},
+ devdir=/dev)
+ 
+-default_moduledir=/lib/modules/`uname -r`/misc
++default_moduledir=/lib/modules/${kernel_ver}/misc
+ AC_ARG_WITH(moduledir,
+-[  --with-moduledir=DIR    kernel modules in DIR (/lib/modules/`uname -r`/misc)], 
++[  --with-moduledir=DIR    kernel modules in DIR (/lib/modules/$kernel_ver/misc)], 
+ moduledir=${withval},
+ moduledir=${default_moduledir})
+ 
+diff -Nur lirc-0.6.3.orig/daemons/hardware.h lirc-0.6.3/daemons/hardware.h
+--- lirc-0.6.3.orig/daemons/hardware.h	Sat Dec  9 00:36:29 2000
++++ lirc-0.6.3/daemons/hardware.h	Sat Jul 21 15:15:23 2001
+@@ -31,6 +31,8 @@
+ 	int (*decode_func)(struct ir_remote *remote,
+ 			   ir_code *prep,ir_code *codep,ir_code *postp,
+ 			   int *repeat_flag,lirc_t *remaining_gapp);
++	lirc_t (*readdata)();
++	char *name;			   
+ };
+ 
+ #endif
+diff -Nur lirc-0.6.3.orig/daemons/hw-types.h lirc-0.6.3/daemons/hw-types.h
+--- lirc-0.6.3.orig/daemons/hw-types.h	Thu Jan  1 01:00:00 1970
++++ lirc-0.6.3/daemons/hw-types.h	Sat Jul 21 15:15:23 2001
+@@ -0,0 +1,23 @@
++extern struct hardware
++	hw_default,
++	hw_pixelview,
++	hw_pinsys,
++	hw_logitech,
++	hw_slinke,
++	hw_silitek,
++	hw_creative;
++
++struct hardware	*hw=&hw_default;
++
++struct hardware *hw_list[] = {
++	&hw_default,
++	&hw_pixelview,
++	&hw_pinsys,
++	&hw_logitech,
++	&hw_slinke,
++	&hw_silitek,
++	&hw_creative,
++	NULL
++};
++
++extern struct ir_remote *last_remote;
+diff -Nur lirc-0.6.3.orig/daemons/hw_creative.c lirc-0.6.3/daemons/hw_creative.c
+--- lirc-0.6.3.orig/daemons/hw_creative.c	Sun Jan 21 13:54:42 2001
++++ lirc-0.6.3/daemons/hw_creative.c	Sat Jul 21 15:15:23 2001
+@@ -67,7 +67,7 @@
+  0xb8,
+  0x00};
+ 
+-struct hardware hw=
++struct hardware hw_creative=
+ {
+ 	LIRC_DRIVER_DEVICE,       /* default device */
+ 	-1,                       /* fd */
+@@ -79,7 +79,9 @@
+ 	creative_deinit,          /* deinit_func */
+ 	NULL,                     /* send_func */
+ 	creative_rec,             /* rec_func */
+-	creative_decode           /* decode_func */
++	creative_decode,          /* decode_func */
++	NULL,
++	"creative"
+ };
+ 
+ int creative_decode(struct ir_remote *remote,
+@@ -127,25 +129,25 @@
+ {
+ 	signal_length=108000;
+ 	
+-	if(!tty_create_lock(hw.device))
++	if(!tty_create_lock(hw_creative.device))
+ 	{
+ 		logprintf(LOG_ERR,"could not create lock files");
+ 		return(0);
+ 	}
+-	if((hw.fd=open(hw.device,O_RDWR|O_NONBLOCK|O_NOCTTY))<0)
++	if((hw_creative.fd=open(hw_creative.device,O_RDWR|O_NONBLOCK|O_NOCTTY))<0)
+ 	{
+-		logprintf(LOG_ERR,"could not open %s",hw.device);
++		logprintf(LOG_ERR,"could not open %s",hw_creative.device);
+ 		logperror(LOG_ERR,"creative_init()");
+ 		tty_delete_lock();
+ 		return(0);
+ 	}
+-	if(!tty_reset(hw.fd))
++	if(!tty_reset(hw_creative.fd))
+ 	{
+ 		logprintf(LOG_ERR,"could not reset tty");
+ 		creative_deinit();
+ 		return(0);
+ 	}
+-	if(!tty_setbaud(hw.fd,2400))
++	if(!tty_setbaud(hw_creative.fd,2400))
+ 	{
+ 		logprintf(LOG_ERR,"could not set baud rate");
+ 		creative_deinit();
+@@ -156,7 +158,7 @@
+ 
+ int creative_deinit(void)
+ {
+-	close(hw.fd);
++	close(hw_creative.fd);
+ 	tty_delete_lock();
+ 	return(1);
+ }
+@@ -183,7 +185,7 @@
+ 				return(NULL);
+ 			}
+ 		}
+-		if(read(hw.fd,&b[i],1)!=1)
++		if(read(hw_creative.fd,&b[i],1)!=1)
+ 		{
+ 			logprintf(LOG_ERR,"reading of byte %d failed",i);
+ 			logperror(LOG_ERR,NULL);
+diff -Nur lirc-0.6.3.orig/daemons/hw_default.c lirc-0.6.3/daemons/hw_default.c
+--- lirc-0.6.3.orig/daemons/hw_default.c	Sat Dec  9 00:36:29 2000
++++ lirc-0.6.3/daemons/hw_default.c	Sat Jul 21 15:15:23 2001
+@@ -60,7 +60,9 @@
+ 	0
+ };
+ 
+-struct hardware hw=
++lirc_t readdata_default();
++
++struct hardware hw_default=
+ {
+ 	LIRC_DRIVER_DEVICE, /* default device */
+ 	-1,                 /* fd */
+@@ -73,13 +75,15 @@
+ 	default_send,       /* send_func */
+ 	default_rec,        /* rec_func */
+ 	default_decode,     /* decode_func */
++	readdata_default,
++	"default"
+ };
+ 
+ /*
+   decoding stuff
+ */
+ 
+-lirc_t readdata(void)
++lirc_t readdata_default(void)
+ {
+ 	lirc_t data;
+ 	int ret;
+@@ -108,7 +112,7 @@
+ 		}
+ 	}
+ #else
+-	ret=read(hw.fd,&data,sizeof(data));
++	ret=read(hw_default.fd,&data,sizeof(data));
+ 	if(ret!=sizeof(data))
+ 	{
+ 		LOGPRINTF(1,"error reading from lirc");
+@@ -126,15 +130,15 @@
+ int default_init()
+ {
+ #if defined(SIM_SEND) && !defined(DAEMONIZE)
+-	hw.fd=STDOUT_FILENO;
+-	hw.features=LIRC_CAN_SEND_PULSE;
+-	hw.send_mode=LIRC_MODE_PULSE;
+-	hw.rec_mode=0;
++	hw_default.fd=STDOUT_FILENO;
++	hw_default.features=LIRC_CAN_SEND_PULSE;
++	hw_default.send_mode=LIRC_MODE_PULSE;
++	hw_default.rec_mode=0;
+ #elif defined(SIM_REC) && !defined(DAEMONIZE)
+-	hw.fd=STDIN_FILENO;
+-	hw.features=LIRC_CAN_REC_MODE2;
+-	hw.send_mode=0;
+-	hw.rec_mode=LIRC_MODE_MODE2;
++	hw_default.fd=STDIN_FILENO;
++	hw_default.features=LIRC_CAN_REC_MODE2;
++	hw_default.send_mode=0;
++	hw_default.rec_mode=LIRC_MODE_MODE2;
+ #else
+ 	struct stat s;
+ 	int i;
+@@ -142,13 +146,13 @@
+ 	/* FIXME: other modules might need this, too */
+ 	init_rec_buffer();
+ 	init_send_buffer();
+-	if((hw.fd=open(hw.device,O_RDWR))<0)
++	if((hw_default.fd=open(hw_default.device,O_RDWR))<0)
+ 	{
+-		logprintf(LOG_ERR,"could not open %s",hw.device);
++		logprintf(LOG_ERR,"could not open %s",hw_default.device);
+ 		logperror(LOG_ERR,"default_init()");
+ 		return(0);
+ 	}
+-	if(fstat(hw.fd,&s)==-1)
++	if(fstat(hw_default.fd,&s)==-1)
+ 	{
+ 		default_deinit();
+ 		logprintf(LOG_ERR,"could not get file information");
+@@ -158,20 +162,20 @@
+ 	if(S_ISFIFO(s.st_mode))
+ 	{
+ 		LOGPRINTF(1,"using defaults for the Irman");
+-		hw.features=LIRC_CAN_REC_MODE2;
+-		hw.rec_mode=LIRC_MODE_MODE2; /* this might change in future */
++		hw_default.features=LIRC_CAN_REC_MODE2;
++		hw_default.rec_mode=LIRC_MODE_MODE2; /* this might change in future */
+ 		return(1);
+ 	}
+ 	else if(!S_ISCHR(s.st_mode))
+ 	{
+ 		default_deinit();
+ 		logprintf(LOG_ERR,"%s is not a character device!!!",
+-			  hw.device);
++			  hw_default.device);
+ 		logperror(LOG_ERR,"something went wrong during "
+ 			  "installation");
+ 		return(0);
+ 	}
+-	else if(ioctl(hw.fd,LIRC_GET_FEATURES,&hw.features)==-1)
++	else if(ioctl(hw_default.fd,LIRC_GET_FEATURES,&hw_default.features)==-1)
+ 	{
+ 		logprintf(LOG_ERR,"could not get hardware features");
+ 		logprintf(LOG_ERR,"this device driver does not "
+@@ -184,22 +188,22 @@
+ #       ifdef DEBUG
+ 	else
+ 	{
+-		if(!(LIRC_CAN_SEND(hw.features) || 
+-		     LIRC_CAN_REC(hw.features)))
++		if(!(LIRC_CAN_SEND(hw_default.features) || 
++		     LIRC_CAN_REC(hw_default.features)))
+ 		{
+ 			LOGPRINTF(1,"driver supports neither "
+ 				  "sending nor receiving of IR signals");
+ 		}
+-		if(LIRC_CAN_SEND(hw.features) && LIRC_CAN_REC(hw.features))
++		if(LIRC_CAN_SEND(hw_default.features) && LIRC_CAN_REC(hw_default.features))
+ 		{
+ 			LOGPRINTF(1,"driver supports both sending and "
+ 				  "receiving");
+ 		}
+-		else if(LIRC_CAN_SEND(hw.features))
++		else if(LIRC_CAN_SEND(hw_default.features))
+ 		{
+ 			LOGPRINTF(1,"driver supports sending");
+ 		}
+-		else if(LIRC_CAN_REC(hw.features))
++		else if(LIRC_CAN_REC(hw_default.features))
+ 		{
+ 			LOGPRINTF(1,"driver supports receiving");
+ 		}
+@@ -207,17 +211,17 @@
+ #       endif
+ 	
+ 	/* set send/receive method */
+-	hw.send_mode=0;
+-	if(LIRC_CAN_SEND(hw.features))
++	hw_default.send_mode=0;
++	if(LIRC_CAN_SEND(hw_default.features))
+ 	{
+ 		for(i=0;supported_send_modes[i]!=0;i++)
+ 		{
+-			if(hw.features&supported_send_modes[i])
++			if(hw_default.features&supported_send_modes[i])
+ 			{
+ 				unsigned long mode;
+ 
+ 				mode=LIRC_SEND2MODE(supported_send_modes[i]);
+-				if(ioctl(hw.fd,LIRC_SET_SEND_MODE,&mode)==-1)
++				if(ioctl(hw_default.fd,LIRC_SET_SEND_MODE,&mode)==-1)
+ 				{
+ 					logprintf(LOG_ERR,"could not set "
+ 						  "send mode");
+@@ -225,7 +229,7 @@
+ 					default_deinit();
+ 					return(0);
+ 				}
+-				hw.send_mode=LIRC_SEND2MODE
++				hw_default.send_mode=LIRC_SEND2MODE
+ 				(supported_send_modes[i]);
+ 				break;
+ 			}
+@@ -236,24 +240,24 @@
+ 				  "driver is not yet supported by lircd");
+ 		}
+ 	}
+-	hw.rec_mode=0;
+-	if(LIRC_CAN_REC(hw.features))
++	hw_default.rec_mode=0;
++	if(LIRC_CAN_REC(hw_default.features))
+ 	{
+ 		for(i=0;supported_rec_modes[i]!=0;i++)
+ 		{
+-			if(hw.features&supported_rec_modes[i])
++			if(hw_default.features&supported_rec_modes[i])
+ 			{
+ 				unsigned long mode;
+ 
+ 				mode=LIRC_REC2MODE(supported_rec_modes[i]);
+-				if(ioctl(hw.fd,LIRC_SET_REC_MODE,&mode)==-1)
++				if(ioctl(hw_default.fd,LIRC_SET_REC_MODE,&mode)==-1)
+ 				{
+ 					logprintf(LOG_ERR,"could not set "
+ 						  "receive mode");
+ 					logperror(LOG_ERR,"default_init()");
+ 					return(0);
+ 				}
+-				hw.rec_mode=LIRC_REC2MODE
++				hw_default.rec_mode=LIRC_REC2MODE
+ 				(supported_rec_modes[i]);
+ 				break;
+ 			}
+@@ -264,28 +268,28 @@
+ 				  "driver is not yet supported by lircd");
+ 		}
+ 	}
+-	if(hw.rec_mode==LIRC_MODE_CODE)
++	if(hw_default.rec_mode==LIRC_MODE_CODE)
+ 	{
+-		hw.code_length=8;
++		hw_default.code_length=8;
+ 	}
+-	else if(hw.rec_mode==LIRC_MODE_LIRCCODE)
++	else if(hw_default.rec_mode==LIRC_MODE_LIRCCODE)
+ 	{
+-		if(ioctl(hw.fd,LIRC_GET_LENGTH,&hw.code_length)==-1)
++		if(ioctl(hw_default.fd,LIRC_GET_LENGTH,&hw_default.code_length)==-1)
+ 		{
+ 			logprintf(LOG_ERR,"could not get code length");
+ 			logperror(LOG_ERR,"default_init()");
+ 			default_deinit();
+ 			return(0);
+ 		}
+-		if(hw.code_length>sizeof(ir_code)*CHAR_BIT)
++		if(hw_default.code_length>sizeof(ir_code)*CHAR_BIT)
+ 		{
+ 			logprintf(LOG_ERR,"lircd can not handle %lu bit "
+-				  "codes",hw.code_length);
++				  "codes",hw_default.code_length);
+ 			default_deinit();
+ 			return(0);
+ 		}
+ 	}
+-	if(!(hw.send_mode || hw.rec_mode))
++	if(!(hw_default.send_mode || hw_default.rec_mode))
+ 	{
+ 		default_deinit();
+ 		return(0);
+@@ -297,7 +301,7 @@
+ int default_deinit(void)
+ {
+ #if (!defined(SIM_SEND) || !defined(SIM_SEND)) || defined(DAEMONIZE)
+-	close(hw.fd);
++	close(hw_default.fd);
+ #endif
+ 	return(1);
+ }
+@@ -351,16 +355,16 @@
+ 	lirc_t remaining_gap;
+ 
+ 	/* things are easy, because we only support one mode */
+-	if(hw.send_mode!=LIRC_MODE_PULSE)
++	if(hw_default.send_mode!=LIRC_MODE_PULSE)
+ 		return(0);
+ 
+ #if !defined(SIM_SEND) || defined(DAEMONIZE)
+-	if(hw.features&LIRC_CAN_SET_SEND_CARRIER)
++	if(hw_default.features&LIRC_CAN_SET_SEND_CARRIER)
+ 	{
+ 		unsigned int freq;
+ 		
+ 		freq=remote->freq==0 ? 38000:remote->freq;
+-		if(ioctl(hw.fd,LIRC_SET_SEND_CARRIER,&freq)==-1)
++		if(ioctl(hw_default.fd,LIRC_SET_SEND_CARRIER,&freq)==-1)
+ 		{
+ 			logprintf(LOG_ERR,"could not set modulation "
+ 				  "frequency");
+@@ -368,12 +372,12 @@
+ 			return(0);
+ 		}
+ 	}
+-	if(hw.features&LIRC_CAN_SET_SEND_DUTY_CYCLE)
++	if(hw_default.features&LIRC_CAN_SET_SEND_DUTY_CYCLE)
+ 	{
+ 		unsigned int duty_cycle;
+ 		
+ 		duty_cycle=remote->duty_cycle==0 ? 50:remote->duty_cycle;
+-		if(ioctl(hw.fd,LIRC_SET_SEND_DUTY_CYCLE,&duty_cycle)==-1)
++		if(ioctl(hw_default.fd,LIRC_SET_SEND_DUTY_CYCLE,&duty_cycle)==-1)
+ 		{
+ 			logprintf(LOG_ERR,"could not set duty cycle");
+ 			logperror(LOG_ERR,NULL);
+@@ -396,7 +400,7 @@
+ 	}
+ #endif
+ 
+-	if(write_send_buffer(hw.fd,code->length,code->signals)==-1)
++	if(write_send_buffer(hw_default.fd,code->length,code->signals)==-1)
+ 	{
+ 		logprintf(LOG_ERR,"write failed");
+ 		logperror(LOG_ERR,NULL);
+@@ -420,7 +424,7 @@
+ 	static char message[PACKET_SIZE+1];
+ 
+ 
+-	if(hw.rec_mode==LIRC_MODE_STRING)
++	if(hw_default.rec_mode==LIRC_MODE_STRING)
+ 	{
+ 		int failed=0;
+ 
+@@ -428,7 +432,7 @@
+ 		n=0;
+ 		do
+ 		{
+-			if(read(hw.fd,&c,1)!=1)
++			if(read(hw_default.fd,&c,1)!=1)
+ 			{
+ 				logprintf(LOG_ERR,"reading in mode "
+ 					  "LIRC_MODE_STRING failed");
+diff -Nur lirc-0.6.3.orig/daemons/hw_irman.c lirc-0.6.3/daemons/hw_irman.c
+--- lirc-0.6.3.orig/daemons/hw_irman.c	Sun Jan 21 13:54:42 2001
++++ lirc-0.6.3/daemons/hw_irman.c	Sat Jul 21 15:15:23 2001
+@@ -42,7 +42,7 @@
+ 
+ #define CODE_LENGTH 64
+ 
+-struct hardware hw=
++struct hardware hw_irman=
+ {
+ 	LIRC_DRIVER_DEVICE,       /* default device */
+ 	-1,                       /* fd */
+@@ -54,7 +54,9 @@
+ 	irman_deinit,             /* deinit_func */
+ 	NULL,                     /* send_func */
+ 	irman_rec,                /* rec_func */
+-	irman_decode              /* decode_func */
++	irman_decode,             /* decode_func */
++	NULL,
++	"irman"
+ };
+ 
+ int irman_decode(struct ir_remote *remote,
+@@ -133,14 +135,14 @@
+ 
+ int irman_init(void)
+ {
+-	if(!tty_create_lock(hw.device))
++	if(!tty_create_lock(hw_irman.device))
+ 	{
+ 		logprintf(LOG_ERR,"could not create lock files");
+ 		return(0);
+ 	}
+-	if((hw.fd=ir_init(hw.device))<0)
++	if((hw_irman.fd=ir_init(hw_irman.device))<0)
+ 	{
+-		logprintf(LOG_ERR,"could not open %s",hw.device);
++		logprintf(LOG_ERR,"could not open %s",hw_irman.device);
+ 		logperror(LOG_ERR,"irman_init()");
+ 		tty_delete_lock();
+ 		return(0);
+@@ -152,7 +154,7 @@
+ {
+ 	ir_finish();
+ 	sleep(1); /* give hardware enough time to reset */
+-	close(hw.fd);
++	close(hw_irman.fd);
+ 	tty_delete_lock();
+ 	return(1);
+ }
+diff -Nur lirc-0.6.3.orig/daemons/hw_logitech.c lirc-0.6.3/daemons/hw_logitech.c
+--- lirc-0.6.3.orig/daemons/hw_logitech.c	Sun Feb 18 20:05:50 2001
++++ lirc-0.6.3/daemons/hw_logitech.c	Sat Jul 21 15:15:23 2001
+@@ -41,7 +41,7 @@
+ lirc_t gap,signal_length;
+ ir_code pre,code;
+ 
+-struct hardware hw=
++struct hardware hw_logitech=
+ {
+ 	LIRC_DRIVER_DEVICE,       /* default device */
+ 	-1,                       /* fd */
+@@ -53,7 +53,9 @@
+ 	logitech_deinit,          /* deinit_func */
+ 	NULL,                     /* send_func */
+ 	logitech_rec,             /* rec_func */
+-	logitech_decode           /* decode_func */
++	logitech_decode,          /* decode_func */
++	NULL,
++	"logitech"
+ };
+ 
+ int logitech_decode(struct ir_remote *remote,
+@@ -99,27 +101,27 @@
+ 
+ int logitech_init(void)
+ {
+-	signal_length=hw.code_length*1000000/1200;
++	signal_length=hw_logitech.code_length*1000000/1200;
+ 	
+-	if(!tty_create_lock(hw.device))
++	if(!tty_create_lock(hw_logitech.device))
+ 	{
+ 		logprintf(LOG_ERR,"could not create lock files");
+ 		return(0);
+ 	}
+-	if((hw.fd=open(hw.device,O_RDWR|O_NONBLOCK|O_NOCTTY))<0)
++	if((hw_logitech.fd=open(hw_logitech.device,O_RDWR|O_NONBLOCK|O_NOCTTY))<0)
+ 	{
+-		logprintf(LOG_ERR,"could not open %s",hw.device);
++		logprintf(LOG_ERR,"could not open %s",hw_logitech.device);
+ 		logperror(LOG_ERR,"logitech_init()");
+ 		tty_delete_lock();
+ 		return(0);
+ 	}
+-	if(!tty_reset(hw.fd))
++	if(!tty_reset(hw_logitech.fd))
+ 	{
+ 		logprintf(LOG_ERR,"could not reset tty");
+ 		logitech_deinit();
+ 		return(0);
+ 	}
+-	if(!tty_setbaud(hw.fd,1200))
++	if(!tty_setbaud(hw_logitech.fd,1200))
+ 	{
+ 		logprintf(LOG_ERR,"could not set baud rate");
+ 		logitech_deinit();
+@@ -130,7 +132,7 @@
+ 
+ int logitech_deinit(void)
+ {
+-	close(hw.fd);
++	close(hw_logitech.fd);
+ 	tty_delete_lock();
+ 	return(1);
+ }
+@@ -160,7 +162,7 @@
+ 				return(NULL);
+ 			}
+ 		}
+-		if(read(hw.fd,&b[i],1)!=1)
++		if(read(hw_logitech.fd,&b[i],1)!=1)
+ 		{
+ 			logprintf(LOG_ERR,"reading of byte %d failed",i);
+ 			logperror(LOG_ERR,NULL);
+diff -Nur lirc-0.6.3.orig/daemons/hw_pinsys.c lirc-0.6.3/daemons/hw_pinsys.c
+--- lirc-0.6.3.orig/daemons/hw_pinsys.c	Sat Jan  6 14:43:34 2001
++++ lirc-0.6.3/daemons/hw_pinsys.c	Sat Jul 21 15:15:23 2001
+@@ -51,7 +51,7 @@
+ lirc_t gap,signal_length;
+ ir_code code;
+ 
+-struct hardware hw=
++struct hardware hw_pinsys=
+ {
+ 	LIRC_DRIVER_DEVICE,       /* default device */
+ 	-1,                       /* fd */
+@@ -68,7 +68,9 @@
+ 	pinsys_deinit,            /* deinit_func */
+ 	NULL,                     /* send_func */
+ 	pinsys_rec,               /* rec_func */
+-	pinsys_decode             /* decode_func */
++	pinsys_decode,            /* decode_func */
++	NULL,
++	"pinsys"
+ };
+ 
+ /**** start of autodetect code ***************************/
+@@ -187,14 +189,14 @@
+ 
+ int pinsys_init(void)
+ {
+-	signal_length=(hw.code_length+(hw.code_length/8)*2)*1000000/1200;
++	signal_length=(hw_pinsys.code_length+(hw_pinsys.code_length/8)*2)*1000000/1200;
+ 
+-	if(!tty_create_lock(hw.device))
++	if(!tty_create_lock(hw_pinsys.device))
+ 	{
+ 		logprintf(LOG_ERR,"could not create lock files");
+ 		return(0);
+ 	}
+-	if((hw.fd=open(hw.device,O_RDWR|O_NONBLOCK|O_NOCTTY))<0)
++	if((hw_pinsys.fd=open(hw_pinsys.device,O_RDWR|O_NONBLOCK|O_NOCTTY))<0)
+ 	{
+ 		int detected;
+ 		/* last character gets overwritten */
+@@ -202,7 +204,7 @@
+ 		
+ 		tty_delete_lock();
+ 		logprintf(LOG_WARNING,"could not open %s, "
+-			  "autodetecting on /dev/ttyS[0-3]",hw.device);
++			  "autodetecting on /dev/ttyS[0-3]",hw_pinsys.device);
+ 		logperror(LOG_WARNING,"pinsys_init()");
+ 		/* it can also mean you compiled serial support as a
+ 		   module and it isn't inserted, but that's unlikely
+@@ -219,34 +221,34 @@
+ 		else /* detected */
+ 		{
+ 			auto_lirc_device[9]='0'+detected;
+-			hw.device=auto_lirc_device;
+-			if((hw.fd=open(hw.device,
++			hw_pinsys.device=auto_lirc_device;
++			if((hw_pinsys.fd=open(hw_pinsys.device,
+ 				       O_RDWR|O_NONBLOCK|O_NOCTTY))<0)
+ 			{
+ 				/* unlikely, but hey. */
+ 				logprintf(LOG_ERR,"couldn't open "
+ 					  "autodetected device \"%s\"",
+-					  hw.device);
++					  hw_pinsys.device);
+ 				logperror(LOG_ERR,"pinsys_init()");
+ 				tty_delete_lock();
+ 				return(0);
+ 			}
+ 		}
+ 	}
+-	if(!tty_reset(hw.fd))
++	if(!tty_reset(hw_pinsys.fd))
+ 	{
+ 		logprintf(LOG_ERR,"could not reset tty");
+ 		pinsys_deinit();
+ 		return(0);
+ 	}
+-	if(!tty_setbaud(hw.fd,1200))
++	if(!tty_setbaud(hw_pinsys.fd,1200))
+ 	{
+ 		logprintf(LOG_ERR,"could not set baud rate");
+ 		pinsys_deinit();
+ 		return(0);
+ 	}
+ 	/* set RTS, clear DTR */
+-	if(!tty_set(hw.fd,1,0) || !tty_clear(hw.fd,0,1))
++	if(!tty_set(hw_pinsys.fd,1,0) || !tty_clear(hw_pinsys.fd,0,1))
+ 	{ 
+ 		logprintf(LOG_ERR,"could not set modem lines (DTR/RTS)");
+ 		pinsys_deinit();
+@@ -258,7 +260,7 @@
+ 	   byte. Problem is, flushing doesn't fix it. It's not fatal,
+ 	   it's an indication that it gets fixed.  still... */
+ 
+-	if (tcflush(hw.fd, TCIFLUSH)<0)
++	if (tcflush(hw_pinsys.fd, TCIFLUSH)<0)
+ 	{
+ 		logprintf(LOG_ERR,"could not flush input buffer");
+ 		pinsys_deinit();
+@@ -269,7 +271,7 @@
+ 
+ int pinsys_deinit(void)
+ {
+-	close(hw.fd);
++	close(hw_pinsys.fd);
+ 	tty_delete_lock();
+ 	return(1);
+ }
+@@ -291,12 +293,12 @@
+ 				logprintf(LOG_WARNING,
+ 					  "timeout reading byte %d",i);
+ 				/* likely to be !=3 bytes, so flush. */
+-				tcflush(hw.fd, TCIFLUSH);
++				tcflush(hw_pinsys.fd, TCIFLUSH);
+ 				return(NULL);
+ 			}
+ 		}
+ 		
+-		if(read(hw.fd,&b[i],1)!=1)
++		if(read(hw_pinsys.fd,&b[i],1)!=1)
+ 		{
+ 			logprintf(LOG_ERR,"reading of byte %d failed",i);
+ 			logperror(LOG_ERR,NULL);
+diff -Nur lirc-0.6.3.orig/daemons/hw_pixelview.c lirc-0.6.3/daemons/hw_pixelview.c
+--- lirc-0.6.3.orig/daemons/hw_pixelview.c	Sat Mar  3 22:29:24 2001
++++ lirc-0.6.3/daemons/hw_pixelview.c	Sat Jul 21 15:15:23 2001
+@@ -37,7 +37,7 @@
+ lirc_t gap,signal_length;
+ ir_code pre,code;
+ 
+-struct hardware hw=
++struct hardware hw_pixelview=
+ {
+ 	LIRC_DRIVER_DEVICE,       /* default device */
+ 	-1,                       /* fd */
+@@ -49,7 +49,9 @@
+ 	pixelview_deinit,         /* deinit_func */
+ 	NULL,                     /* send_func */
+ 	pixelview_rec,            /* rec_func */
+-	pixelview_decode          /* decode_func */
++	pixelview_decode,         /* decode_func */
++	NULL,
++	"pixelview"
+ };
+ 
+ int pixelview_decode(struct ir_remote *remote,
+@@ -101,27 +103,27 @@
+ 
+ int pixelview_init(void)
+ {
+-	signal_length=hw.code_length*1000000/1200;
++	signal_length=hw_pixelview.code_length*1000000/1200;
+ 	
+-	if(!tty_create_lock(hw.device))
++	if(!tty_create_lock(hw_pixelview.device))
+ 	{
+ 		logprintf(LOG_ERR,"could not create lock files");
+ 		return(0);
+ 	}
+-	if((hw.fd=open(hw.device,O_RDWR|O_NONBLOCK|O_NOCTTY))<0)
++	if((hw_pixelview.fd=open(hw_pixelview.device,O_RDWR|O_NONBLOCK|O_NOCTTY))<0)
+ 	{
+-		logprintf(LOG_ERR,"could not open %s",hw.device);
++		logprintf(LOG_ERR,"could not open %s",hw_pixelview.device);
+ 		logperror(LOG_ERR,"pixelview_init()");
+ 		tty_delete_lock();
+ 		return(0);
+ 	}
+-	if(!tty_reset(hw.fd))
++	if(!tty_reset(hw_pixelview.fd))
+ 	{
+ 		logprintf(LOG_ERR,"could not reset tty");
+ 		pixelview_deinit();
+ 		return(0);
+ 	}
+-	if(!tty_setbaud(hw.fd,1200))
++	if(!tty_setbaud(hw_pixelview.fd,1200))
+ 	{
+ 		logprintf(LOG_ERR,"could not set baud rate");
+ 		pixelview_deinit();
+@@ -132,7 +134,7 @@
+ 
+ int pixelview_deinit(void)
+ {
+-	close(hw.fd);
++	close(hw_pixelview.fd);
+ 	tty_delete_lock();
+ 	return(1);
+ }
+@@ -155,7 +157,7 @@
+ 				return(NULL);
+ 			}
+ 		}
+-		if(read(hw.fd,&b[i],1)!=1)
++		if(read(hw_pixelview.fd,&b[i],1)!=1)
+ 		{
+ 			logprintf(LOG_ERR,"reading of byte %d failed",i);
+ 			logperror(LOG_ERR,NULL);
+diff -Nur lirc-0.6.3.orig/daemons/hw_silitek.c lirc-0.6.3/daemons/hw_silitek.c
+--- lirc-0.6.3.orig/daemons/hw_silitek.c	Sat Mar 10 18:43:58 2001
++++ lirc-0.6.3/daemons/hw_silitek.c	Sat Jul 21 15:15:23 2001
+@@ -41,7 +41,7 @@
+ struct timeval current, last;
+ int do_repeat;
+ 
+-struct hardware hw=
++struct hardware hw_silitek=
+ {
+ 	LIRC_DRIVER_DEVICE,       /* default device */
+ 	-1,                       /* fd */
+@@ -53,7 +53,9 @@
+ 	silitek_deinit,           /* deinit_func */
+ 	NULL,                     /* send_func */
+ 	silitek_rec,              /* rec_func */
+-	silitek_decode            /* decode_func */
++	silitek_decode,           /* decode_func */
++	NULL,
++	"silitek"
+ };
+ 
+ int silitek_read(int fd, unsigned char *data, long timeout) {
+@@ -90,26 +92,26 @@
+ }
+ 
+ int silitek_init(void) {
+-	if(!tty_create_lock(hw.device)) {
++	if(!tty_create_lock(hw_silitek.device)) {
+ 		logprintf(LOG_ERR, "could not create lock files");
+ 		return(0);
+ 	}
+ 
+-	if((hw.fd = open(hw.device, O_RDWR | O_NOCTTY | O_NDELAY)) < 0) {
+-		logprintf(LOG_ERR, "could not open %s", hw.device);
++	if((hw_silitek.fd = open(hw_silitek.device, O_RDWR | O_NOCTTY | O_NDELAY)) < 0) {
++		logprintf(LOG_ERR, "could not open %s", hw_silitek.device);
+ 		logperror(LOG_ERR, "silitek_init()");
+ 		tty_delete_lock();
+ 		return(0);
+ 	}
+ 
+-        if(!tty_reset(hw.fd)) {
+-                logprintf(LOG_ERR,"could not reset %s", hw.device);
++        if(!tty_reset(hw_silitek.fd)) {
++                logprintf(LOG_ERR,"could not reset %s", hw_silitek.device);
+                 silitek_deinit();
+                 return(0);
+         }
+ 
+-        if(!tty_setbaud(hw.fd, 1200)) {
+-                logprintf(LOG_ERR,"could not set baud rate on %s", hw.device);
++        if(!tty_setbaud(hw_silitek.fd, 1200)) {
++                logprintf(LOG_ERR,"could not set baud rate on %s", hw_silitek.device);
+                 silitek_deinit();
+                 return(0);
+         }
+@@ -118,7 +120,7 @@
+ }
+ 
+ int silitek_deinit(void) {
+-	close(hw.fd);
++	close(hw_silitek.fd);
+ 	tty_delete_lock();
+ 	return(1);
+ }
+@@ -132,7 +134,7 @@
+ 
+ 	do_repeat = 1;
+ 
+-        if(!silitek_read(hw.fd, &b[0], TIMEOUT)) {
++        if(!silitek_read(hw_silitek.fd, &b[0], TIMEOUT)) {
+ 		logprintf(LOG_ERR,"reading of byte 0 failed");
+ 		logperror(LOG_ERR,NULL);
+ 		return(NULL);
+@@ -150,13 +152,13 @@
+ 
+ 	last = current;
+ 
+-        if(!silitek_read(hw.fd, &b[1], TIMEOUT)) {
++        if(!silitek_read(hw_silitek.fd, &b[1], TIMEOUT)) {
+ 		logprintf(LOG_ERR,"reading of byte 1 failed");
+ 		logperror(LOG_ERR,NULL);
+ 		return(NULL);
+ 	}
+ 
+-        if(!silitek_read(hw.fd, &b[2], TIMEOUT)) {
++        if(!silitek_read(hw_silitek.fd, &b[2], TIMEOUT)) {
+ 		logprintf(LOG_ERR,"reading of byte 2 failed");
+ 		logperror(LOG_ERR,NULL);
+ 		return(NULL);
+diff -Nur lirc-0.6.3.orig/daemons/hw_slinke.c lirc-0.6.3/daemons/hw_slinke.c
+--- lirc-0.6.3.orig/daemons/hw_slinke.c	Sun Feb 18 20:05:52 2001
++++ lirc-0.6.3/daemons/hw_slinke.c	Sat Jul 21 15:15:23 2001
+@@ -88,7 +88,9 @@
+ lirc_t gap,signal_length;
+ ir_code pre,code;
+ 
+-struct hardware hw = {
++lirc_t readdata_slinke();
++
++struct hardware hw_slinke = {
+     LIRC_DRIVER_DEVICE, /* default device */
+     -1,                 /* fd */
+     LIRC_CAN_REC_MODE2, /* features */
+@@ -99,7 +101,9 @@
+     slinke_deinit,      /* deinit_func */
+     NULL,               /* send_func */
+     slinke_rec,         /* rec_func */
+-    slinke_decode       /* decode_func */
++    slinke_decode,      /* decode_func */
++    readdata_slinke,
++    "slinke"
+ };
+ 
+ /*****************************************************************************/
+@@ -257,7 +261,7 @@
+ /*****************************************************************************/
+ static void tx_bytes(unsigned char *b, int n){
+     LOGPRINTF(3,"sending %s",to_byte_string(b,n));
+-    write(hw.fd,b,n); 
++    write(hw_slinke.fd,b,n); 
+ } /* tx_bytes */
+ 
+ static void enable_port(unsigned char port){
+@@ -315,27 +319,27 @@
+     int i;
+     
+     logprintf(LOG_INFO,"slinke_init");
+-    signal_length=hw.code_length*1000000/1200;
++    signal_length=hw_slinke.code_length*1000000/1200;
+     
+-    if(!tty_create_lock(hw.device)){
++    if(!tty_create_lock(hw_slinke.device)){
+         logprintf(LOG_ERR,"could not create lock files");
+         return(0);
+     } /* if */
+ 
+-    if((hw.fd=open(hw.device,O_RDWR|O_NOCTTY))<0){
+-        logprintf(LOG_ERR,"could not open %s",hw.device);
++    if((hw_slinke.fd=open(hw_slinke.device,O_RDWR|O_NOCTTY))<0){
++        logprintf(LOG_ERR,"could not open %s",hw_slinke.device);
+         logperror(LOG_ERR,"slinke_init()");
+         tty_delete_lock();
+         return(0);
+     } /* if */
+ 
+-    if(!tty_reset(hw.fd)){
++    if(!tty_reset(hw_slinke.fd)){
+         logprintf(LOG_ERR,"could not reset tty");
+         slinke_deinit();
+         return(0);
+     } /* if */
+ 
+-    if(!tty_setbaud(hw.fd,19200)){
++    if(!tty_setbaud(hw_slinke.fd,19200)){
+         logprintf(LOG_ERR,"could not set baud rate");
+         slinke_deinit();
+         return(0);
+@@ -370,7 +374,7 @@
+ int slinke_deinit(void){
+     int i;
+     
+-    close(hw.fd);
++    close(hw_slinke.fd);
+     tty_delete_lock();
+     
+     if (signal_queue_buf != NULL)
+@@ -412,7 +416,7 @@
+ #endif
+ 
+ /*****************************************************************************/
+-lirc_t readdata(void){
++lirc_t readdata_slinke(void){
+     lirc_t result;
+     if (signal_queue_buf == NULL) return 0;
+     if (signal_queue_rd_idx < signal_queue_length){
+@@ -722,7 +726,7 @@
+             return(NULL);
+         } /* if */
+ 
+-        if (read(hw.fd,&rch,1) != 1){
++        if (read(hw_slinke.fd,&rch,1) != 1){
+ 	    LOGPRINTF(0,"reading of byte %d failed",byteNo);
+             return(NULL);
+         } /* if */
+diff -Nur lirc-0.6.3.orig/daemons/ir_remote.c lirc-0.6.3/daemons/ir_remote.c
+--- lirc-0.6.3.orig/daemons/ir_remote.c	Sat Jan  6 14:52:55 2001
++++ lirc-0.6.3/daemons/ir_remote.c	Sat Jul 21 15:15:23 2001
+@@ -34,7 +34,7 @@
+ struct ir_remote *repeat_remote=NULL;
+ struct ir_ncode *repeat_code;
+ 
+-extern struct hardware hw;
++extern struct hardware *hw;
+ 
+ struct ir_remote *get_ir_remote(struct ir_remote *remotes,char *name)
+ {
+@@ -230,7 +230,7 @@
+ 	{
+ 		LOGPRINTF(1,"trying \"%s\" remote",remote->name);
+ 		
+-		if(hw.decode_func(remote,&pre,&code,&post,&repeat_flag,
++		if(hw->decode_func(remote,&pre,&code,&post,&repeat_flag,
+ 				   &remaining_gap) &&
+ 		   (ncode=get_code(remote,pre,code,post,&repeat_state)))
+ 		{
+diff -Nur lirc-0.6.3.orig/daemons/irrecord.c lirc-0.6.3/daemons/irrecord.c
+--- lirc-0.6.3.orig/daemons/irrecord.c	Wed Feb 28 18:25:01 2001
++++ lirc-0.6.3/daemons/irrecord.c	Sat Jul 21 15:15:23 2001
+@@ -68,15 +68,10 @@
+ int get_gap_length(struct ir_remote *remote);
+ void fprint_copyright(FILE *fout);
+ 
+-#ifdef LIRC_NETWORK_ONLY 
+-struct hardware hw;
+-#else
+-extern struct hardware hw;
+-#endif
+-extern struct ir_remote *last_remote;
++#include "hw-types.h"
+ 
+ char *progname;
+-const char *usage="Usage: %s --help | --version | [-d | --device=device] | [--force] file\n";
++const char *usage="Usage: %s --help | --version | [-d | --device=device] | [-D | --driver=driver] | [--force] file\n";
+ 
+ struct ir_remote remote;
+ struct ir_ncode ncode;
+@@ -177,6 +172,7 @@
+ 	int force;
+ 	int retries;
+ 	struct ir_remote *remotes=NULL;
++	char *device;
+ #ifdef DEBUG
+ 	int get_pre=0,get_post=0;
+ #endif
+@@ -191,6 +187,7 @@
+ 			{"help",no_argument,NULL,'h'},
+ 			{"version",no_argument,NULL,'v'},
+ 			{"device",required_argument,NULL,'d'},
++			{"driver",required_argument,NULL,'D'},
+ 			{"force",no_argument,NULL,'f'},
+ #ifdef DEBUG
+ 			{"pre",no_argument,NULL,'p'},
+@@ -199,9 +196,9 @@
+ 			{0, 0, 0, 0}
+ 		};
+ #ifdef DEBUG
+-		c = getopt_long(argc,argv,"hvd:fpP",long_options,NULL);
++		c = getopt_long(argc,argv,"hvd:D:fpP",long_options,NULL);
+ #else
+-		c = getopt_long(argc,argv,"hvd:f",long_options,NULL);
++		c = getopt_long(argc,argv,"hvd:D:f",long_options,NULL);
+ #endif
+ 		if(c==-1)
+ 			break;
+@@ -218,8 +215,21 @@
+ 			printf("irrecord %s\n",IRRECORD_VERSION);
+ 			exit(EXIT_SUCCESS);
+ 		case 'd':
+-			hw.device=optarg;
++			device=optarg;
+ 			break;
++		case 'D': {
++			struct hardware **i;
++			for(i=hw_list; *i; i++)
++				if (!strcasecmp((*i)->name, optarg)) break;
++			if (!i) {
++				printf("Hardware type `%s' not supported.\n"
++				       "Hardware types supported:\n",optarg);
++				for(i=hw_list; *i; i++)
++					printf("\t%s\n", (*i)->name);
++				exit(EXIT_FAILURE);
++			}
++			hw=*i;
++		}
+ 		case 'f':
+ 			force=1;
+ 			break;
+@@ -236,6 +246,7 @@
+ 			exit(EXIT_FAILURE);
+ 		}
+ 	}
++	hw->device=device;
+ 	if(argc==1)
+ 	{
+ 		printf(usage,progname);
+@@ -318,9 +329,9 @@
+ 	       "(lirc@bartelmus.de)\n");
+ 	printf("\n");
+ 	
+-	if(hw.init_func)
++	if(hw->init_func)
+ 	{
+-		if(!hw.init_func())
++		if(!hw->init_func())
+ 		{
+ 			fprintf(stderr,"%s: could not init hardware"
+ 				" (lircd running ? --> close it, "
+@@ -331,33 +342,33 @@
+ 		}
+ 	}
+ 	
+-	if(hw.rec_mode==LIRC_MODE_STRING)
++	if(hw->rec_mode==LIRC_MODE_STRING)
+ 	{
+ 		fprintf(stderr,"%s: no config file necessary\n",progname);
+ 		fclose(fout);
+ 		unlink(filename);
+-		if(hw.deinit_func) hw.deinit_func();
++		if(hw->deinit_func) hw->deinit_func();
+ 		exit(EXIT_SUCCESS);
+ 	}
+-	if(hw.rec_mode!=LIRC_MODE_MODE2 &&
+-	   hw.rec_mode!=LIRC_MODE_CODE &&
+-	   hw.rec_mode!=LIRC_MODE_LIRCCODE)
++	if(hw->rec_mode!=LIRC_MODE_MODE2 &&
++	   hw->rec_mode!=LIRC_MODE_CODE &&
++	   hw->rec_mode!=LIRC_MODE_LIRCCODE)
+ 	{
+ 		fprintf(stderr,"%s: mode not supported\n",progname);
+ 		fclose(fout);
+ 		unlink(filename);
+-		if(hw.deinit_func) hw.deinit_func();
++		if(hw->deinit_func) hw->deinit_func();
+ 		exit(EXIT_FAILURE);
+ 	}
+ 	
+-	flags=fcntl(hw.fd,F_GETFL,0);
+-	if(flags==-1 || fcntl(hw.fd,F_SETFL,flags|O_NONBLOCK)==-1)
++	flags=fcntl(hw->fd,F_GETFL,0);
++	if(flags==-1 || fcntl(hw->fd,F_SETFL,flags|O_NONBLOCK)==-1)
+ 	{
+ 		fprintf(stderr,"%s: could not set O_NONBLOCK flag\n",
+ 			progname);
+ 		fclose(fout);
+ 		unlink(filename);
+-		if(hw.deinit_func) hw.deinit_func();
++		if(hw->deinit_func) hw->deinit_func();
+ 		exit(EXIT_FAILURE);
+ 	}
+ 	
+@@ -380,12 +391,12 @@
+ 	{
+ 		fclose(fout);
+ 		unlink(filename);
+-		if(hw.deinit_func) hw.deinit_func();
++		if(hw->deinit_func) hw->deinit_func();
+ 		exit(EXIT_FAILURE);
+ 	}
+ 
+ 	remote.name=filename;
+-	switch(hw.rec_mode)
++	switch(hw->rec_mode)
+ 	{
+ 	case LIRC_MODE_MODE2:
+ 		if(remotes==NULL && !get_lengths(&remote,force))
+@@ -396,7 +407,7 @@
+ 					" can´t continue\n",progname);
+ 				fclose(fout);
+ 				unlink(filename);
+-				if(hw.deinit_func) hw.deinit_func();
++				if(hw->deinit_func) hw->deinit_func();
+ 				exit(EXIT_FAILURE);
+ 			}
+ 			printf("Creating config file in raw mode.\n");
+@@ -421,15 +432,15 @@
+ 		break;
+ 	case LIRC_MODE_CODE:
+ 	case LIRC_MODE_LIRCCODE:
+-		if(hw.rec_mode==LIRC_MODE_CODE) remote.bits=CHAR_BIT;
+-		else remote.bits=hw.code_length;
++		if(hw->rec_mode==LIRC_MODE_CODE) remote.bits=CHAR_BIT;
++		else remote.bits=hw->code_length;
+ 		if(!get_gap_length(&remote))
+ 		{
+ 			fprintf(stderr,"%s: gap not found,"
+ 				" can´t continue\n",progname);
+ 			fclose(fout);
+ 			unlink(filename);
+-			if(hw.deinit_func) hw.deinit_func();
++			if(hw->deinit_func) hw->deinit_func();
+ 			exit(EXIT_FAILURE);
+ 		}
+ 		break;
+@@ -440,14 +451,14 @@
+ 		sleep(1);
+ 		while(availabledata())
+ 		{
+-			hw.rec_func(NULL);
++			hw->rec_func(NULL);
+ 		}
+ 		if(!get_toggle_bit(&remote))
+ 		{
+ 			printf("But I know for sure that RC6 has a toggle bit!\n");
+ 			fclose(fout);
+ 			unlink(filename);
+-			if(hw.deinit_func) hw.deinit_func();
++			if(hw->deinit_func) hw->deinit_func();
+ 			exit(EXIT_FAILURE);
+ 		}
+ 	}
+@@ -498,7 +509,7 @@
+ 		{
+ 			while(availabledata())
+ 			{
+-				hw.rec_func(NULL);
++				hw->rec_func(NULL);
+ 			}
+ 		}
+ 		printf("\nNow hold down button \"%s\".\n",buffer);
+@@ -530,7 +541,7 @@
+ 				}
+ 				else
+ 				{
+-					ret=read(hw.fd,&data,sizeof(data));
++					ret=read(hw->fd,&data,sizeof(data));
+ 					if(ret!=sizeof(unsigned long))
+ 					{
+ 						fprintf(stderr,"%s: read() failed\n",
+@@ -616,8 +627,8 @@
+ 			sleep(1);
+ 			while(availabledata())
+ 			{
+-				hw.rec_func(NULL);
+-				if(hw.decode_func(&remote,&pre,&code,&post,
++				hw->rec_func(NULL);
++				if(hw->decode_func(&remote,&pre,&code,&post,
+ 						  &repeat_flag,&remaining_gap))
+ 				{
+ 					flag=1;
+@@ -666,7 +677,7 @@
+ 
+ 	if(retval==EXIT_FAILURE)
+ 	{
+-		if(hw.deinit_func) hw.deinit_func();
++		if(hw->deinit_func) hw->deinit_func();
+ 		exit(EXIT_FAILURE);
+ 	}
+ 	
+@@ -684,7 +695,7 @@
+ 	if(fin==NULL)
+ 	{
+ 		fprintf(stderr,"%s: could not reopen config file\n",progname);
+-		if(hw.deinit_func) hw.deinit_func();
++		if(hw->deinit_func) hw->deinit_func();
+ 		exit(EXIT_FAILURE);
+ 	}
+ 	remotes=read_config(fin);
+@@ -694,7 +705,7 @@
+ 		fprintf(stderr,"%s: config file contains no valid "
+ 			"remote control definition\n",progname);
+ 		fprintf(stderr,"%s: this shouldn't ever happen!\n",progname);
+-		if(hw.deinit_func) hw.deinit_func();
++		if(hw->deinit_func) hw->deinit_func();
+ 		exit(EXIT_FAILURE);
+ 	}
+ 	if(remotes==(void *) -1)
+@@ -702,7 +713,7 @@
+ 		fprintf(stderr,"%s: reading of config file failed\n",
+ 			progname);
+ 		fprintf(stderr,"%s: this shouldn't ever happen!\n",progname);
+-		if(hw.deinit_func) hw.deinit_func();
++		if(hw->deinit_func) hw->deinit_func();
+ 		exit(EXIT_FAILURE);
+ 	}
+ 	
+@@ -715,7 +726,7 @@
+ 		set_toggle_bit(remotes,
+ 			       1<<(remotes->bits-remotes->toggle_bit));
+ 	}
+-	if(hw.deinit_func) hw.deinit_func();
++	if(hw->deinit_func) hw->deinit_func();
+ 	get_pre_data(remotes);
+ 	get_post_data(remotes);
+ 	
+@@ -741,7 +752,7 @@
+ 	size_t size=1;
+ 	char buffer[sizeof(ir_code)];
+ 
+-	switch(hw.rec_mode)
++	switch(hw->rec_mode)
+ 	{
+ 	case LIRC_MODE_MODE2:
+ 		size=sizeof(lirc_t);
+@@ -750,27 +761,27 @@
+ 		size=sizeof(unsigned char);
+ 		break;
+ 	case LIRC_MODE_LIRCCODE:
+-		size=hw.code_length/CHAR_BIT;
+-		if(hw.code_length%CHAR_BIT) size++;
++		size=hw->code_length/CHAR_BIT;
++		if(hw->code_length%CHAR_BIT) size++;
+ 		break;
+ 	}
+-	while(read(hw.fd,buffer,size)==size);
++	while(read(hw->fd,buffer,size)==size);
+ }
+ 
+ int resethw()
+ {
+ 	int flags;
+ 
+-	if(hw.deinit_func) hw.deinit_func();
+-	if(hw.init_func)
++	if(hw->deinit_func) hw->deinit_func();
++	if(hw->init_func)
+ 	{
+-		if(!hw.init_func())
++		if(!hw->init_func())
+ 			return(0);
+ 	}
+-	flags=fcntl(hw.fd,F_GETFL,0);
+-	if(flags==-1 || fcntl(hw.fd,F_SETFL,flags|O_NONBLOCK)==-1)
++	flags=fcntl(hw->fd,F_GETFL,0);
++	if(flags==-1 || fcntl(hw->fd,F_SETFL,flags|O_NONBLOCK)==-1)
+ 	{
+-		if(hw.deinit_func) hw.deinit_func();
++		if(hw->deinit_func) hw->deinit_func();
+ 		return(0);
+ 	}
+ 	return(1);
+@@ -785,19 +796,19 @@
+ 	while(1)
+ 	{
+ 		FD_ZERO(&fds);
+-		FD_SET(hw.fd,&fds);
++		FD_SET(hw->fd,&fds);
+ 		do{
+ 			do{
+ 				if(maxusec>0)
+ 				{
+ 					tv.tv_sec=maxusec/1000000;
+ 					tv.tv_usec=maxusec%1000000;
+-					ret=select(hw.fd+1,&fds,NULL,NULL,&tv);
++					ret=select(hw->fd+1,&fds,NULL,NULL,&tv);
+ 					if(ret==0) return(0);
+ 				}
+ 				else
+ 				{
+-					ret=select(hw.fd+1,&fds,NULL,NULL,NULL);
++					ret=select(hw->fd+1,&fds,NULL,NULL,NULL);
+ 				}
+ 			}
+ 			while(ret==-1 && errno==EINTR);
+@@ -810,7 +821,7 @@
+ 		}
+ 		while(ret==-1);
+ 		
+-                if(FD_ISSET(hw.fd,&fds))
++                if(FD_ISSET(hw->fd,&fds))
+                 {
+                         /* we will read later */
+ 			return(1);
+@@ -825,12 +836,12 @@
+ 	struct timeval tv;
+ 
+ 	FD_ZERO(&fds);
+-	FD_SET(hw.fd,&fds);
++	FD_SET(hw->fd,&fds);
+ 	do{
+ 		do{
+ 			tv.tv_sec=0;
+ 			tv.tv_usec=0;
+-			ret=select(hw.fd+1,&fds,NULL,NULL,&tv);
++			ret=select(hw->fd+1,&fds,NULL,NULL,&tv);
+ 		}
+ 		while(ret==-1 && errno==EINTR);
+ 		if(ret==-1)
+@@ -842,7 +853,7 @@
+ 	}
+ 	while(ret==-1);
+ 	
+-	if(FD_ISSET(hw.fd,&fds))
++	if(FD_ISSET(hw->fd,&fds))
+ 	{
+ 		return(1);
+ 	}	
+@@ -868,7 +879,7 @@
+ 	seq=repeats=0;found=0;
+ 	while(availabledata())
+ 	{
+-		hw.rec_func(NULL);
++		hw->rec_func(NULL);
+ 	}
+ 	while(retval==EXIT_SUCCESS && retries>0)
+ 	{
+@@ -879,14 +890,14 @@
+ 			retval=EXIT_FAILURE;
+ 			break;
+ 		}
+-		hw.rec_func(remote);
++		hw->rec_func(remote);
+ 		if(is_rc6(remote))
+ 		{
+ 			for(remote->toggle_bit=1;
+ 			    remote->toggle_bit<=remote->bits;
+ 			    remote->toggle_bit++)
+ 			{
+-				success=hw.decode_func(remote,&pre,&code,&post,
++				success=hw->decode_func(remote,&pre,&code,&post,
+ 						       &repeat_flag,
+ 						       &remaining_gap);
+ 				if(success)
+@@ -900,7 +911,7 @@
+ 		}
+ 		else
+ 		{
+-			success=hw.decode_func(remote,&pre,&code,&post,
++			success=hw->decode_func(remote,&pre,&code,&post,
+ 					       &repeat_flag,&remaining_gap);
+ 			if(success)
+ 			{
+@@ -1180,7 +1191,7 @@
+ 			retval=0;
+ 			break;
+ 		}
+-		ret=read(hw.fd,&data,sizeof(data));
++		ret=read(hw->fd,&data,sizeof(data));
+ 		if(ret!=sizeof(data))
+ 		{
+ 			fprintf(stderr,"%s: read() failed\n",
+@@ -2074,7 +2085,7 @@
+ 	{
+ 		while(availabledata())
+ 		{
+-			hw.rec_func(NULL);
++			hw->rec_func(NULL);
+ 		}
+ 		if(!waitfordata(10000000))
+ 		{
+@@ -2084,7 +2095,7 @@
+ 		gettimeofday(&start,NULL);
+ 		while(availabledata())
+ 		{
+-			hw.rec_func(NULL);
++			hw->rec_func(NULL);
+ 		}
+ 		gettimeofday(&end,NULL);
+ 		if(flag)
+diff -Nur lirc-0.6.3.orig/daemons/lircd.c lirc-0.6.3/daemons/lircd.c
+--- lirc-0.6.3.orig/daemons/lircd.c	Sat Jul 21 14:45:48 2001
++++ lirc-0.6.3/daemons/lircd.c	Sat Jul 21 15:15:23 2001
+@@ -59,6 +59,7 @@
+ #include "ir_remote.h"
+ #include "config_file.h"
+ #include "hardware.h"
++#include "hw-types.h"
+ 
+ struct ir_remote *remotes;
+ struct ir_remote *free_remotes=NULL;
+@@ -71,25 +72,6 @@
+ static int repeat_fd=-1;
+ static char *repeat_message=NULL;
+ 
+-#ifdef LIRC_NETWORK_ONLY
+-struct hardware hw=
+-{
+-	"/dev/null",        /* default device */
+-	-1,                 /* fd */
+-	0,                  /* features */
+-	0,                  /* send_mode */
+-	0,                  /* rec_mode */
+-	0,                  /* code_length */
+-	NULL,               /* init_func */
+-	NULL,               /* deinit_func */
+-	NULL,               /* send_func */
+-	NULL,               /* rec_func */
+-	NULL,               /* decode_func */
+-};
+-#else
+-extern struct hardware hw;
+-#endif
+-
+ char *progname="lircd-"VERSION;
+ char *configfile=LIRCDCFGFILE;
+ char *logfile=LOGFILE;
+@@ -291,7 +273,7 @@
+ 	}
+ 	fclose(pidfile);
+ 	(void) unlink(PIDFILE);
+-	if(clin>0 && hw.deinit_func) hw.deinit_func();
++	if(clin>0 && hw->deinit_func) hw->deinit_func();
+ #ifdef USE_SYSLOG
+ 	closelog();
+ #else
+@@ -422,9 +404,9 @@
+ 			clin--;
+ 			if(clin==0 &&
+ 			   repeat_remote==NULL &&
+-			   hw.deinit_func)
++			   hw->deinit_func)
+ 			{
+-				hw.deinit_func();
++				hw->deinit_func();
+ 			}
+ 			for(;i<clin;i++)
+ 			{
+@@ -477,9 +459,9 @@
+ 	clis[clin++]=fd;
+ 	if(clin==1 && repeat_remote==NULL)
+ 	{
+-		if(hw.init_func)
++		if(hw->init_func)
+ 		{
+-			if(!hw.init_func())
++			if(!hw->init_func())
+ 			{
+ 				shutdown(clis[0],2);
+ 				close(clis[0]);
+@@ -922,14 +904,14 @@
+ 			free(repeat_message);
+ 			repeat_message=NULL;
+ 		}
+-		if(clin==0 && repeat_remote==NULL && hw.deinit_func)
++		if(clin==0 && repeat_remote==NULL && hw->deinit_func)
+ 		{
+-			hw.deinit_func();
++			hw->deinit_func();
+ 		}
+ 		return;
+ 	}
+ 	repeat_remote->repeat_countdown--;
+-	if(hw.send_func(repeat_remote,repeat_code) &&
++	if(hw->send_func(repeat_remote,repeat_code) &&
+ 	   repeat_remote->repeat_countdown>0)
+ 	{
+ 		repeat_timer.it_value.tv_sec=0;
+@@ -949,9 +931,9 @@
+ 		repeat_message=NULL;
+ 		repeat_fd=-1;
+ 	}
+-	if(clin==0 && repeat_remote==NULL && hw.deinit_func)
++	if(clin==0 && repeat_remote==NULL && hw->deinit_func)
+ 	{
+-		hw.deinit_func();
++		hw->deinit_func();
+ 	}
+ }
+ 
+@@ -1196,7 +1178,7 @@
+ 	struct ir_ncode *code;
+ 	struct itimerval repeat_timer;
+ 	
+-	if(hw.send_mode==0) return(send_error(fd,message,"hardware does not "
++	if(hw->send_mode==0) return(send_error(fd,message,"hardware does not "
+ 					      "support sending\n"));
+ 	
+ 	if(parse_rc(fd,message,arguments,&remote,&code,2)==0) return(0);
+@@ -1219,7 +1201,7 @@
+ 	if(remote->toggle_bit>0)
+ 		remote->repeat_state=
+ 		!remote->repeat_state;
+-	if(!hw.send_func(remote,code))
++	if(!hw->send_func(remote,code))
+ 	{
+ 		return(send_error(fd,message,"transmission failed\n"));
+ 	}
+@@ -1537,10 +1519,10 @@
+ 				FD_SET(sockinet,&fds);
+ 				maxfd=max(maxfd,sockinet);
+ 			}
+-			if(clin>0 && hw.rec_mode!=0)
++			if(clin>0 && hw->rec_mode!=0)
+ 			{
+-				FD_SET(hw.fd,&fds);
+-				maxfd=max(maxfd,hw.fd);
++				FD_SET(hw->fd,&fds);
++				maxfd=max(maxfd,hw->fd);
+ 			}
+ 			
+ 			for(i=0;i<clin;i++)
+@@ -1684,7 +1666,7 @@
+ 			LOGPRINTF(1,"registering inet client");
+ 			add_client(sockinet);
+ 		}
+-                if(clin>0 && hw.rec_mode!=0 && FD_ISSET(hw.fd,&fds))
++                if(clin>0 && hw->rec_mode!=0 && FD_ISSET(hw->fd,&fds))
+                 {
+                         /* we will read later */
+ 			return(1);
+@@ -1701,8 +1683,8 @@
+ 	while(1)
+ 	{
+ 		(void) waitfordata(0);
+-		if(!hw.rec_func) continue;
+-		message=hw.rec_func(remotes);
++		if(!hw->rec_func) continue;
++		message=hw->rec_func(remotes);
+ 		
+ 		if(message!=NULL)
+ 		{
+@@ -1739,16 +1721,10 @@
+ 			{"device",required_argument,NULL,'d'},
+ 			{"listen",optional_argument,NULL,'l'},
+ 			{"connect",required_argument,NULL,'c'},
+-#                       ifdef DEBUG
+-			{"debug",optional_argument,NULL,'D'},
+-#                       endif
++			{"driver",required_argument,NULL,'D'},
+ 			{0, 0, 0, 0}
+ 		};
+-#               ifdef DEBUG
+-		c = getopt_long(argc,argv,"hvnp:d:l::c:D::",long_options,NULL);
+-#               else
+-		c = getopt_long(argc,argv,"hvnp:d:l::c:",long_options,NULL);
+-#               endif
++		c = getopt_long(argc,argv,"hvnp:d:l::c:D:",long_options,NULL);
+ 		if(c==-1)
+ 			break;
+ 		switch (c)
+@@ -1760,11 +1736,9 @@
+ 			printf("\t -n --nodaemon\t\t\tdon't fork to background\n");
+ 			printf("\t -p --permission=mode\t\tfile permissions for " LIRCD "\n");
+ 			printf("\t -d --device=device\t\tread from given device\n");
++			printf("\t -D --driver=driver\t\tuse a specific hardware driver\n");
+ 			printf("\t -l --listen[=port]\t\tlisten for network connections on port\n");
+ 			printf("\t -c --connect=host[:port]\t\tconnect to remote lircd server\n");
+-#                       ifdef DEBUG
+-			printf("\t -D[debug_level] --debug[=debug_level]\n");
+-#                       endif
+ 			return(EXIT_SUCCESS);
+ 		case 'v':
+ 			printf("%s\n",progname);
+@@ -1781,7 +1755,7 @@
+ 			permission=oatoi(optarg);
+ 			break;
+ 		case 'd':
+-			hw.device=optarg;
++			hw->device=optarg;
+ 			break;
+ 		case 'l':
+ 			listen_tcpip=1;
+@@ -1809,16 +1783,20 @@
+ 			if(!add_peer_connection(optarg))
+ 				return(EXIT_FAILURE);
+ 			break;
+-#               ifdef DEBUG
+-		case 'D':
+-			if(optarg==NULL) debug=1;
+-			else
+-			{
+-				/* don't check for errors */
+-				debug=atoi(optarg);
++		case 'D': {
++			struct hardware **i;
++			for(i=hw_list; *i; i++)
++				if (!strcasecmp((*i)->name, optarg)) break;
++			if (!*i) {
++				printf("Hardware type `%s' not supported.\n"
++				       "Supported types:\n", optarg);
++				for(i=hw_list; *i; i++)
++					printf("\t%s\n", (*i)->name);
++				return(EXIT_FAILURE);
+ 			}
+ 			break;
+-#               endif
++			hw=*i;
++		}
+ 		default:
+ 			printf("Usage: %s [options] [config-file]\n",progname);
+ 			return(EXIT_FAILURE);
+@@ -1875,9 +1853,9 @@
+ 		struct ir_remote *r;
+ 		struct ir_ncode *c;
+ 		
+-		if(hw.init_func)
++		if(hw->init_func)
+ 		{
+-			if(!hw.init_func()) dosigterm(SIGTERM);
++			if(!hw->init_func()) dosigterm(SIGTERM);
+ 		}
+ 		
+ 		printf("space 1000000\n");
+@@ -1889,19 +1867,19 @@
+ 			{
+ 				repeat_remote=NULL;
+ 				repeat_code=NULL;
+-				hw.send_func(r,c);
++				hw->send_func(r,c);
+ 				repeat_remote=r;
+ 				repeat_code=c;
+-				hw.send_func(r,c);
+-				hw.send_func(r,c);
+-				hw.send_func(r,c);
+-				hw.send_func(r,c);
++				hw->send_func(r,c);
++				hw->send_func(r,c);
++				hw->send_func(r,c);
++				hw->send_func(r,c);
+ 				c++;
+ 			}
+ 			r=r->next;
+ 		}
+ 		fflush(stdout);
+-		if(hw.deinit_func) hw.deinit_func();
++		if(hw->deinit_func) hw->deinit_func();
+ 	}
+ 	fprintf(stderr,"Ready.\n");
+ 	dosigterm(SIGTERM);
+diff -Nur lirc-0.6.3.orig/daemons/lircd.c.orig lirc-0.6.3/daemons/lircd.c.orig
+--- lirc-0.6.3.orig/daemons/lircd.c.orig	Thu Jan  1 01:00:00 1970
++++ lirc-0.6.3/daemons/lircd.c.orig	Sat Jul 21 15:15:23 2001
+@@ -0,0 +1,1891 @@
++/*      $Id$      */
++
++/****************************************************************************
++ ** lircd.c *****************************************************************
++ ****************************************************************************
++ *
++ * lircd - LIRC Decoder Daemon
++ * 
++ * Copyright (C) 1996,97 Ralph Metzler <rjkm@thp.uni-koeln.de>
++ * Copyright (C) 1998,99 Christoph Bartelmus <lirc@bartelmus.de>
++ *
++ *  =======
++ *  HISTORY
++ *  =======
++ *
++ * 0.1:  03/27/96  decode SONY infra-red signals
++ *                 create mousesystems mouse signals on pipe /dev/lircm
++ *       04/07/96  send ir-codes to clients via socket (see irpty)
++ *       05/16/96  now using ir_remotes for decoding
++ *                 much easier now to describe new remotes
++ *
++ * 0.5:  09/02/98 finished (nearly) complete rewrite (Christoph)
++ *
++ */
++
++#ifdef HAVE_CONFIG_H
++# include <config.h>
++#endif
++
++/* disable daemonise if maintainer mode SIM_REC / SIM_SEND defined */
++#if defined(SIM_REC) || defined (SIM_SEND)
++# undef DAEMONIZE
++#endif
++
++#define __USE_BSD
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <stdarg.h>
++#include <string.h>
++#include <signal.h>
++#include <unistd.h>
++#include <time.h>
++#include <getopt.h>
++#include <sys/time.h>
++#include <sys/socket.h>
++#include <sys/un.h>
++#include <netinet/in.h>
++#include <netdb.h>
++#include <arpa/inet.h>
++#include <sys/types.h>
++#include <sys/stat.h>
++#include <errno.h>
++#include <limits.h>
++#include <fcntl.h>
++#include <sys/file.h>
++
++#include "lircd.h"
++#include "ir_remote.h"
++#include "config_file.h"
++#include "hardware.h"
++#include "hw-types.h"
++
++struct ir_remote *remotes;
++struct ir_remote *free_remotes=NULL;
++
++extern struct ir_remote *decoding;
++extern struct ir_remote *last_remote;
++extern struct ir_remote *repeat_remote;
++extern struct ir_ncode *repeat_code;
++
++static int repeat_fd=-1;
++static char *repeat_message=NULL;
++
++char *progname="lircd-"VERSION;
++char *configfile=LIRCDCFGFILE;
++char *logfile=LOGFILE;
++FILE *pidfile;
++
++struct protocol_directive directives[] =
++{
++	{"LIST",list},
++	{"SEND_ONCE",send_once},
++	{"SEND_START",send_start},
++	{"SEND_STOP",send_stop},
++	{"VERSION",version},
++	{NULL,NULL}
++	/*
++	{"DEBUG",debug},
++	{"DEBUG_LEVEL",debug_level},
++	*/
++};
++
++enum protocol_string_num {
++	P_BEGIN=0,
++	P_DATA,
++	P_END,
++	P_ERROR,
++	P_SUCCESS,
++	P_SIGHUP
++};
++
++char *protocol_string[] = 
++{
++	"BEGIN\n",
++	"DATA\n",
++	"END\n",
++	"ERROR\n",
++	"SUCCESS\n",
++	"SIGHUP\n"
++};
++
++#ifndef USE_SYSLOG
++#define HOSTNAME_LEN 128
++char hostname[HOSTNAME_LEN+1];
++
++FILE *lf=NULL;
++#endif
++
++/* fixme: */
++#define MAX_PEERS	100
++
++int sockfd, sockinet;
++int clis[FD_SETSIZE-5-MAX_PEERS]; /* substract one for lirc, sockfd, sockinet, logfile, pidfile */
++
++#define CT_LOCAL  1
++#define CT_REMOTE 2
++
++int cli_type[FD_SETSIZE-5-MAX_PEERS];
++int clin=0;
++
++int listen_tcpip=0;
++unsigned short int port=LIRC_INET_PORT;
++
++struct	peer_connection *peers[MAX_PEERS];
++int	peern = 0;
++
++int debug=0;
++int daemonized=0;
++
++static sig_atomic_t term=0,hup=0,alrm=0;
++static int termsig;
++
++inline int max(int a,int b)
++{
++	return(a>b ? a:b);
++}
++
++/* cut'n'paste from fileutils-3.16: */
++
++#define isodigit(c) ((c) >= '0' && (c) <= '7')
++
++/* Return a positive integer containing the value of the ASCII
++   octal number S.  If S is not an octal number, return -1.  */
++
++static int
++oatoi (s)
++     char *s;
++{
++  register int i;
++
++  if (*s == 0)
++    return -1;
++  for (i = 0; isodigit (*s); ++s)
++    i = i * 8 + *s - '0';
++  if (*s)
++    return -1;
++  return i;
++}
++
++/* A safer write(), since sockets might not write all but only some of the
++   bytes requested */
++
++inline int write_socket(int fd, char *buf, int len)
++{
++	int done,todo=len;
++
++	while(todo)
++	{
++		done=write(fd,buf,todo);
++		if(done<=0) return(done);
++		buf+=done;
++		todo-=done;
++	}
++	return(len);
++}
++
++inline int write_socket_len(int fd, char *buf)
++{
++	int len;
++
++	len=strlen(buf);
++	if(write_socket(fd,buf,len)<len) return(0);
++	return(1);
++}
++
++inline int read_timeout(int fd,char *buf,int len,int timeout)
++{
++	fd_set fds;
++	struct timeval tv;
++	int ret,n;
++	
++	FD_ZERO(&fds);
++	FD_SET(fd,&fds);
++	tv.tv_sec=timeout;
++	tv.tv_usec=0;
++	
++	/* CAVEAT: (from libc documentation)
++     Any signal will cause `select' to return immediately.  So if your
++     program uses signals, you can't rely on `select' to keep waiting
++     for the full time specified.  If you want to be sure of waiting
++     for a particular amount of time, you must check for `EINTR' and
++     repeat the `select' with a newly calculated timeout based on the
++     current time.  See the example below.
++
++     Obviously the timeout is not recalculated in the example because
++     this is done automatically on Linux systems...
++	*/
++     
++	do
++	{
++		ret=select(fd+1,&fds,NULL,NULL,&tv);
++	}
++	while(ret==-1 && errno==EINTR);
++	if(ret==-1)
++	{
++		logprintf(LOG_ERR,"select() failed");
++		logperror(LOG_ERR,NULL);
++		return(-1);
++	}
++	else if(ret==0) return(0); /* timeout */
++	n=read(fd,buf,len);
++	if(n==-1)
++	{
++		logprintf(LOG_ERR,"read() failed");
++		logperror(LOG_ERR,NULL);
++		return(-1);
++	}
++	return(n);
++}
++
++void sigterm(int sig)
++{
++	/* all signals are blocked now */
++	if(term) return;
++	term=1;
++	termsig=sig;
++}
++
++void dosigterm(int sig)
++{
++	int i;
++	
++	signal(SIGALRM,SIG_IGN);
++	
++	if(free_remotes!=NULL)
++	{
++		free_config(free_remotes);
++	}
++	free_config(remotes);
++	logprintf(LOG_NOTICE,"caught signal");
++	for (i=0; i<clin; i++)
++	{
++		shutdown(clis[i],2);
++		close(clis[i]);
++	};
++	shutdown(sockfd,2);
++	close(sockfd);
++	if(listen_tcpip)
++	{
++		shutdown(sockinet,2);
++		close(sockinet);
++	}
++	fclose(pidfile);
++	(void) unlink(PIDFILE);
++	if(clin>0 && hw->deinit_func) hw->deinit_func();
++#ifdef USE_SYSLOG
++	closelog();
++#else
++	if(lf) fclose(lf);
++#endif
++	signal(sig,SIG_DFL);
++	raise(sig);
++}
++
++void sighup(int sig)
++{
++	hup=1;
++}
++
++void dosighup(int sig)
++{
++#ifndef USE_SYSLOG
++	struct stat s;
++#endif
++	int i;
++
++	/* reopen logfile first */
++#ifdef USE_SYSLOG
++	/* we don't need to do anyting as this is syslogd's task */
++#else
++	logprintf(LOG_INFO,"closing logfile");
++	if(-1==fstat(fileno(lf),&s))		
++	{
++		dosigterm(SIGTERM); /* shouldn't ever happen */
++	}
++	fclose(lf);
++	lf=fopen(logfile,"a");
++	if(lf==NULL)
++	{
++		/* can't print any error messagees */
++		dosigterm(SIGTERM);
++	}
++	logprintf(LOG_INFO,"reopened logfile");
++	if(-1==fchmod(fileno(lf),s.st_mode))
++	{
++		logprintf(LOG_WARNING,"could not set file permissions");
++		logperror(0,NULL);
++	}
++#endif
++
++	config();
++	
++	for (i=0; i<clin; i++)
++	{
++		if(!(write_socket_len(clis[i],protocol_string[P_BEGIN]) &&
++		     write_socket_len(clis[i],protocol_string[P_SIGHUP]) &&
++		     write_socket_len(clis[i],protocol_string[P_END])))
++		{
++			remove_client(clis[i]);
++			i--;
++		}
++	}
++      /* restart all connection timers */
++      for (i=0; i<peern; i++)
++      {
++              if (peers[i]->socket == -1)
++              {
++                      gettimeofday(&peers[i]->reconnect, NULL);
++                      peers[i]->connection_failure = 0;
++              }
++      }
++}
++
++void config(void)
++{
++	FILE *fd;
++	struct ir_remote *config_remotes;
++	
++	if(free_remotes!=NULL)
++	{
++		logprintf(LOG_ERR,"cannot read config file");
++		logprintf(LOG_ERR,"old config is still in use");
++		return;
++	}
++	fd=fopen(configfile,"r");
++	if(fd==NULL)
++	{
++		logprintf(LOG_ERR,"could not open config file '%s'",
++			  configfile);
++		logperror(LOG_ERR,NULL);
++		return;
++	}
++	config_remotes=read_config(fd);
++	fclose(fd);
++	if(config_remotes==(void *) -1)
++	{
++		logprintf(LOG_ERR,"reading of config file failed");
++	}
++	else
++	{
++		LOGPRINTF(1,"config file read");
++		if(config_remotes==NULL)
++		{
++			logprintf(LOG_WARNING,"config file contains no "
++				  "valid remote control definition");
++		}
++		/* I cannot free the data structure
++		   as they could still be in use */
++		free_remotes=remotes;
++		remotes=config_remotes;
++	}
++}
++
++void nolinger(int sock)
++{
++	static struct linger  linger = {0, 0};
++	int lsize  = sizeof(struct linger);
++	setsockopt(sock, SOL_SOCKET, SO_LINGER, (void *)&linger, lsize);
++}
++
++void remove_client(int fd)
++{
++	int i;
++
++	for(i=0;i<clin;i++)
++	{
++		if(clis[i]==fd)
++		{
++			shutdown(clis[i],2);
++			close(clis[i]);
++			logprintf(LOG_INFO,"removed client");
++			
++			clin--;
++			if(clin==0 &&
++			   repeat_remote==NULL &&
++			   hw->deinit_func)
++			{
++				hw->deinit_func();
++			}
++			for(;i<clin;i++)
++			{
++				clis[i]=clis[i+1];
++			}
++			return;
++		}
++	}
++	LOGPRINTF(1,"internal error in remove_client: no such fd");
++}
++
++void add_client(int sock)
++{
++	int fd;
++	int clilen;
++	struct sockaddr client_addr;
++
++	clilen=sizeof(client_addr);
++	fd=accept(sock,(struct sockaddr *)&client_addr,&clilen);
++	if(fd==-1) 
++	{
++		logprintf(LOG_ERR,"accept() failed for new client");
++		logperror(LOG_ERR,NULL);
++		dosigterm(SIGTERM);
++	};
++
++	if(fd>=FD_SETSIZE)
++	{
++		logprintf(LOG_ERR,"connection rejected");
++		shutdown(fd,2);
++		close(fd);
++		return;
++	}
++	nolinger(fd);
++	if(client_addr.sa_family==AF_UNIX)
++	{
++		cli_type[clin]=CT_LOCAL;
++		logprintf(LOG_NOTICE,"accepted new client on %s",LIRCD);
++	}
++	else if(client_addr.sa_family==AF_INET)
++	{
++		cli_type[clin]=CT_REMOTE;
++		logprintf(LOG_NOTICE,"accepted new client from %s",
++			  inet_ntoa(((struct sockaddr_in *)&client_addr)->sin_addr));
++	}
++	else
++	{
++		cli_type[clin]=0; /* what? */
++	}
++	clis[clin++]=fd;
++	if(clin==1 && repeat_remote==NULL)
++	{
++		if(hw->init_func)
++		{
++			if(!hw->init_func())
++			{
++				shutdown(clis[0],2);
++				close(clis[0]);
++				clin=0;
++				dosigterm(SIGTERM);
++			}
++		}
++	}
++}
++
++int add_peer_connection(char *server)
++{
++	char *sep;
++	struct servent *service;
++	
++	if(peern<MAX_PEERS)
++	{
++		peers[peern]=malloc(sizeof(struct peer_connection));
++		if(peers[peern]!=NULL)
++		{
++			gettimeofday(&peers[peern]->reconnect,NULL);
++			peers[peern]->connection_failure = 0;
++			sep=strchr(server,':');
++			if(sep!=NULL)
++			{
++				*sep=0;sep++;
++				peers[peern]->host=strdup(server);
++				service=getservbyname(sep,"tcp");
++				if(service)
++				{
++					peers[peern]->port=
++						ntohs(service->s_port);
++				}
++				else
++				{
++					long p;
++					char *endptr;
++				
++					p=strtol(sep,&endptr,10);
++					if(!*sep || *endptr ||
++					   p<1 || p>USHRT_MAX)
++					{
++						fprintf(stderr,
++							"%s: bad port number \"%s\"\n",
++							progname,sep);
++						return(0);
++					}
++					
++					peers[peern]->port=
++						(unsigned short int) p;
++				}
++			}
++			else
++			{
++				peers[peern]->host=strdup(server);
++				peers[peern]->port=LIRC_INET_PORT;
++			}
++			if(peers[peern]->host==NULL)
++			{
++				fprintf(stderr, "%s: out of memory\n",progname);
++			}
++		}
++		else
++		{
++			fprintf(stderr, "%s: out of memory\n",progname);
++			return(0);
++		}
++		peers[peern]->socket=-1;
++		peern++;
++		return(1);
++	}
++	else
++	{
++		fprintf(stderr,"%s: too many client connections\n",
++			progname);
++	}
++	return(0);
++}
++
++void connect_to_peers()
++{
++	int	i;
++	struct	hostent *host;
++	struct	sockaddr_in	addr;
++	struct timeval now;
++	
++	gettimeofday(&now,NULL);
++	for(i=0;i<peern;i++)
++	{
++		if(peers[i]->socket!=-1)
++			continue;
++		if(timercmp(&peers[i]->reconnect,&now,<=))
++		{
++			peers[i]->socket=socket(AF_INET, SOCK_STREAM,0);
++			host=gethostbyname(peers[i]->host);
++			if(host==NULL)
++			{
++				logprintf(LOG_ERR,"name lookup failure "
++					  "connecting to %s",peers[i]->host);
++				peers[i]->connection_failure++;
++				gettimeofday(&peers[i]->reconnect,NULL);
++				peers[i]->reconnect.tv_sec+=
++					5*peers[i]->connection_failure;
++				close(peers[i]->socket);
++				peers[i]->socket=-1;
++				continue;
++			}
++			
++			addr.sin_family=host->h_addrtype;;
++			addr.sin_addr=*((struct in_addr *)host->h_addr);
++			addr.sin_port=htons(peers[i]->port);
++			
++			if(connect(peers[i]->socket,(struct sockaddr *) &addr,
++				   sizeof(addr))==-1)
++			{
++				logprintf(LOG_ERR, "failure connecting to %s",
++					  peers[i]->host);
++				logperror(LOG_ERR, NULL);
++				peers[i]->connection_failure++;
++				gettimeofday(&peers[i]->reconnect,NULL);
++				peers[i]->reconnect.tv_sec+=
++					5*peers[i]->connection_failure;
++				close(peers[i]->socket);
++				peers[i]->socket=-1;
++				continue;
++			}
++			peers[i]->connection_failure=0;
++		}
++	}
++}
++
++int get_peer_message(struct peer_connection *peer)
++{
++	int length;
++	char buffer[PACKET_SIZE+1];
++	char *end;
++	int	i;
++
++	length=read_timeout(peer->socket,buffer,PACKET_SIZE,0);
++	if(length)
++	{
++		buffer[length]=0;
++		end=strchr(buffer,'\n');
++		if(end==NULL)
++		{
++			logprintf(LOG_ERR,"bad send packet: \"%s\"",buffer);
++			/* remove clients that behave badly */
++			return(0);
++		}
++		end++;	/* include the \n */
++		end[0]=0;
++		LOGPRINTF(1,"received peer message: \"%s\"",buffer);
++		for(i=0;i<clin;i++)
++		{
++			/* don't relay messages to remote clients */
++			if(cli_type[i]==CT_REMOTE)
++				continue;
++			LOGPRINTF(1,"writing to client %d",i);
++			if(write_socket(clis[i],buffer,length)<length)
++			{
++				remove_client(clis[i]);
++				i--;
++			}			
++		}
++	}
++
++	if(length==0) /* EOF: connection closed by client */
++	{
++		return(0);
++	}
++	return(1);
++}
++
++void start_server(mode_t permission,int nodaemon)
++{
++	struct sockaddr_un serv_addr;
++	struct sockaddr_in serv_addr_in;
++	struct stat s;
++	int ret;
++	int new=1;
++	int fd;
++	
++	/* create pid lockfile in /var/run */
++	if((fd=open(PIDFILE,O_RDWR|O_CREAT,0644))==-1 ||
++	   (pidfile=fdopen(fd,"r+"))==NULL)
++	{
++		fprintf(stderr,"%s: can't open or create %s\n",
++			progname,PIDFILE);
++		perror(progname);
++		exit(EXIT_FAILURE);
++	}
++	if(flock(fd,LOCK_EX|LOCK_NB)==-1)
++	{
++		int otherpid;
++		
++		if(fscanf(pidfile,"%d\n",&otherpid)>0)
++		{
++			fprintf(stderr,"%s: there seems to already be "
++				"a lircd process with pid %d\n",
++				progname,otherpid);
++			fprintf(stderr,"%s: otherwise delete stale "
++				"lockfile %s\n",progname,PIDFILE);
++		}
++		else
++		{
++			fprintf(stderr,"%s: invalid %s encountered\n",
++				progname,PIDFILE);
++		}
++		exit(EXIT_FAILURE);
++	}
++	(void) fcntl(fd,F_SETFD,FD_CLOEXEC);
++	rewind(pidfile);
++	(void) fprintf(pidfile,"%d\n",getpid());
++	(void) fflush(pidfile);
++	(void) ftruncate(fileno(pidfile),ftell(pidfile));
++
++	/* create socket*/
++	sockfd=socket(AF_UNIX,SOCK_STREAM,0);
++	if(sockfd==-1)
++	{
++		close(sockfd);
++		fclose(pidfile);
++		(void) unlink(PIDFILE);
++		fprintf(stderr,"%s: could not create socket\n",progname);
++		perror(progname);
++		exit(EXIT_FAILURE);
++	};
++	
++	/* 
++	   get owner, permissions, etc.
++	   so new socket can be the same since we
++	   have to delete the old socket.  
++	*/
++	ret=stat(LIRCD,&s);
++	if(ret==-1 && errno!=ENOENT)
++	{
++		close(sockfd);
++		fclose(pidfile);
++		(void) unlink(PIDFILE);
++		fprintf(stderr,"%s: could not get file information for %s\n",
++			progname,LIRCD);
++		perror(progname);
++		exit(EXIT_FAILURE);
++	}
++	if(ret!=-1)
++	{
++		new=0;
++		ret=unlink(LIRCD);
++		if(ret==-1)
++		{
++			close(sockfd);
++			fclose(pidfile);
++			(void) unlink(PIDFILE);
++			fprintf(stderr,"%s: could not delete %s\n",
++				progname,LIRCD);
++			perror(NULL);
++			exit(EXIT_FAILURE);
++		}
++	}
++	
++	serv_addr.sun_family=AF_UNIX;
++	strcpy(serv_addr.sun_path,LIRCD);
++	if(bind(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr))==-1)
++	{
++		close(sockfd);
++		fclose(pidfile);
++		(void) unlink(PIDFILE);
++		fprintf(stderr,"%s: could not assign address to socket\n",
++			progname);
++		perror(progname);
++		exit(EXIT_FAILURE);
++	}
++	
++	if(new ?
++	   chmod(LIRCD,permission):
++	   (chmod(LIRCD,s.st_mode)==-1 || chown(LIRCD,s.st_uid,s.st_gid)==-1)
++	   )
++	{
++		close(sockfd);
++		fclose(pidfile);
++		(void) unlink(PIDFILE);
++		fprintf(stderr,"%s: could not set file permissions\n",
++			progname);
++		perror(progname);
++		exit(EXIT_FAILURE);
++	}
++	
++	listen(sockfd,3);
++	nolinger(sockfd);
++
++	if(listen_tcpip)
++	{
++		/* create socket*/
++		sockinet=socket(AF_INET,SOCK_STREAM,0);
++		if(sockinet==-1)
++		{
++			close(sockfd);
++			fclose(pidfile);
++			(void) unlink(PIDFILE);
++			fprintf(stderr,"%s: could not create TCP/IP socket\n",
++				progname);
++			perror(progname);
++			exit(EXIT_FAILURE);
++		};
++		
++		serv_addr_in.sin_family=AF_INET;
++		serv_addr_in.sin_addr.s_addr=htonl(INADDR_ANY);
++		serv_addr_in.sin_port=htons(port);
++		
++		if(bind(sockinet,(struct sockaddr *) &serv_addr_in,
++			sizeof(serv_addr_in))==-1)
++		{
++			close(sockinet);
++			close(sockfd);
++			fclose(pidfile);
++			(void) unlink(PIDFILE);
++			fprintf(stderr,"%s: could not assign address to socket\n",
++				progname);
++			perror(progname);
++			exit(EXIT_FAILURE);
++		}
++		
++		listen(sockinet,3);
++		nolinger(sockinet);
++	}
++	
++#ifdef USE_SYSLOG
++#ifdef DAEMONIZE
++	if(nodaemon)
++	{
++		openlog(progname,LOG_CONS|LOG_PID|LOG_PERROR,LIRC_SYSLOG);
++	}
++	else
++	{
++		openlog(progname,LOG_CONS|LOG_PID,LIRC_SYSLOG);
++	}
++#else
++	openlog(progname,LOG_CONS|LOG_PID|LOG_PERROR,LIRC_SYSLOG);
++#endif
++#else
++	lf=fopen(logfile,"a");
++	if(lf==NULL)
++	{
++		if(listen_tcpip)
++		{
++			close(sockinet);
++		}
++		close(sockfd);
++		fclose(pidfile);
++		(void) unlink(PIDFILE);
++		fprintf(stderr,"%s: could not open logfile\n",progname);
++		perror(progname);
++		exit(EXIT_FAILURE);
++	}
++	gethostname(hostname,HOSTNAME_LEN);
++#endif
++	LOGPRINTF(1,"started server socket");
++}
++
++#ifndef USE_SYSLOG
++void logprintf(int prio,char *format_str, ...)
++{
++	time_t current;
++	char *currents;
++	va_list ap;  
++	
++	current=time(&current);
++	currents=ctime(&current);
++	
++	if(lf) fprintf(lf,"%15.15s %s %s: ",currents+4,hostname,progname);
++	if(!daemonized) fprintf(stderr,"%s: ",progname);
++	va_start(ap,format_str);
++	if(lf)
++	{
++		if(prio==LOG_WARNING) fprintf(lf,"WARNING: ");
++		vfprintf(lf,format_str,ap);
++		fputc('\n',lf);fflush(lf);
++	}
++	if(!daemonized)
++	{
++		if(prio==LOG_WARNING) fprintf(stderr,"WARNING: ");
++		vfprintf(stderr,format_str,ap);
++		fputc('\n',stderr);fflush(stderr);
++	}
++	va_end(ap);
++}
++
++void logperror(int prio,const char *s)
++{
++	if(s!=NULL)
++	{
++		logprintf(prio,"%s: %s",s,strerror(errno));
++	}
++	else
++	{
++		logprintf(prio,"%s",strerror(errno));
++	}
++}
++#endif
++
++#ifdef DAEMONIZE
++
++void daemonize(void)
++{
++	if(daemon(0,0)==-1)
++	{
++		logprintf(LOG_ERR,"daemon() failed");
++		logperror(LOG_ERR,NULL);
++		dosigterm(SIGTERM);
++	}
++	umask(0);
++	rewind(pidfile);
++	(void) fprintf(pidfile,"%d\n",getpid());
++	(void) fflush(pidfile);
++	(void) ftruncate(fileno(pidfile),ftell(pidfile));
++	daemonized=1;
++}
++
++#endif DAEMONIZE
++
++void sigalrm(int sig)
++{
++	alrm=1;
++}
++
++void dosigalrm(int sig)
++{
++	struct itimerval repeat_timer;
++	
++	if(repeat_remote->last_code!=repeat_code)
++	{
++		/* we received a different code from the original
++		   remote control we could repeat the wrong code so
++		   better stop repeating */
++		repeat_remote=NULL;
++		repeat_code=NULL;
++		repeat_fd=-1;
++		if(repeat_message!=NULL)
++		{
++			free(repeat_message);
++			repeat_message=NULL;
++		}
++		if(clin==0 && repeat_remote==NULL && hw->deinit_func)
++		{
++			hw->deinit_func();
++		}
++		return;
++	}
++	repeat_remote->repeat_countdown--;
++	if(hw->send_func(repeat_remote,repeat_code) &&
++	   repeat_remote->repeat_countdown>0)
++	{
++		repeat_timer.it_value.tv_sec=0;
++		repeat_timer.it_value.tv_usec=repeat_remote->remaining_gap;
++		repeat_timer.it_interval.tv_sec=0;
++		repeat_timer.it_interval.tv_usec=0;
++		
++		setitimer(ITIMER_REAL,&repeat_timer,NULL);
++		return;
++	}
++	repeat_remote=NULL;
++	repeat_code=NULL;
++	if(repeat_fd!=-1)
++	{
++		send_success(repeat_fd,repeat_message);
++		free(repeat_message);
++		repeat_message=NULL;
++		repeat_fd=-1;
++	}
++	if(clin==0 && repeat_remote==NULL && hw->deinit_func)
++	{
++		hw->deinit_func();
++	}
++}
++
++int parse_rc(int fd,char *message,char *arguments,struct ir_remote **remote,
++	     struct ir_ncode **code,int n)
++{
++	char *name=NULL,*command=NULL;
++
++	*remote=NULL;
++	*code=NULL;
++	if(arguments==NULL) return(1);
++
++	name=strtok(arguments,WHITE_SPACE);
++	if(name==NULL) return(1);
++	*remote=get_ir_remote(remotes,name);
++	if(*remote==NULL)
++	{
++		return(send_error(fd,message,"unknown remote: \"%s\"\n",
++				  name));
++	}
++	command=strtok(NULL,WHITE_SPACE);
++	if(command==NULL) return(1);
++	*code=get_ir_code(*remote,command);
++	if(*code==NULL)
++	{
++		return(send_error(fd,message,"unknown command: \"%s\"\n",
++				  command));
++	}
++	if(strtok(NULL,WHITE_SPACE)!=NULL)
++	{
++		return(send_error(fd,message,"bad send packet\n"));
++	}
++	if(n>0 && *remote==NULL)
++	{
++		return(send_error(fd,message,"remote missing\n"));
++	}
++	if(n>1 && *code==NULL)
++	{
++		return(send_error(fd,message,"code missing\n"));
++	}
++	return(1);
++}
++
++int send_success(int fd,char *message)
++{
++	if(!(write_socket_len(fd,protocol_string[P_BEGIN]) &&
++	     write_socket_len(fd,message) &&
++	     write_socket_len(fd,protocol_string[P_SUCCESS]) &&
++	     write_socket_len(fd,protocol_string[P_END]))) return(0);
++	return(1);
++}
++
++int send_error(int fd,char *message,char *format_str, ...)
++{
++	char lines[4],buffer[PACKET_SIZE+1];
++	int i,n,len;
++	va_list ap;  
++	char *s1,*s2;
++	
++	va_start(ap,format_str);
++	vsprintf(buffer,format_str,ap);
++	va_end(ap);
++	
++	s1=strrchr(message,'\n');
++	s2=strrchr(buffer,'\n');
++	if(s1!=NULL) s1[0]=0;
++	if(s2!=NULL) s2[0]=0;
++	logprintf(LOG_ERR,"error processing command: %s",message);
++	logprintf(LOG_ERR,"%s",buffer);
++	if(s1!=NULL) s1[0]='\n';
++	if(s2!=NULL) s2[0]='\n';
++
++	n=0;
++	len=strlen(buffer);
++	for(i=0;i<len;i++) if(buffer[i]=='\n') n++;
++	sprintf(lines,"%d\n",n);
++	
++	if(!(write_socket_len(fd,protocol_string[P_BEGIN]) &&
++	     write_socket_len(fd,message) &&
++	     write_socket_len(fd,protocol_string[P_ERROR]) &&
++	     write_socket_len(fd,protocol_string[P_DATA]) &&
++	     write_socket_len(fd,lines) &&
++	     write_socket_len(fd,buffer) &&
++	     write_socket_len(fd,protocol_string[P_END]))) return(0);
++	return(1);
++}
++
++int send_remote_list(int fd,char *message)
++{
++	char buffer[PACKET_SIZE+1];
++	struct ir_remote *all;
++	int n,len;
++	
++	n=0;
++	all=remotes;
++	while(all)
++	{
++		n++;
++		all=all->next;
++	}
++
++	if(!(write_socket_len(fd,protocol_string[P_BEGIN]) &&
++	     write_socket_len(fd,message) &&
++	     write_socket_len(fd,protocol_string[P_SUCCESS]))) return(0);
++	
++	if(n==0)
++	{
++		return(write_socket_len(fd,protocol_string[P_END]));
++	}
++	sprintf(buffer,"%d\n",n);
++	len=strlen(buffer);
++	if(!(write_socket_len(fd,protocol_string[P_DATA]) &&
++	     write_socket_len(fd,buffer))) return(0);
++
++	all=remotes;
++	while(all)
++	{
++		len=snprintf(buffer,PACKET_SIZE+1,"%s\n",all->name);
++		if(len==PACKET_SIZE+1)
++		{
++			len=sprintf(buffer,"name_too_long\n");
++		}
++		if(write_socket(fd,buffer,len)<len) return(0);
++		all=all->next;
++	}
++	return(write_socket_len(fd,protocol_string[P_END]));
++}
++
++int send_remote(int fd,char *message,struct ir_remote *remote)
++{
++	struct ir_ncode *codes;
++	char buffer[PACKET_SIZE+1];
++	int n,len;
++
++	n=0;
++	codes=remote->codes;
++	if(codes!=NULL)
++	{
++		while(codes->name!=NULL)
++		{
++			n++;
++			codes++;
++		}
++	}
++
++	if(!(write_socket_len(fd,protocol_string[P_BEGIN]) &&
++	     write_socket_len(fd,message) &&
++	     write_socket_len(fd,protocol_string[P_SUCCESS]))) return(0);
++	if(n==0)
++	{
++		return(write_socket_len(fd,protocol_string[P_END]));
++	}
++	sprintf(buffer,"%d\n",n);
++	if(!(write_socket_len(fd,protocol_string[P_DATA]) &&
++	     write_socket_len(fd,buffer))) return(0);
++
++	codes=remote->codes;
++	while(codes->name!=NULL)
++	{
++#ifdef __GLIBC__
++		/* It seems you can't print 64-bit longs on glibc */
++		
++		len=snprintf(buffer,PACKET_SIZE+1,"%08lx%08lx %s\n",
++			     (unsigned long) (codes->code>>32),
++			     (unsigned long) (codes->code&0xFFFFFFFF),
++			     codes->name);
++#else
++		len=snprintf(buffer,PACKET_SIZE,"%016llx %s\n",
++			     codes->code,
++			     codes->name);
++#endif
++		if(len==PACKET_SIZE+1)
++		{
++			len=sprintf(buffer,"code_too_long\n");
++		}
++		if(write_socket(fd,buffer,len)<len) return(0);
++		codes++;
++	}
++	return(write_socket_len(fd,protocol_string[P_END]));
++}
++
++int send_name(int fd,char *message,struct ir_ncode *code)
++{
++	char buffer[PACKET_SIZE+1];
++	int len;
++
++	if(!(write_socket_len(fd,protocol_string[P_BEGIN]) &&
++	     write_socket_len(fd,message) &&
++	     write_socket_len(fd,protocol_string[P_SUCCESS]) && 
++	     write_socket_len(fd,protocol_string[P_DATA]))) return(0);
++#ifdef __GLIBC__
++	/* It seems you can't print 64-bit longs on glibc */
++	
++	len=snprintf(buffer,PACKET_SIZE+1,"1\n%08lx%08lx %s\n",
++		     (unsigned long) (code->code>>32),
++		     (unsigned long) (code->code&0xFFFFFFFF),
++		     code->name);
++#else
++	len=snprintf(buffer,PACKET_SIZE,"1\n%016llx %s\n",
++		     code->code,
++		     code->name);
++#endif
++	if(len==PACKET_SIZE+1)
++	{
++		len=sprintf(buffer,"1\ncode_too_long\n");
++	}
++	if(write_socket(fd,buffer,len)<len) return(0);
++	return(write_socket_len(fd,protocol_string[P_END]));
++}
++
++int list(int fd,char *message,char *arguments)
++{
++	struct ir_remote *remote;
++	struct ir_ncode *code;
++
++	if(parse_rc(fd,message,arguments,&remote,&code,0)==0) return(0);
++
++	if(remote==NULL)
++	{
++		return(send_remote_list(fd,message));
++	}
++	if(code==NULL)
++	{
++		return(send_remote(fd,message,remote));
++	}
++	return(send_name(fd,message,code));
++}
++
++int send_once(int fd,char *message,char *arguments)
++{
++	return(send_core(fd,message,arguments,1));
++}
++
++int send_start(int fd,char *message,char *arguments)
++{
++	return(send_core(fd,message,arguments,0));
++}
++
++int send_core(int fd,char *message,char *arguments,int once)
++{
++	struct ir_remote *remote;
++	struct ir_ncode *code;
++	struct itimerval repeat_timer;
++	
++	if(hw->send_mode==0) return(send_error(fd,message,"hardware does not "
++					      "support sending\n"));
++	
++	if(parse_rc(fd,message,arguments,&remote,&code,2)==0) return(0);
++	
++	if(remote==NULL || code==NULL) return(1);
++	if(once)
++	{
++		if(remote==repeat_remote)
++		{
++			return(send_error(fd,message,"remote is repeating\n"));
++		}
++	}
++	else
++	{
++		if(repeat_remote!=NULL)
++		{
++			return(send_error(fd,message,"already repeating\n"));
++		}
++	}
++	if(remote->toggle_bit>0)
++		remote->repeat_state=
++		!remote->repeat_state;
++	if(!hw->send_func(remote,code))
++	{
++		return(send_error(fd,message,"transmission failed\n"));
++	}
++	if(once)
++	{
++		remote->repeat_countdown=remote->min_repeat;
++	}
++	else
++	{
++		/* you've been warned, now we have a limit */
++		remote->repeat_countdown=REPEAT_MAX;
++	}
++	if(remote->repeat_countdown>0)
++	{
++		repeat_remote=remote;
++		repeat_code=code;
++		repeat_timer.it_value.tv_sec=0;
++		repeat_timer.it_value.tv_usec=
++			remote->remaining_gap;
++		repeat_timer.it_interval.tv_sec=0;
++		repeat_timer.it_interval.tv_usec=0;
++		if(once)
++		{
++			repeat_message=strdup(message);
++			if(repeat_message==NULL)
++			{
++				repeat_remote=NULL;
++				repeat_code=NULL;
++				return(send_error(fd,message,
++						  "out of memory\n"));
++			}
++			repeat_fd=fd;
++		}
++		else if(!send_success(fd,message))
++		{
++			repeat_remote=NULL;
++			repeat_code=NULL;
++			return(0);
++		}
++		setitimer(ITIMER_REAL,&repeat_timer,NULL);
++		return(1);
++	}
++	else
++	{
++		return(send_success(fd,message));
++	}
++}
++
++int send_stop(int fd,char *message,char *arguments)
++{
++	struct ir_remote *remote;
++	struct ir_ncode *code;
++	struct itimerval repeat_timer;
++	
++	if(parse_rc(fd,message,arguments,&remote,&code,2)==0) return(0);
++	
++	if(remote==NULL || code==NULL) return(1);
++	if(repeat_remote && repeat_code &&
++	   strcasecmp(remote->name,repeat_remote->name)==0 && 
++	   strcasecmp(code->name,repeat_code->name)==0)
++	{
++		int done;
++
++		done=REPEAT_MAX-remote->repeat_countdown;
++		if(done<remote->min_repeat)
++		{
++			/* we still have some repeats to do */
++			remote->repeat_countdown=remote->min_repeat-done;
++			return(send_success(fd,message));
++		}
++		repeat_timer.it_value.tv_sec=0;
++		repeat_timer.it_value.tv_usec=0;
++		repeat_timer.it_interval.tv_sec=0;
++		repeat_timer.it_interval.tv_usec=0;
++		
++		setitimer(ITIMER_REAL,&repeat_timer,NULL);
++		
++		repeat_remote=NULL;
++		repeat_code=NULL;
++		/* clin!=0, so we don't have to deinit hardware */
++		alrm=0;
++		return(send_success(fd,message));
++	}
++	else
++	{
++		return(send_error(fd,message,"not repeating\n"));
++	}
++}
++
++int version(int fd,char *message,char *arguments)
++{
++	char buffer[PACKET_SIZE+1];
++
++	if(arguments!=NULL)
++	{
++		return(send_error(fd,message,"bad send packet\n"));
++	}
++	sprintf(buffer,"1\n%s\n",VERSION);
++	if(!(write_socket_len(fd,protocol_string[P_BEGIN]) &&
++	     write_socket_len(fd,message) &&
++	     write_socket_len(fd,protocol_string[P_SUCCESS]) &&
++	     write_socket_len(fd,protocol_string[P_DATA]) &&
++	     write_socket_len(fd,buffer) &&
++	     write_socket_len(fd,protocol_string[P_END]))) return(0);
++	return(1);
++}
++
++int get_command(int fd)
++{
++	int length;
++	char buffer[PACKET_SIZE+1],backup[PACKET_SIZE+1];
++	char *end;
++	int packet_length,i;
++	char *directive;
++
++	length=read_timeout(fd,buffer,PACKET_SIZE,0);
++	packet_length=0;
++	while(length>packet_length)
++	{
++		buffer[length]=0;
++		end=strchr(buffer,'\n');
++		if(end==NULL)
++		{
++			logprintf(LOG_ERR,"bad send packet: \"%s\"",buffer);
++			/* remove clients that behave badly */
++			return(0);
++		}
++		end[0]=0;
++		LOGPRINTF(1,"received command: \"%s\"",buffer);
++		packet_length=strlen(buffer)+1;
++
++		strcpy(backup,buffer);strcat(backup,"\n");
++		directive=strtok(buffer,WHITE_SPACE);
++		if(directive==NULL)
++		{
++			if(!send_error(fd,backup,"bad send packet\n"))
++				return(0);
++			goto skip;
++		}
++		for(i=0;directives[i].name!=NULL;i++)
++		{
++			if(strcasecmp(directive,directives[i].name)==0)
++			{
++				if(!directives[i].
++				   function(fd,backup,strtok(NULL,"")))
++					return(0);
++				goto skip;
++			}
++		}
++		
++		if(!send_error(fd,backup,"unknown directive: \"%s\"\n",
++			       directive))
++			return(0);
++	skip:
++		if(length>packet_length)
++		{
++			int new_length;
++
++			memmove(buffer,buffer+packet_length,
++				length-packet_length+1);
++			if(strchr(buffer,'\n')==NULL)
++			{
++				new_length=read_timeout(fd,buffer+length-
++							packet_length,
++							PACKET_SIZE-
++							(length-
++							 packet_length),5);
++				if(new_length>0)
++				{
++					length=length-packet_length+new_length;
++				}
++				else
++				{
++					length=new_length;
++				}
++			}
++			else
++			{
++				length-=packet_length;
++			}
++			packet_length=0;
++		}
++	}
++
++	if(length==0) /* EOF: connection closed by client */
++	{
++		return(0);
++	}
++	return(1);
++}
++
++void free_old_remotes()
++{
++	struct ir_remote *scan_remotes,*found;
++	struct ir_ncode *code;
++
++	if(last_remote!=NULL)
++	{
++		scan_remotes=free_remotes;
++		while(scan_remotes!=NULL)
++		{
++			if(last_remote==scan_remotes)
++			{
++				found=get_ir_remote(remotes,last_remote->name);
++				if(found!=NULL)
++				{
++					code=get_ir_code(found,last_remote->last_code->name);
++					if(code!=NULL)
++					{
++						found->reps=last_remote->reps;
++						found->repeat_state=last_remote->repeat_state;
++						found->remaining_gap=last_remote->remaining_gap;
++						last_remote=found;
++						last_remote->last_code=code;
++					}
++				}
++				break;
++			}
++			scan_remotes=scan_remotes->next;
++		}
++		if(scan_remotes==NULL) last_remote=NULL;
++	}
++	/* check if last config is still needed */
++	found=NULL;
++	if(repeat_remote!=NULL)
++	{
++		scan_remotes=free_remotes;
++		while(scan_remotes!=NULL)
++		{
++			if(repeat_remote==scan_remotes)
++			{
++				found=repeat_remote;
++				break;
++			}
++			scan_remotes=scan_remotes->next;
++		}
++		if(found!=NULL)
++		{
++			found=get_ir_remote(remotes,repeat_remote->name);
++			if(found!=NULL)
++			{
++				code=get_ir_code(found,repeat_code->name);
++				if(code!=NULL)
++				{
++					struct itimerval repeat_timer;
++
++					repeat_timer.it_value.tv_sec=0;
++					repeat_timer.it_value.tv_usec=0;
++					repeat_timer.it_interval.tv_sec=0;
++					repeat_timer.it_interval.tv_usec=0;
++
++					found->last_code=code;
++					found->last_send=repeat_remote->last_send;
++					found->repeat_state=repeat_remote->repeat_state;
++					found->remaining_gap=repeat_remote->remaining_gap;
++
++					setitimer(ITIMER_REAL,&repeat_timer,&repeat_timer);
++					/* "atomic" (shouldn't be necessary any more) */
++					repeat_remote=found;
++					repeat_code=code;
++					/* end "atomic" */
++					setitimer(ITIMER_REAL,&repeat_timer,NULL);
++					found=NULL;
++				}
++			}
++			else
++			{
++				found=repeat_remote;
++			}
++		}
++	}
++	if(found==NULL && decoding!=free_remotes)
++	{
++		free_config(free_remotes);
++		free_remotes=NULL;
++	}
++	else
++	{
++		LOGPRINTF(1,"free_remotes still in use");
++	}
++}
++
++
++int waitfordata(unsigned long maxusec)
++{
++	fd_set fds;
++	int maxfd,i,ret,reconnect;
++	struct timeval tv,start,now;
++
++	while(1)
++	{
++		do{
++				/* handle signals */
++			if(term)
++			{
++				dosigterm(termsig);
++				/* never reached */
++			}
++			if(hup)
++			{
++				dosighup(SIGHUP);
++				hup=0;
++			}
++			if(alrm)
++			{
++				dosigalrm(SIGALRM);
++				alrm=0;
++			}
++			FD_ZERO(&fds);
++			FD_SET(sockfd,&fds);
++
++			maxfd=sockfd;
++			if(listen_tcpip)
++			{
++				FD_SET(sockinet,&fds);
++				maxfd=max(maxfd,sockinet);
++			}
++			if(clin>0 && hw->rec_mode!=0)
++			{
++				FD_SET(hw->fd,&fds);
++				maxfd=max(maxfd,hw->fd);
++			}
++			
++			for(i=0;i<clin;i++)
++			{
++				/* Ignore this client until codes have been
++				   sent and it will get an answer. Otherwise
++				   we could mix up answer packets and send
++				   them back in the wrong order.*/
++				if(clis[i]!=repeat_fd)
++				{
++					FD_SET(clis[i],&fds);
++					maxfd=max(maxfd,clis[i]);
++				}
++			}
++			timerclear(&tv);
++			reconnect=0;
++			for(i=0;i<peern;i++)
++			{
++				if(peers[i]->socket!=-1)
++				{
++					FD_SET(peers[i]->socket,&fds);
++					maxfd=max(maxfd,peers[i]->socket);
++				}
++				else
++				{
++					if(timerisset(&tv))
++					{
++						if(timercmp(&tv,
++							    &peers[i]->reconnect,
++							    >))
++						{
++							tv=peers[i]->reconnect;
++						}
++					}
++					else
++					{
++						tv=peers[i]->reconnect;
++					}
++				}
++			}
++			if(timerisset(&tv))
++			{
++				gettimeofday(&now,NULL);
++				if(timercmp(&now,&tv,>=))
++				{
++					timerclear(&tv);
++				}
++				else
++				{
++					timersub(&tv,&now,&start);
++					tv=start;
++				}
++				reconnect=1;
++			}
++			gettimeofday(&start,NULL);
++			if(maxusec>0)
++			{
++				tv.tv_sec=0;
++				tv.tv_usec=maxusec;
++			}
++			if(timerisset(&tv) || reconnect)
++			{
++				ret=select(maxfd+1,&fds,NULL,NULL,&tv);
++			}
++			else
++			{
++				ret=select(maxfd+1,&fds,NULL,NULL,NULL);
++			}
++			gettimeofday(&now,NULL);
++			if(free_remotes!=NULL)
++			{
++				free_old_remotes();
++			}
++			if(maxusec>0)
++			{
++				if(ret==0)
++				{
++					return(0);
++				}
++				if(time_elapsed(&start,&now)>=maxusec)
++				{
++					return(0);
++				}
++				else
++				{
++					maxusec-=time_elapsed(&start,&now);
++				}
++				
++			}
++			if(reconnect)
++			{
++				connect_to_peers();
++			}
++		}
++		while(ret==-1 && errno==EINTR);
++		if(ret==-1)
++		{
++			logprintf(LOG_ERR,"select() failed");
++			logperror(LOG_ERR,NULL);
++			continue;
++		}
++		
++logprintf(LOG_INFO, "foo");
++
++		for(i=0;i<clin;i++)
++		{
++			if(FD_ISSET(clis[i],&fds))
++			{
++				FD_CLR(clis[i],&fds);
++				if(get_command(clis[i])==0)
++				{
++					remove_client(clis[i]);
++					i--;
++				}
++			}
++		}
++		for(i=0;i<peern;i++)
++		{
++			if(peers[i]->socket!=-1 &&
++			   FD_ISSET(peers[i]->socket,&fds))
++			{
++				if(get_peer_message(peers[i])==0)
++				{
++					shutdown(peers[i]->socket,2);
++					close(peers[i]->socket);
++					peers[i]->socket=-1;
++					peers[i]->connection_failure = 1;
++					gettimeofday(&peers[i]->reconnect,NULL);
++					peers[i]->reconnect.tv_sec+=5;
++				}
++			}
++		}
++
++		if(FD_ISSET(sockfd,&fds))
++		{
++			LOGPRINTF(1,"registering local client");
++			add_client(sockfd);
++		}
++		if(listen_tcpip && FD_ISSET(sockinet,&fds))
++		{
++			LOGPRINTF(1,"registering inet client");
++			add_client(sockinet);
++		}
++                if(clin>0 && hw->rec_mode!=0 && FD_ISSET(hw->fd,&fds))
++                {
++                        /* we will read later */
++			return(1);
++                }
++	}
++}
++
++void loop()
++{
++	char *message;
++	int len,i;
++	
++	logprintf(LOG_NOTICE,"lircd(%s) ready",LIRC_DRIVER);
++	while(1)
++	{
++		(void) waitfordata(0);
++		if(!hw->rec_func) continue;
++		message=hw->rec_func(remotes);
++		
++		if(message!=NULL)
++		{
++			len=strlen(message);
++			
++			for (i=0; i<clin; i++)
++			{
++				LOGPRINTF(1,"writing to client %d",i);
++				if(write_socket(clis[i],message,len)<len)
++				{
++					remove_client(clis[i]);
++					i--;
++				}			
++			}
++		}
++	}
++}
++
++int main(int argc,char **argv)
++{
++	struct sigaction act;
++	int nodaemon=0;
++	mode_t permission=S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH;
++
++	while(1)
++	{
++		int c;
++		static struct option long_options[] =
++		{
++			{"help",no_argument,NULL,'h'},
++			{"version",no_argument,NULL,'v'},
++			{"nodaemon",no_argument,NULL,'n'},
++			{"permission",required_argument,NULL,'p'},
++			{"device",required_argument,NULL,'d'},
++			{"listen",optional_argument,NULL,'l'},
++			{"connect",required_argument,NULL,'c'},
++			{"driver",required_argument,NULL,'D'},
++			{0, 0, 0, 0}
++		};
++		c = getopt_long(argc,argv,"hvnp:d:l::c:D:",long_options,NULL);
++		if(c==-1)
++			break;
++		switch (c)
++		{
++		case 'h':
++			printf("Usage: %s [options] [config-file]\n",progname);
++			printf("\t -h --help\t\t\tdisplay this message\n");
++			printf("\t -v --version\t\t\tdisplay version\n");
++			printf("\t -n --nodaemon\t\t\tdon't fork to background\n");
++			printf("\t -p --permission=mode\t\tfile permissions for " LIRCD "\n");
++			printf("\t -d --device=device\t\tread from given device\n");
++			printf("\t -D --driver=driver\t\tuse a specific hardware driver\n");
++			printf("\t -l --listen[=port]\t\tlisten for network connections on port\n");
++			printf("\t -c --connect=host[:port]\t\tconnect to remote lircd server\n");
++			return(EXIT_SUCCESS);
++		case 'v':
++			printf("%s\n",progname);
++			return(EXIT_SUCCESS);
++		case 'n':
++			nodaemon=1;
++			break;
++		case 'p':
++			if(oatoi(optarg)==-1)
++			{
++				fprintf(stderr,"%s: invalid mode\n",progname);
++				return(EXIT_FAILURE);
++			}
++			permission=oatoi(optarg);
++			break;
++		case 'd':
++			hw->device=optarg;
++			break;
++		case 'l':
++			listen_tcpip=1;
++			if(optarg)
++			{
++				long p;
++				char *endptr;
++				
++				p=strtol(optarg,&endptr,10);
++				if(!*optarg || *endptr || p<1 || p>USHRT_MAX)
++				{
++					fprintf(stderr,
++						"%s: bad port number \"%s\"\n",
++						progname,optarg);
++					return(EXIT_FAILURE);
++				}
++				port=(unsigned short int) p;
++			}
++			else
++			{
++				port=LIRC_INET_PORT;
++			}
++			break;
++		case 'c':
++			if(!add_peer_connection(optarg))
++				return(EXIT_FAILURE);
++			break;
++		case 'D': {
++			struct hardware **i;
++			for(i=hw_list; *i; i++)
++				if (!strcasecmp((*i)->name, optarg)) break;
++			if (!*i) {
++				printf("Hardware type `%s' not supported.\n"
++				       "Supported types:\n", optarg);
++				for(i=hw_list; *i; i++)
++					printf("\t%s\n", (*i)->name);
++				return(EXIT_FAILURE);
++			}
++			break;
++			hw=*i;
++		}
++		default:
++			printf("Usage: %s [options] [config-file]\n",progname);
++			return(EXIT_FAILURE);
++		}
++	}
++	if(optind==argc-1)
++	{
++	        configfile=argv[optind];
++	}
++	else if(optind!=argc)
++	{
++		fprintf(stderr,"%s: invalid argument count\n",progname);
++		return(EXIT_FAILURE);
++	}
++	
++#ifdef LIRC_NETWORK_ONLY
++	if(peern==0)
++	{
++		fprintf(stderr,"%s: there's no hardware I can use and "
++			"no peers are specified\n",progname);
++		return(EXIT_FAILURE);
++	}
++#endif
++	signal(SIGPIPE,SIG_IGN);
++	
++	start_server(permission,nodaemon);
++	
++	act.sa_handler=sigterm;
++	sigfillset(&act.sa_mask);
++	act.sa_flags=SA_RESTART;           /* don't fiddle with EINTR */
++	sigaction(SIGTERM,&act,NULL);
++	sigaction(SIGINT,&act,NULL);
++	
++	act.sa_handler=sigalrm;
++	sigemptyset(&act.sa_mask);
++	act.sa_flags=SA_RESTART;           /* don't fiddle with EINTR */
++	sigaction(SIGALRM,&act,NULL);
++	
++	remotes=NULL;
++	config();                          /* read config file */
++	
++	act.sa_handler=sighup;
++	sigemptyset(&act.sa_mask);
++	act.sa_flags=SA_RESTART;           /* don't fiddle with EINTR */
++	sigaction(SIGHUP,&act,NULL);
++	
++#ifdef DAEMONIZE
++	/* ready to accept connections */
++	if(!nodaemon) daemonize();
++#endif
++	
++#if defined(SIM_SEND) && !defined(DAEMONIZE)
++	{
++		struct ir_remote *r;
++		struct ir_ncode *c;
++		
++		if(hw->init_func)
++		{
++			if(!hw->init_func()) dosigterm(SIGTERM);
++		}
++		
++		printf("space 1000000\n");
++		r=remotes;
++		while(r!=NULL)
++		{
++			c=r->codes;
++			while(c->name!=NULL)
++			{
++				repeat_remote=NULL;
++				repeat_code=NULL;
++				hw->send_func(r,c);
++				repeat_remote=r;
++				repeat_code=c;
++				hw->send_func(r,c);
++				hw->send_func(r,c);
++				hw->send_func(r,c);
++				hw->send_func(r,c);
++				c++;
++			}
++			r=r->next;
++		}
++		fflush(stdout);
++		if(hw->deinit_func) hw->deinit_func();
++	}
++	fprintf(stderr,"Ready.\n");
++	dosigterm(SIGTERM);
++#endif
++	loop();
++
++	/* never reached */
++	return(EXIT_SUCCESS); 
++}
+diff -Nur lirc-0.6.3.orig/daemons/receive.c lirc-0.6.3/daemons/receive.c
+--- lirc-0.6.3.orig/daemons/receive.c	Sun Sep  3 16:34:45 2000
++++ lirc-0.6.3/daemons/receive.c	Sat Jul 21 15:15:23 2001
+@@ -18,9 +18,9 @@
+ #include "lircd.h"
+ #include "receive.h"
+ 
+-lirc_t readdata(void);
++#define readdata() hw->readdata
+ 
+-extern struct hardware hw;
++extern struct hardware *hw;
+ extern struct ir_remote *last_remote;
+ 
+ struct rbuf rec_buffer;
+@@ -76,15 +76,15 @@
+ {
+ 	int move,i;
+ 
+-	if(hw.rec_mode==LIRC_MODE_LIRCCODE)
++	if(hw->rec_mode==LIRC_MODE_LIRCCODE)
+ 	{
+ 		unsigned char buffer[sizeof(ir_code)];
+ 		size_t count;
+ 		
+-		count=hw.code_length/CHAR_BIT;
+-		if(hw.code_length%CHAR_BIT) count++;
++		count=hw->code_length/CHAR_BIT;
++		if(hw->code_length%CHAR_BIT) count++;
+ 		
+-		if(read(hw.fd,buffer,count)!=count)
++		if(read(hw->fd,buffer,count)!=count)
+ 		{
+ 			logprintf(LOG_ERR,"reading in mode "
+ 				  "LIRC_MODE_LIRCCODE failed");
+@@ -96,11 +96,11 @@
+ 			((ir_code) buffer[i]);
+ 		}
+ 	}
+-	else if(hw.rec_mode==LIRC_MODE_CODE)
++	else if(hw->rec_mode==LIRC_MODE_CODE)
+ 	{
+ 		unsigned char c;
+ 		
+-		if(read(hw.fd,&c,1)!=1)
++		if(read(hw->fd,&c,1)!=1)
+ 		{
+ 			logprintf(LOG_ERR,"reading in mode LIRC_MODE_CODE "
+ 				  "failed");
+@@ -630,9 +630,9 @@
+ 	code=pre=post=0;
+ 	header=0;
+ 
+-	if(hw.rec_mode==LIRC_MODE_MODE2 ||
+-	   hw.rec_mode==LIRC_MODE_PULSE ||
+-	   hw.rec_mode==LIRC_MODE_RAW)
++	if(hw->rec_mode==LIRC_MODE_MODE2 ||
++	   hw->rec_mode==LIRC_MODE_PULSE ||
++	   hw->rec_mode==LIRC_MODE_RAW)
+ 	{
+ 		rewind_rec_buffer();
+ 		rec_buffer.is_biphase=is_biphase(remote) ? 1:0;
+@@ -713,8 +713,8 @@
+ 		struct ir_ncode *codes,*found;
+ 		int i;
+ 
+-		if(hw.rec_mode==LIRC_MODE_CODE ||
+-		   hw.rec_mode==LIRC_MODE_LIRCCODE)
++		if(hw->rec_mode==LIRC_MODE_CODE ||
++		   hw->rec_mode==LIRC_MODE_LIRCCODE)
+ 			return(0);
+ 
+ 		codes=remote->codes;
+@@ -755,8 +755,8 @@
+ 	}
+ 	else
+ 	{
+-		if(hw.rec_mode==LIRC_MODE_CODE ||
+-		   hw.rec_mode==LIRC_MODE_LIRCCODE)
++		if(hw->rec_mode==LIRC_MODE_CODE ||
++		   hw->rec_mode==LIRC_MODE_LIRCCODE)
+ 		{
+ 			int i;
+  			lirc_t sum;
+@@ -767,12 +767,12 @@
+ #                       else
+ 			LOGPRINTF(1,"decoded: %lx",rec_buffer.decoded);
+ #                       endif
+-			if((hw.rec_mode==LIRC_MODE_CODE &&
+-			    hw.code_length<remote->pre_data_bits
++			if((hw->rec_mode==LIRC_MODE_CODE &&
++			    hw->code_length<remote->pre_data_bits
+ 			    +remote->bits+remote->post_data_bits)
+ 			   ||
+-			   (hw.rec_mode==LIRC_MODE_LIRCCODE && 
+-			    hw.code_length!=remote->pre_data_bits
++			   (hw->rec_mode==LIRC_MODE_LIRCCODE && 
++			    hw->code_length!=remote->pre_data_bits
+ 			    +remote->bits+remote->post_data_bits))
+ 			{
+ 				return(0);
