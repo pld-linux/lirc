@@ -34,14 +34,15 @@ diff -Nur lirc-0.6.3.orig/drivers/lirc_parallel/lirc_parallel.c lirc-0.6.3/drive
  /***********************************************************************
   *************************   Interne Funktionen  ***********************
   ***********************************************************************/
-@@ -853,9 +860,18 @@
+@@ -853,9 +860,19 @@
  	parport_release(ppdevice);
   skip_init:
  #endif
 +#ifdef CONFIG_DEVFS_FS
 +	lirc_devfs = devfs_register(NULL, "lirc/parallel", DEVFS_FL_DEFAULT,
-+				    major, 0, S_IFCHR | S_IRUSR | S_IWUSR,
-+				    &lirc_fops, NULL);
++				    LIRC_MAJOR, 0,
++				    S_IFCHR | S_IRUSR | S_IWUSR, &lirc_fops,
++				    NULL);
 +	if (lirc_devfs == NULL) {
 +		printk(KERN_NOTICE LIRC_DRIVER_NAME
 +		       ": devfs_register() failed\n");
@@ -53,7 +54,7 @@ diff -Nur lirc-0.6.3.orig/drivers/lirc_parallel/lirc_parallel.c lirc-0.6.3/drive
  #ifdef KERNEL_2_2
  		parport_unregister_device(ppdevice);
  #else
-@@ -875,6 +891,10 @@
+@@ -875,6 +892,10 @@
  #else
  	release_region(port,LIRC_PORT_LEN);
  #endif
