@@ -1,17 +1,20 @@
 #
 # Conditional build:
-# _without_dist_kernel	- without sources of distribution kernel
-# _without_modules	- build only library+programs, no kernel modules
-# _without_x		- without XFree support
+%bcond_without	dist_kernel	# without sources of distribution kernel
+%bcond_without	kernel		# don't build kernel modules, only library+programs
+%bcond_without	userspace	# build only packages with kernel modules
+%bcond_without	svga		# without svgalib-based utility
+%bcond_without	x		# without X11-based utilitied
 #
+%ifnarch %{ix86} alpha
+%undefine	with_svga
+%endif
 %define		_kernel24	%(echo %{_kernel_ver} | grep -q '2\.[012]\.' ; echo $?)
-# needed because of release macro expansion
-
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl):	Serwery do zdalnej kontroli Linuksa za pomoc± podczerwieni
 Name:		lirc
 Version:	0.6.6
-%define _rel	1
+%define _rel	2
 Release:	%{_rel}
 License:	GPL
 Group:		Daemons
@@ -31,17 +34,21 @@ Patch5:		%{name}-makpc.patch
 Patch6:		%{name}-udp.patch
 Patch7:		http://delvare.free.fr/i2c/other/%{name}-0.6.6-i2c-2.8.0.patch
 URL:		http://www.lirc.org/
-%{!?_without_x:BuildRequires:	XFree86-devel}
+%{?with_x:BuildRequires:	XFree86-devel}
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
-%{!?_without_dist_kernel:BuildRequires:	kernel-headers}
-%{!?_without_dist_kernel:%{!?_without_modules:BuildRequires:	kernel-source}}
-BuildRequires:	%{kgcc_package}
+%if %{with dist_kernel} && %{with kernel}
+BuildRequires:	i2c-devel
+BuildRequires:	kernel-headers
+BuildRequires:	kernel-source
+%endif
+%{?with_kernel:BuildRequires:	%{kgcc_package}}
 BuildRequires:	rpmbuild(macros) >= 1.118
+%{?with_svga:BuildRequires:	svgalib-devel}
 Requires(post,preun):	/sbin/chkconfig
+Requires:	%{name}-libs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-Conflicts:	%{name}-libs < 0.6.3-3
 
 %description
 LIRC is a package that allows you to decode and send infra-red signals
@@ -52,12 +59,79 @@ LIRC to program pozwalaj±cy na dekodowanie nadchodz±cych oraz
 wysy³anie sygna³ów w podczerwieni za pomoc± wielu (ale nie wszystkich)
 popularnych urz±dzeñ do zdalnej kontroli
 
+%package X11
+Summary:	Linux Infrared Remote Control - X11 utilities
+Summary(pl):	Zdalna kontrola Linuksa za pomoc± podczerwieni - narzêdzia X11
+Group:		X11/Applications
+Requires:	%{name}-libs = %{version}
+
+%description X11
+Linux Infrared Remote Control - X11 utilities.
+
+%description X11 -l pl
+Zdalna kontrola Linuksa za pomoc± podczerwieni - narzêdzia X11.
+
+%package svga
+Summary:	Linux Infrared Remote Control - svgalib utilities
+Summary(pl):	Zdalna kontrola Linuksa za pomoc± podczerwieni - narzêdzia svgalib
+Group:		Applications
+Requires:	%{name}-libs = %{version}
+
+%description svga
+Linux Infrared Remote Control - svgalib-based utilities.
+
+%description svga -l pl
+Zdalna kontrola Linuksa za pomoc± podczerwieni - narzêdzia oparte na
+svgalibie.
+
+%package libs
+Summary:	LIRC libraries
+Summary(pl):	Biblioteki LIRC
+Group:		Libraries
+Conflicts:	lirc < 0.6.3-3
+# didn't use /tmp/.lircd
+
+%description libs
+This package provides the libraries necessary to run lirc client
+programs.
+
+%description libs -l pl
+Ten pakiet zawiera biblioteki niezbêdne do dzia³ania klientów LIRC.
+
+%package devel
+Summary:	Header files for LIRC development
+Summary(pl):	Pliki nag³ówkowe do tworzenia programów z obs³ug± LIRC
+Group:		Development/Libraries
+Requires:	%{name}-libs = %{version}
+
+%description devel
+This package provides the files necessary to develop LIRC-based
+programs.
+
+%description devel -l pl
+Ten pakiet zawiera pliki niezbêdne do tworzenia programów opartych na
+LIRC.
+
+%package static
+Summary:	Static library for LIRC development
+Summary(pl):	Biblioteka statyczna LIRC
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}
+
+%description static
+The files necessary for development of statically-linked lirc-based
+programs.
+
+%description static -l pl
+Pliki potrzebne do tworzenia ³±czonych statycznie programów opartych
+na LIRC.
+
 %package -n kernel-char-lirc-dev
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-%{!?_without_dist_kernel:%requires_releq_kernel_up}
+%{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
@@ -83,7 +157,7 @@ Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-%{!?_without_dist_kernel:%requires_releq_kernel_up}
+%{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
@@ -110,7 +184,7 @@ Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-%{!?_without_dist_kernel:%requires_releq_kernel_up}
+%{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
@@ -137,7 +211,7 @@ Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-%{!?_without_dist_kernel:%requires_releq_kernel_up}
+%{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
@@ -163,7 +237,7 @@ Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-%{!?_without_dist_kernel:%requires_releq_kernel_up}
+%{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
@@ -189,7 +263,7 @@ Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-%{!?_without_dist_kernel:%requires_releq_kernel_up}
+%{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
@@ -215,7 +289,7 @@ Summary:	SMP kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-%{!?_without_dist_kernel:%requires_releq_kernel_smp}
+%{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
@@ -241,7 +315,7 @@ Summary:	SMP kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-%{!?_without_dist_kernel:%requires_releq_kernel_smp}
+%{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
@@ -268,7 +342,7 @@ Summary:	SMP kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-%{!?_without_dist_kernel:%requires_releq_kernel_smp}
+%{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
@@ -295,7 +369,7 @@ Summary:	SMP kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-%{!?_without_dist_kernel:%requires_releq_kernel_smp}
+%{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
@@ -321,7 +395,7 @@ Summary:	SMP kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-%{!?_without_dist_kernel:%requires_releq_kernel_smp}
+%{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
@@ -347,7 +421,7 @@ Summary:	SMP kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-%{!?_without_dist_kernel:%requires_releq_kernel_smp}
+%{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
@@ -368,73 +442,25 @@ pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
 
 Modu³ lirc_sir.
 
-%package X11
-Summary:	Linux Infrared Remote Control - X11 utilities
-Summary(pl):	Zdalna kontrola Linuksa za pomoc± podczerwieni - narzêdzia X11
-Group:		X11/Applications
-
-%description X11
-Linux Infrared Remote Control - X11 utilities.
-
-%description X11 -l pl
-Zdalna kontrola Linuksa za pomoc± podczerwieni - narzêdzia X11.
-
-%package libs
-Summary:	LIRC libraries
-Summary(pl):	Biblioteki LIRC
-Group:		Libraries
-Conflicts:	%{name} < 0.6.3-3
-# didn't use /tmp/.lircd
-
-%description libs
-This package provides the libraries necessary to run lirc client
-programs.
-
-%description libs -l pl
-Ten pakiet zawiera biblioteki niezbêdne do dzia³ania klientów LIRC.
-
-%package devel
-Summary:	Header and library files for LIRC development
-Summary(pl):	Pliki nag³ówkowe i biblioteki dla tworzenia programów z obs³ug± LIRC
-Group:		Development/Libraries
-Requires:	%{name}-libs = %{version}
-
-%description devel
-This package provides the files necessary to develop LIRC-based
-programs.
-
-%description devel -l pl
-Ten pakiet zawiera pliki niezbêdne do tworzenia programów opartych na
-LIRC.
-
-%package static
-Summary:	Static library for LIRC development
-Summary(pl):	Biblioteka statyczna LIRC
-Group:		Development/Libraries
-Requires:	%{name}-devel = %{version}
-
-%description static
-The files necessary for development of statically-linked lirc-based
-programs.
-
-%description static -l pl
-Pliki potrzebne do tworzenia ³±czonych statycznie programów opartych
-na LIRC.
-
 %prep
 %setup -q -a 1
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%if %{without svga}
 %patch3 -p1
+%endif
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%{!?_without_dist_kernel:%patch7 -p1}
+%if %{with kernel}
+if grep -qs 'I2C_VERSION.*"2\.8\.' %{_kernelsrcdir}/include/linux/i2c.h ; then
+%patch7 -p1
+fi
+%endif
 
 %build
 echo '#' > drivers/Makefile.am
-rm -f missing
 %{__libtoolize}
 %{__aclocal}
 %{__automake}
@@ -443,11 +469,14 @@ rm -f missing
 %configure \
 	--with-driver=any \
 	--with-kerneldir=%{_kernelsrcdir} \
-	%{!?_without_x:--with-x }\
+	%{?with_x:--with-x} \
 	--with-port=0x2f8 \
 	--with-irq=3 \
 	--without-soft-carrier
 %{__make}
+
+%if %{with kernel}
+cd drivers
 
 %if %{_kernel24}
 # 2.4 drivers
@@ -458,9 +487,6 @@ LIRC_SYMTAB="lirc_dev"
 LIRC_NORMAL="lirc_serial lirc_sir"
 LIRC_SYMTAB=""
 %endif
-
-%if 0%{!?_without_modules:1}
-cd drivers
 
 # lirc_parallel is not smp safe
 
@@ -508,19 +534,19 @@ fi
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_bindir}
-install -d $RPM_BUILD_ROOT/dev
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,sysconfig}
-install -d $RPM_BUILD_ROOT%{_aclocaldir}
-install -d $RPM_BUILD_ROOT%{_localstatedir}/log
-%{__make} install DESTDIR=$RPM_BUILD_ROOT \
-	sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir}
+install -d $RPM_BUILD_ROOT{%{_bindir},%{_aclocaldir},/dev,/var/log} \
+	$RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig}
 
-%if 0%{!?_without_modules:1}
+%if %{with kernel}
 install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}{,smp}/misc
-cp -f drivers/*.o $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
-cp -f drivers/*/*.o $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/misc
+install drivers/*.o $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
+install drivers/*/*.o $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/misc
 %endif
+
+%if %{with userspace}
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT \
+	sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir}
 
 cat>$RPM_BUILD_ROOT%{_sysconfdir}/lircd.conf<<END
 #
@@ -530,11 +556,12 @@ cat>$RPM_BUILD_ROOT%{_sysconfdir}/lircd.conf<<END
 END
 cp -f $RPM_BUILD_ROOT%{_sysconfdir}/lirc{,m}d.conf
 install contrib/*.m4 $RPM_BUILD_ROOT%{_aclocaldir}
-:> $RPM_BUILD_ROOT%{_localstatedir}/log/lircd
+:> $RPM_BUILD_ROOT/var/log/lircd
 
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/lircd
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/lircd
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/rc.d/init.d/lircmd
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -685,10 +712,12 @@ fi
 %postun -n kernel-smp-char-lirc-sir
 %depmod %{_kernel_ver}smp
 
+%if %{with userspace}
 %files
 %defattr(644,root,root,755)
+# XXX: are jpegs in docs (remotes) a good idea?
 %doc ANNOUNCE AUTHORS NEWS README TODO ChangeLog
-%doc contrib/lircrc doc/* remotes
+%doc contrib/lircrc doc/{html,images,lirc.css} remotes
 %attr(755,root,root) %{_bindir}/ir[!x]*
 %attr(755,root,root) %{_bindir}/mode2
 %attr(755,root,root) %{_bindir}/rc
@@ -696,10 +725,46 @@ fi
 %attr(754,root,root) /etc/rc.d/init.d/*
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/sysconfig/*
 %config(noreplace) %{_sysconfdir}/*.conf
-%{_mandir}/man?/*
-%ghost %attr(600,root,root) %{_localstatedir}/log/lircd
+%{_mandir}/man1/ir[!x]*
+%{_mandir}/man1/[!isx]*
+%{_mandir}/man8/*
+%ghost %attr(600,root,root) /var/log/lircd
 
-%if 0%{!?_without_modules:%{_kernel24}}
+%if %{with x}
+%files X11
+%defattr(644,root,root,755)
+%doc doc/irxevent.keys
+%attr(755,root,root) %{_bindir}/irxevent
+%attr(755,root,root) %{_bindir}/xmode2
+%{_mandir}/man1/irxevent.1*
+%{_mandir}/man1/xmode2.1*
+%endif
+
+%if %{with svga}
+%files svga
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/smode2
+%{_mandir}/man1/smode2.1*
+%endif
+
+%files libs
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/lib*.so.*.*.*
+
+%files devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/*.so
+%{_libdir}/*.la
+%{_includedir}/lirc
+%{_aclocaldir}/*.m4
+
+%files static
+%defattr(644,root,root,755)
+%{_libdir}/lib*.a
+%endif
+
+%if %{with kernel}
+%if %{_kernel24}
 %files -n kernel-char-lirc-dev
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/*/lirc_dev*
@@ -713,7 +778,6 @@ fi
 /lib/modules/%{_kernel_ver}/*/lirc_i2c*
 %endif
 
-%if 0%{!?_without_modules:1}
 %files -n kernel-char-lirc-serial
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/*/lirc_serial*
@@ -725,9 +789,8 @@ fi
 %files -n kernel-char-lirc-sir
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/*/lirc_sir*
-%endif
 
-%if 0%{!?_without_modules:%{_kernel24}}
+%if %{_kernel24}
 %files -n kernel-smp-char-lirc-dev
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}smp/*/lirc_dev*
@@ -741,11 +804,9 @@ fi
 /lib/modules/%{_kernel_ver}smp/*/lirc_i2c*
 %endif
 
-%if 0%{!?_without_modules:1}
 %files -n kernel-smp-char-lirc-serial
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}smp/*/lirc_serial*
-%endif
 
 # currently not SMP-safe
 %if 0
@@ -754,30 +815,7 @@ fi
 /lib/modules/%{_kernel_ver}smp/*/lirc_parallel*
 %endif
 
-%if 0%{!?_without_modules:1}
 %files -n kernel-smp-char-lirc-sir
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}smp/*/lirc_sir*
 %endif
-
-%if %{!?_without_x:1}%{?_without_x:0}
-%files X11
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/irxevent
-%attr(755,root,root) %{_bindir}/xmode2
-%endif
-
-%files libs
-%defattr(644,root,root,755)
-%{_libdir}/*.so.*.*
-
-%files devel
-%defattr(644,root,root,755)
-%{_includedir}/lirc
-%{_aclocaldir}/*
-%attr(755,root,root) %{_libdir}/*.so
-%{_libdir}/*.la
-
-%files static
-%defattr(644,root,root,755)
-%{_libdir}/*.a
