@@ -9,7 +9,7 @@
 %define		_kernel24	%(echo %{_kernel_ver} | grep -qv '2\.4\.' ; echo $?)
 %define         _kernelsrcdir   /usr/src/linux-2.4
 Summary:	Linux Infrared Remote Control daemons
-Summary(pl):	Serwery do zdalnej kontroli Linuksa za pomoc± podczerwieni
+Summary(pl):	Serwery do zdalnego sterowania Linuksem za pomoc± podczerwieni
 Name:		lirc
 Version:	0.7.0
 %define _pre	pre7
@@ -52,11 +52,11 @@ of many (but not all) commonly used remote controls.
 %description -l pl
 LIRC to program pozwalaj±cy na dekodowanie nadchodz±cych oraz
 wysy³anie sygna³ów w podczerwieni za pomoc± wielu (ale nie wszystkich)
-popularnych urz±dzeñ do zdalnej kontroli
+popularnych urz±dzeñ do zdalnego sterowania.
 
 %package X11
 Summary:	Linux Infrared Remote Control - X11 utilities
-Summary(pl):	Zdalna kontrola Linuksa za pomoc± podczerwieni - narzêdzia X11
+Summary(pl):	Zdalne sterowanie Linuksem za pomoc± podczerwieni - narzêdzia X11
 Group:		X11/Applications
 Requires:	%{name}-libs = %{version}-%{_rel}
 
@@ -64,11 +64,11 @@ Requires:	%{name}-libs = %{version}-%{_rel}
 Linux Infrared Remote Control - X11 utilities.
 
 %description X11 -l pl
-Zdalna kontrola Linuksa za pomoc± podczerwieni - narzêdzia X11.
+Zdalne sterowanie Linuksem za pomoc± podczerwieni - narzêdzia X11.
 
 %package svga
 Summary:	Linux Infrared Remote Control - svgalib utilities
-Summary(pl):	Zdalna kontrola Linuksa za pomoc± podczerwieni - narzêdzia svgalib
+Summary(pl):	Zdalne sterowanie Linuksem za pomoc± podczerwieni - narzêdzia svgalib
 Group:		Applications
 Requires:	%{name}-libs = %{version}-%{_rel}
 
@@ -76,8 +76,8 @@ Requires:	%{name}-libs = %{version}-%{_rel}
 Linux Infrared Remote Control - svgalib-based utilities.
 
 %description svga -l pl
-Zdalna kontrola Linuksa za pomoc± podczerwieni - narzêdzia oparte na
-svgalibie.
+Zdalne sterowanie Linuksem za pomoc± podczerwieni - narzêdzia oparte
+na svgalibie.
 
 %package libs
 Summary:	LIRC libraries
