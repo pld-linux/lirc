@@ -4,7 +4,7 @@
 
 %define		_kernel24	%(echo %{_kernel_ver} | grep -q '2\.[012]\.' ; echo $?)
 # needed because of release macro expansion
-%define		_release	5
+%define		_release	6
 
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl):	Serwery do zdalnej kontroli Linuxa za pomoc± podczerwieni
@@ -524,8 +524,6 @@ install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/lircmd
 
 find remotes -type f '!' '(' -name '*.jpg' -o -name '*.gif' ')' -print0 |\
 	xargs -0 gzip -9nf
-gzip -9nf ANNOUNCE AUTHORS NEWS README TODO ChangeLog doc/irxevent.keys
-gzip -9nf contrib/lircrc
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -678,14 +676,14 @@ fi
 
 %files
 %defattr(644,root,root,755)
+%doc ANNOUNCE AUTHORS NEWS README TODO ChangeLog doc/irxevent.keys
+%doc contrib/lircrc doc/doc.html doc/html doc/images
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_sbindir}/*
 %attr(754,root,root) %{_sysconfdir}/rc.d/init.d/*
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/sysconfig/*
 %config(noreplace) %{_sysconfdir}/*.conf
 %ghost %attr(600,root,root) %{_localstatedir}/log/lircd
-%doc *.gz remotes contrib/*.gz
-%doc doc/*.gz doc/doc.html doc/html doc/images
 
 %if %{_kernel24}
 %files -n kernel-char-lirc-dev
