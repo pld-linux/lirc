@@ -1,0 +1,9 @@
+# Customized setings for lirc daemon
+
+# The hardware driver to use, run lircd --driver=? for a list
+
+DRIVER=default
+
+# The device node that communicates with the IR device.
+
+DEVICE=/dev/lirc
