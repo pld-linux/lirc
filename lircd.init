@@ -80,8 +80,11 @@ case "$1" in
         status lircd
         ;;
   restart)
+	test -f /var/lock/subsys/lircmd && RESTART_LIRCMD=yes
+	test -n "$RESTART_LIRCMD" && /etc/rc.d/init.d/lircmd stop
         $0 stop
         $0 start
+	test -n "$RESTART_LIRCMD" && /etc/rc.d/init.d/lircmd start
         ;;
   reload)
 	msg_reloading "Linux Infrared Remote Control daemon"
