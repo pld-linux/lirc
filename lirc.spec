@@ -156,7 +156,7 @@ Release:	%{_release}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
 Prereq:		/sbin/depmod
-%{!?_without_dist_kernel:%requires_releq_kernel-up}
+%{!?_without_dist_kernel:%requires_releq_kernel_up}
 Requires:	dev >= 2.8.0-3
 Requires:	%{name} = %{version}
 Obsoletes:	lirc-modules
