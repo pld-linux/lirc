@@ -1,6 +1,7 @@
 
 # Conditional build:
 # _without_dist_kernel	- without sources of distribution kernel
+# _with_kernel_2_2 - build for 2.2 kernel
 #
 
 %define		_kernel_ver %(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
@@ -30,7 +31,7 @@ Group:		Daemons
 Group(de):	Server
 Group(pl):	Serwery
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-%{!?_without_dist_kernel:BuildRequires:	kernel-source}
+%{!?_without_dist_kernel:BuildRequires:	kernel-source %{?_with_kernel_2_2: < 2.3.0}}
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
@@ -324,13 +325,35 @@ autoconf
 %if %{smp}
 SMP="-D__KERNEL_SMP=1"
 %endif
+
 cd drivers
-for drv in lirc_*; do
+LIRC_NORMAL="$(ls -d lirc_* | grep -v lirc_dev)"
+LIRC_SYMTAB="lirc_dev"
+
+# 2.4 only drivers
+%{?_with_kernel_2_2:rm -rf lirc_dev lirc_gpio lirc_i2c}
+
+# Not SMP safe
+%{?_with_smp:rm -rf lirc_parallel}
+
+if [ -n "$LIRC_NORMAL" ]; then
+  for drv in $LIRC_NORMAL; do
 	kgcc %{rpmcflags} -D__KERNEL__ -DMODULE -DHAVE_CONFIG_H $SMP \
 	-DIRCTL_DEV_MAJOR=61 -I.. -I%{_kernelsrcdir}/include \
 	-fno-strict-aliasing -fno-common \
 	-c -o $drv/$drv.o $drv/$drv.c
-done
+  done
+fi
+
+if [ -n "$LIRC_SYMTAB" ]; then
+  for drv in $LIRC_SYMTAB; do
+	kgcc %{rpmcflags} -D__KERNEL__ -DMODULE -DHAVE_CONFIG_H $SMP \
+	-DEXPORT_SYMTAB \
+	-DIRCTL_DEV_MAJOR=61 -I.. -I%{_kernelsrcdir}/include \
+	-fno-strict-aliasing -fno-common \
+	-c -o $drv/$drv.o $drv/$drv.c
+  done
+fi
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -467,25 +490,25 @@ fi
 %doc *.gz remotes contrib/*.gz
 %doc doc/*.gz doc/doc.html doc/html doc/images
 
-%files -n kernel%{smpstr}-char-lirc-dev
-%defattr(644,root,root,755)
-/lib/modules/*/*/lirc_dev*
+%{!?_with_kernel_2_2:%files -n kernel%{smpstr}-char-lirc-dev}
+%{!?_with_kernel_2_2:%defattr(644,root,root,755)}
+%{!?_with_kernel_2_2:/lib/modules/*/*/lirc_dev*}
 
-%files -n kernel%{smpstr}-char-lirc-gpio
-%defattr(644,root,root,755)
-/lib/modules/*/*/lirc_gpio*
+%{!?_with_kernel_2_2:%files -n kernel%{smpstr}-char-lirc-gpio}
+%{!?_with_kernel_2_2:%defattr(644,root,root,755)}
+%{!?_with_kernel_2_2:/lib/modules/*/*/lirc_gpio*}
 
-%files -n kernel%{smpstr}-char-lirc-i2c
-%defattr(644,root,root,755)
-/lib/modules/*/*/lirc_i2c*
+%{!?_with_kernel_2_2:%files -n kernel%{smpstr}-char-lirc-i2c}
+%{!?_with_kernel_2_2:%defattr(644,root,root,755)}
+%{!?_with_kernel_2_2:/lib/modules/*/*/lirc_i2c*}
 
 %files -n kernel%{smpstr}-char-lirc-serial
 %defattr(644,root,root,755)
 /lib/modules/*/*/lirc_serial*
 
-%files -n kernel%{smpstr}-char-lirc-parallel
-%defattr(644,root,root,755)
-/lib/modules/*/*/lirc_parallel*
+%{!?_with_smp:%files -n kernel%{smpstr}-char-lirc-parallel}
+%{!?_with_smp:%defattr(644,root,root,755)}
+%{!?_with_smp:/lib/modules/*/*/lirc_parallel*}
 
 %files -n kernel%{smpstr}-char-lirc-sir
 %defattr(644,root,root,755)
