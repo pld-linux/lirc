@@ -27,6 +27,7 @@ case "$1" in
 		OPTIONS=""
 		[ -n "$DRIVER" ] && OPTIONS="--driver=$DRIVER"
 		[ -n "$DEVICE" ] && OPTIONS="$OPTIONS --device=$DEVICE"
+		modprobe -s lirc > /dev/null 2>&1
                 daemon lircd $OPTIONS
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/lircd
