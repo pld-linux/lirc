@@ -7,7 +7,7 @@
 %define		_release	6
 
 Summary:	Linux Infrared Remote Control daemons
-Summary(pl):	Serwery do zdalnej kontroli Linuxa za pomoc± podczerwieni
+Summary(pl):	Serwery do zdalnej kontroli Linuksa za pomoc± podczerwieni
 Name:		lirc
 Version:	0.6.5
 Release:	%{_release}
@@ -46,7 +46,7 @@ popularnych urz±dzeñ do zdalnej kontroli
 
 %package -n kernel-char-lirc-dev
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
+Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_release}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
@@ -72,7 +72,7 @@ Modu³ lirc_dev.
 
 %package -n kernel-char-lirc-gpio
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
+Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_release}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
@@ -99,7 +99,7 @@ Modu³ lirc_gpio.
 
 %package -n kernel-char-lirc-i2c
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
+Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_release}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
@@ -126,7 +126,7 @@ Modu³ lirc_i2c
 
 %package -n kernel-char-lirc-serial
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
+Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_release}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
@@ -152,7 +152,7 @@ Modu³ lirc_serial dla urz±dzeñ pod³±czanych do serial portu.
 
 %package -n kernel-char-lirc-parallel
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
+Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_release}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
@@ -178,7 +178,7 @@ Modu³ lirc_parallel dla urz±dzeñ pod³±czanych do portu równoleg³ego.
 
 %package -n kernel-char-lirc-sir
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
+Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_release}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
@@ -204,7 +204,7 @@ Modu³ lirc_sir.
 
 %package -n kernel-smp-char-lirc-dev
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
+Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_release}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
@@ -230,7 +230,7 @@ Modu³ lirc_dev.
 
 %package -n kernel-smp-char-lirc-gpio
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
+Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_release}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
@@ -257,7 +257,7 @@ Modu³ lirc_gpio.
 
 %package -n kernel-smp-char-lirc-i2c
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
+Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_release}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
@@ -284,7 +284,7 @@ Modu³ lirc_i2c
 
 %package -n kernel-smp-char-lirc-serial
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
+Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_release}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
@@ -310,7 +310,7 @@ Modu³ lirc_serial dla urz±dzeñ pod³±czanych do serial portu.
 
 %package -n kernel-smp-char-lirc-parallel
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
+Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_release}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
@@ -336,7 +336,7 @@ Modu³ lirc_parallel dla urz±dzeñ pod³±czanych do portu równoleg³ego.
 
 %package -n kernel-smp-char-lirc-sir
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
+Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_release}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
@@ -362,14 +362,14 @@ Modu³ lirc_sir.
 
 %package X11
 Summary:	Linux Infrared Remote Control - X11 utilities
-Summary(pl):	Zdalna kontrola Linuxa za pomoc± podczerwieni - narzêdzia X11
+Summary(pl):	Zdalna kontrola Linuksa za pomoc± podczerwieni - narzêdzia X11
 Group:		X11/Applications
 
 %description X11
 Linux Infrared Remote Control - X11 utilities.
 
 %description X11 -l pl
-Zdalna kontrola Linuxa za pomoc± podczerwieni - narzêdzia X11.
+Zdalna kontrola Linuksa za pomoc± podczerwieni - narzêdzia X11.
 
 %package libs
 Summary:	LIRC libraries
