@@ -1,7 +1,7 @@
 
 # Conditional build:
 # _without_dist_kernel	- without sources of distribution kernel
-# _with_kernel_2_2 - build for 2.2 kernel
+# _with_kernel_2_2	- build for 2.2 kernel
 #
 
 %define		_kernel_ver %(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
@@ -62,8 +62,8 @@ Group(pl):	Podstawowe/J±dro
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
-Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
-Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}
+%{!?_without_dist_kernel:Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
+%{!?_without_dist_kernel:Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}}
 Requires:	%{name} = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-dev
@@ -90,8 +90,8 @@ Group(pl):	Podstawowe/J±dro
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
-Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
-Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}
+%{!?_without_dist_kernel:Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
+%{!?_without_dist_kernel:Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}}
 Requires:	%{name} = %{version}
 Requires:	kernel%{smpstr}-char-lirc-dev = %{version}
 Obsoletes:	lirc-modules
@@ -119,8 +119,8 @@ Group(pl):	Podstawowe/J±dro
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
-Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
-Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}
+%{!?_without_dist_kernel:Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
+%{!?_without_dist_kernel:Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}}
 Requires:	%{name} = %{version}
 Requires:	kernel%{smpstr}-char-lirc-dev = %{version}
 Obsoletes:	lirc-modules
@@ -148,8 +148,8 @@ Group(pl):	Podstawowe/J±dro
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
-Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
-Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}
+%{!?_without_dist_kernel:Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
+%{!?_without_dist_kernel:Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}}
 Requires:	%{name} = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-serial
@@ -176,8 +176,8 @@ Group(pl):	Podstawowe/J±dro
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
-Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
-Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}
+%{!?_without_dist_kernel:Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
+%{!?_without_dist_kernel:Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}}
 Requires:	%{name} = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-parallel
@@ -204,8 +204,8 @@ Group(pl):	Podstawowe/J±dro
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
-Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
-Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}
+%{!?_without_dist_kernel:Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
+%{!?_without_dist_kernel:Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}}
 Requires:	%{name} = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-sir
