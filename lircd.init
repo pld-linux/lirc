@@ -3,8 +3,8 @@
 # lircd		Linux Infrared Remote Control daemon
 #
 # chkconfig:	2345 65 35
-# description:	LIRC is a package that allows you to decode and send
-#		infra-red signals of many (but not all) commonly used
+# description:	LIRC is a package that allows you to decode and send \
+#		infra-red signals of many (but not all) commonly used \
 #		remote controls.
 #
 # processname:	lircd
