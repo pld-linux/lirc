@@ -33,6 +33,7 @@ Patch4:		%{name}-alpha.patch
 Patch5:		%{name}-makpc.patch
 Patch6:		%{name}-udp.patch
 Patch7:		http://delvare.free.fr/i2c/other/%{name}-0.6.6-i2c-2.8.0.patch
+Patch8:		%{name}-sparc.patch
 URL:		http://www.lirc.org/
 %{?with_x:BuildRequires:	XFree86-devel}
 BuildRequires:	autoconf
@@ -458,12 +459,14 @@ if grep -qs 'I2C_VERSION.*"2\.8\.' %{_kernelsrcdir}/include/linux/i2c.h ; then
 %patch7 -p1
 fi
 %endif
+%patch8 -p1
 
 %build
 echo '#' > drivers/Makefile.am
 %{__libtoolize}
 %{__aclocal}
 %{__automake}
+%{__autoheader}
 %{__autoconf}
 
 %configure \
