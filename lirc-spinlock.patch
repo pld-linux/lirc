@@ -1,52 +1,6 @@
-diff -urN lirc-0.6.3.org/drivers/lirc_parallel/lirc_parallel.c lirc-0.6.3/drivers/lirc_parallel/lirc_parallel.c
---- lirc-0.6.3.org/drivers/lirc_parallel/lirc_parallel.c	Thu Jul 12 00:41:24 2001
-+++ lirc-0.6.3/drivers/lirc_parallel/lirc_parallel.c	Fri Jul 13 10:15:55 2001
-@@ -447,6 +448,7 @@
- 	unsigned int i;
- 	unsigned int level,newlevel;
- 	unsigned long flags;
-+	spinlock_t irq_lock = SPIN_LOCK_UNLOCKED;
- 	lirc_t counttimer;
- 	
- #ifdef KERNEL_2_2
-@@ -486,7 +488,7 @@
- 		wbuf[i]=(lirc_t) (((double) wbuf[i])*timer/1000000);
- 	}
- 	
--	save_flags(flags);cli();
-+	spin_lock_irqsave(&irq_lock, flags);
- 	i=0;
- 	while(i<count)
- 	{
-@@ -501,7 +503,7 @@
- 			if(in(1)&LP_PSELECD)
- 			{
- 				lirc_off();
--				restore_flags(flags); /* sti(); */
-+				spin_unlock_irqrestore(&irq_lock, flags); /* sti(); */
- 				return(-EIO);
- 			}
- 		}
-@@ -517,13 +519,13 @@
- 			level=newlevel;
- 			if(in(1)&LP_PSELECD)
- 			{
--				restore_flags(flags); /* sti(); */
-+				spin_unlock_irqrestore(&irq_lock, flags); /* sti(); */
- 				return(-EIO);
- 			}
- 		}
- 		while(counttimer<wbuf[i]);i++;
- 	}
--	restore_flags(flags); /* sti(); */
-+	spin_unlock_irqrestore(&irq_lock, flags); /* sti(); */
- #else
- 	/* 
- 	   place code that handles write
-diff -urN lirc-0.6.3.org/drivers/lirc_serial/lirc_serial.c lirc-0.6.3/drivers/lirc_serial/lirc_serial.c
---- lirc-0.6.3.org/drivers/lirc_serial/lirc_serial.c	Thu Jul 12 00:41:24 2001
-+++ lirc-0.6.3/drivers/lirc_serial/lirc_serial.c	Fri Jul 13 10:12:32 2001
-@@ -439,6 +440,7 @@
+--- ./drivers/lirc_serial/lirc_serial.c.org	Fri Sep  7 03:08:32 2001
++++ ./drivers/lirc_serial/lirc_serial.c	Fri Sep  7 03:14:28 2001
+@@ -625,6 +625,7 @@
  static int init_port(void)
  {
  	unsigned long flags;
@@ -54,7 +8,7 @@ diff -urN lirc-0.6.3.org/drivers/lirc_serial/lirc_serial.c lirc-0.6.3/drivers/li
  
          /* Check io region*/
  	
-@@ -464,7 +466,7 @@
+@@ -650,7 +651,7 @@
  	/* Reserve io region. */
  	request_region(port, 8, LIRC_DRIVER_NAME);
  	
@@ -63,16 +17,16 @@ diff -urN lirc-0.6.3.org/drivers/lirc_serial/lirc_serial.c lirc-0.6.3/drivers/li
  	
  	/* Set DLAB 0. */
  	soutp(UART_LCR, sinp(UART_LCR) & (~UART_LCR_DLAB));
-@@ -502,7 +504,7 @@
+@@ -688,7 +689,7 @@
  	/* THR interrupt already disabled at this point */
  #endif
  	
 -	restore_flags(flags);
 +	spin_unlock_irqrestore(&irq_lock, flags);
  	
- 	/* If pin is high, then this must be an active low receiver. */
- 	if(sense==-1)
-@@ -538,6 +540,7 @@
+ #ifdef LIRC_SERIAL_TRANSMITTER
+ #ifdef USE_RDTSC
+@@ -731,6 +732,7 @@
  {
  	int result;
  	unsigned long flags;
@@ -80,7 +34,7 @@ diff -urN lirc-0.6.3.org/drivers/lirc_serial/lirc_serial.c lirc-0.6.3/drivers/li
  	
  #       ifdef KERNEL_2_1
  	spin_lock(&lirc_lock);
-@@ -578,14 +581,14 @@
+@@ -771,14 +773,14 @@
  	};
  
  	/* finally enable interrupts. */
@@ -97,18 +51,18 @@ diff -urN lirc-0.6.3.org/drivers/lirc_serial/lirc_serial.c lirc-0.6.3/drivers/li
  	
  	/* Init read buffer pointers. */
  	rbh = rbt = 0;
-@@ -603,8 +606,9 @@
+@@ -796,8 +798,9 @@
  static void lirc_close(struct inode *node, struct file *file)
  #endif
  {	unsigned long flags;
-+    	spinlock_t irq_lock = SPIN_LOCK_UNLOCKED;
++	spinlock_t irq_lock = SPIN_LOCK_UNLOCKED;
  	
 -	save_flags(flags);cli();
 +	spin_lock_irqsave(&irq_lock, flags);
  	
  	/* Set DLAB 0. */
  	soutp(UART_LCR, sinp(UART_LCR) & (~UART_LCR_DLAB));
-@@ -612,7 +616,7 @@
+@@ -805,7 +808,7 @@
  	/* First of all, disable all interrupts */
  	soutp(UART_IER, sinp(UART_IER)&
  	      (~(UART_IER_MSI|UART_IER_RLSI|UART_IER_THRI|UART_IER_RDI)));
@@ -117,15 +71,15 @@ diff -urN lirc-0.6.3.org/drivers/lirc_serial/lirc_serial.c lirc-0.6.3/drivers/li
  	
  	free_irq(irq, NULL);
  #       ifdef DEBUG
-@@ -712,6 +716,7 @@
+@@ -905,6 +908,7 @@
  #ifdef LIRC_SERIAL_TRANSMITTER
  	int retval,i,count;
  	unsigned long flags;
 +	spinlock_t irq_lock = SPIN_LOCK_UNLOCKED;
+ 	long delta=0;
  	
  	if(n%sizeof(lirc_t)) return(-EINVAL);
- 	retval=verify_area(VERIFY_READ,buf,n);
-@@ -723,7 +728,7 @@
+@@ -917,7 +921,7 @@
  #       else
  	memcpy_fromfs(wbuf,buf,n);
  #       endif
@@ -134,8 +88,8 @@ diff -urN lirc-0.6.3.org/drivers/lirc_serial/lirc_serial.c lirc-0.6.3/drivers/li
  #       ifdef LIRC_SERIAL_IRDEO
  	/* DTR, RTS down */
  	on();
-@@ -734,7 +739,7 @@
- 		else send_pulse(wbuf[i]);
+@@ -928,7 +932,7 @@
+ 		else delta=send_pulse(wbuf[i]);
  	}
  	off();
 -	restore_flags(flags);
@@ -143,3 +97,47 @@ diff -urN lirc-0.6.3.org/drivers/lirc_serial/lirc_serial.c lirc-0.6.3/drivers/li
  	return(n);
  #else
  	return(-EBADF);
+--- ./drivers/lirc_parallel/lirc_parallel.c.org	Fri Sep  7 03:05:21 2001
++++ ./drivers/lirc_parallel/lirc_parallel.c	Fri Sep  7 03:07:56 2001
+@@ -460,6 +460,7 @@
+ 	unsigned int i;
+ 	unsigned int level,newlevel;
+ 	unsigned long flags;
++	spinlock_t irq_lock = SPIN_LOCK_UNLOCKED;
+ 	lirc_t counttimer;
+ 	
+ #ifdef KERNEL_2_2
+@@ -499,7 +500,7 @@
+ 		wbuf[i]=(lirc_t) (((double) wbuf[i])*timer/1000000);
+ 	}
+ 	
+-	save_flags(flags);cli();
++	spin_lock_irqsave(&irq_lock, flags);
+ 	i=0;
+ 	while(i<count)
+ 	{
+@@ -514,7 +515,7 @@
+ 			if(in(1)&LP_PSELECD)
+ 			{
+ 				lirc_off();
+-				restore_flags(flags); /* sti(); */
++				spin_unlock_irqrestore(&irq_lock, flags); /* sti(); */
+ 				return(-EIO);
+ 			}
+ 		}
+@@ -530,13 +531,13 @@
+ 			level=newlevel;
+ 			if(in(1)&LP_PSELECD)
+ 			{
+-				restore_flags(flags); /* sti(); */
++				spin_unlock_irqrestore(&irq_lock, flags); /* sti(); */
+ 				return(-EIO);
+ 			}
+ 		}
+ 		while(counttimer<wbuf[i]);i++;
+ 	}
+-	restore_flags(flags); /* sti(); */
++	spin_unlock_irqrestore(&irq_lock, flags); /* sti(); */
+ #else
+ 	/* 
+ 	   place code that handles write
