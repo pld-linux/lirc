@@ -524,9 +524,6 @@ install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/lircd
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/lircd
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/rc.d/init.d/lircmd
 
-find remotes -type f '!' '(' -name '*.jpg' -o -name '*.gif' ')' -print0 |\
-	xargs -0 gzip -9nf
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -679,7 +676,7 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc ANNOUNCE AUTHORS NEWS README TODO ChangeLog
-%doc contrib/lircrc doc/*
+%doc contrib/lircrc doc/* remotes
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_sbindir}/*
 %attr(754,root,root) /etc/rc.d/init.d/*
