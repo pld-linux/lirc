@@ -4,7 +4,7 @@
 
 %define		_kernel24	%(echo %{_kernel_ver} | grep -q '2\.[012]\.' ; echo $?)
 # needed because of release macro expansion
-%define		_release	7
+%define		_release	8
 
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl):	Serwery do zdalnej kontroli Linuksa za pomoc± podczerwieni
@@ -78,7 +78,7 @@ Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
 Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_up}
-Requires:	dev >= 2.8.0-3
+Conflicts:	dev < 2.8.0-3
 Requires:	%{name} = %{version}
 Requires:	kernel-char-lirc-dev = %{version}
 Obsoletes:	lirc-modules
@@ -105,7 +105,7 @@ Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
 Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_up}
-Requires:	dev >= 2.8.0-3
+Conflicts:	dev < 2.8.0-3
 Requires:	%{name} = %{version}
 Requires:	kernel-char-lirc-dev = %{version}
 Obsoletes:	lirc-modules
@@ -132,7 +132,7 @@ Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
 Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_up}
-Requires:	dev >= 2.8.0-3
+Conflicts:	dev < 2.8.0-3
 Requires:	%{name} = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-serial
@@ -158,7 +158,7 @@ Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
 Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_up}
-Requires:	dev >= 2.8.0-3
+Conflicts:	dev < 2.8.0-3
 Requires:	%{name} = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-parallel
@@ -184,7 +184,7 @@ Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
 Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_up}
-Requires:	dev >= 2.8.0-3
+Conflicts:	dev < 2.8.0-3
 Requires:	%{name} = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-sir
@@ -210,7 +210,7 @@ Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
 Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_smp}
-Requires:	dev >= 2.8.0-3
+Conflicts:	dev < 2.8.0-3
 Requires:	%{name} = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-dev
@@ -236,7 +236,7 @@ Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
 Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_smp}
-Requires:	dev >= 2.8.0-3
+Conflicts:	dev < 2.8.0-3
 Requires:	%{name} = %{version}
 Requires:	kernel-smp-char-lirc-dev = %{version}
 Obsoletes:	lirc-modules
@@ -263,7 +263,7 @@ Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
 Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_smp}
-Requires:	dev >= 2.8.0-3
+Conflicts:	dev < 2.8.0-3
 Requires:	%{name} = %{version}
 Requires:	kernel-smp-char-lirc-dev = %{version}
 Obsoletes:	lirc-modules
@@ -290,7 +290,7 @@ Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
 Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_smp}
-Requires:	dev >= 2.8.0-3
+Conflicts:	dev < 2.8.0-3
 Requires:	%{name} = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-serial
@@ -316,7 +316,7 @@ Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
 Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_smp}
-Requires:	dev >= 2.8.0-3
+Conflicts:	dev < 2.8.0-3
 Requires:	%{name} = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-parallel
@@ -342,7 +342,7 @@ Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
 Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_smp}
-Requires:	dev >= 2.8.0-3
+Conflicts:	dev < 2.8.0-3
 Requires:	%{name} = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-sir
