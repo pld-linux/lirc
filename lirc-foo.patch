@@ -1,0 +1,12 @@
+diff -urN lirc-0.6.3.org/daemons/lircd.c lirc-0.6.3/daemons/lircd.c
+--- lirc-0.6.3.org/daemons/lircd.c	Thu Jul 12 00:41:24 2001
++++ lirc-0.6.3/daemons/lircd.c	Thu Jul 12 20:55:56 2001
+@@ -1643,7 +1643,7 @@
+ 			continue;
+ 		}
+ 		
+-logprintf(LOG_INFO, "foo");
++/* logprintf(LOG_INFO, "foo"); */
+ 
+ 		for(i=0;i<clin;i++)
+ 		{

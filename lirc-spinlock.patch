@@ -1,0 +1,108 @@
+diff -urN lirc-0.6.3.org/drivers/lirc_serial/lirc_serial.c lirc-0.6.3/drivers/lirc_serial/lirc_serial.c
+--- lirc-0.6.3.org/drivers/lirc_serial/lirc_serial.c	Thu Jul 12 00:41:24 2001
++++ lirc-0.6.3/drivers/lirc_serial/lirc_serial.c	Thu Jul 12 18:45:52 2001
+@@ -66,6 +66,7 @@
+ #include <asm/segment.h>
+ #include <asm/io.h>
+ #include <asm/irq.h>
++#include <asm/spinlock.h>
+ #include <asm/fcntl.h>
+ 
+ #include "drivers/lirc.h"
+@@ -438,6 +439,7 @@
+ 
+ static int init_port(void)
+ {
++    	spinlock_t xxx_lock = SPIN_LOCK_UNLOCKED;
+ 	unsigned long flags;
+ 
+         /* Check io region*/
+@@ -463,8 +465,8 @@
+ 	
+ 	/* Reserve io region. */
+ 	request_region(port, 8, LIRC_DRIVER_NAME);
+-	
+-	save_flags(flags);cli();
++
++	spin_lock_irqsave(&xxx_lock, flags);
+ 	
+ 	/* Set DLAB 0. */
+ 	soutp(UART_LCR, sinp(UART_LCR) & (~UART_LCR_DLAB));
+@@ -501,8 +503,8 @@
+ 	soutp(UART_LCR,UART_LCR_WLEN7);
+ 	/* THR interrupt already disabled at this point */
+ #endif
+-	
+-	restore_flags(flags);
++
++	spin_unlock_irqrestore(&xxx_lock, flags);
+ 	
+ 	/* If pin is high, then this must be an active low receiver. */
+ 	if(sense==-1)
+@@ -537,6 +539,7 @@
+ static int lirc_open(struct inode *ino, struct file *filep)
+ {
+ 	int result;
++	spinlock_t xxx_lock = SPIN_LOCK_UNLOCKED;
+ 	unsigned long flags;
+ 	
+ #       ifdef KERNEL_2_1
+@@ -578,14 +581,14 @@
+ 	};
+ 
+ 	/* finally enable interrupts. */
+-	save_flags(flags);cli();
++	spin_lock_irqsave(&xxx_lock, flags);
+ 	
+ 	/* Set DLAB 0. */
+ 	soutp(UART_LCR, sinp(UART_LCR) & (~UART_LCR_DLAB));
+ 	
+ 	soutp(UART_IER, sinp(UART_IER)|UART_IER_MSI);
+ 	
+-	restore_flags(flags);
++	spin_unlock_irqrestore(&xxx_lock, flags);
+ 	
+ 	/* Init read buffer pointers. */
+ 	rbh = rbt = 0;
+@@ -602,9 +605,11 @@
+ #else
+ static void lirc_close(struct inode *node, struct file *file)
+ #endif
+-{	unsigned long flags;
+-	
+-	save_flags(flags);cli();
++{
++    	spinlock_t xxx_lock = SPIN_LOCK_UNLOCKED;
++    	unsigned long flags;
++
++	spin_lock_irqsave(&xxx_lock, flags);
+ 	
+ 	/* Set DLAB 0. */
+ 	soutp(UART_LCR, sinp(UART_LCR) & (~UART_LCR_DLAB));
+@@ -612,7 +617,7 @@
+ 	/* First of all, disable all interrupts */
+ 	soutp(UART_IER, sinp(UART_IER)&
+ 	      (~(UART_IER_MSI|UART_IER_RLSI|UART_IER_THRI|UART_IER_RDI)));
+-	restore_flags(flags);
++	spin_unlock_irqrestore(&xxx_lock, flags);
+ 	
+ 	free_irq(irq, NULL);
+ #       ifdef DEBUG
+@@ -723,7 +728,7 @@
+ #       else
+ 	memcpy_fromfs(wbuf,buf,n);
+ #       endif
+-	save_flags(flags);cli();
++	spin_lock_irqsave(&xxx_lock, flags); 
+ #       ifdef LIRC_SERIAL_IRDEO
+ 	/* DTR, RTS down */
+ 	on();
+@@ -734,7 +739,7 @@
+ 		else send_pulse(wbuf[i]);
+ 	}
+ 	off();
+-	restore_flags(flags);
++	spin_unlock_irqrestore(&xxx_lock, flags);
+ 	return(n);
+ #else
+ 	return(-EBADF);
