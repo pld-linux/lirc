@@ -677,7 +677,7 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc ANNOUNCE AUTHORS NEWS README TODO ChangeLog doc/irxevent.keys
-%doc contrib/lircrc doc/doc.html doc/html doc/images
+%doc contrib/lircrc doc/*
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_sbindir}/*
 %attr(754,root,root) %{_sysconfdir}/rc.d/init.d/*
