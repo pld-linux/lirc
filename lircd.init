@@ -10,43 +10,13 @@
 # processname:	lircd
 # pidfile:	/var/run/lircd.pid
 # config:	/etc/lircd.conf
-# config:	/etc/sysconfig/lirc
+# config:	/etc/sysconfig/lircd
 
 # Source function library
 . /etc/rc.d/init.d/functions
 
 # Get service config
-[ -f /etc/sysconfig/lirc ] && . /etc/sysconfig/lirc
-
-[ "$DRIVER" = serial -o "$DRIVER" = animax -o "$DRIVER" = packard_bell ] && \
-	MODULE=lirc_serial
-[ "$DRIVER" = sir -o "$DRIVER" = tekram ] && MODULE=lirc_sir
-[ "$DRIVER" = parallel ] && MODULE=lirc_parallel
-[ "$DRIVER" = avermedia -o "$DRIVER" = avermedia98 -o "$DRIVER" = fly98 -o \
-	"$DRIVER" = cph03x -o "$DRIVER" = cph06x -o \
-	"$DRIVER" = pixelview_pro -o "$DRIVER" = chronos -o \
-	"$DRIVER" = pixelview_pak -o "$DRIVER" = bestbuy ] && MODULE=lirc_gpio
-[ "$DRIVER" = hauppauge -o "$DRIVER" = pixelview_bt878 -o \
-	"$DRIVER" = provideo ] && MODULE=lirc_i2c
-
-if is_yes "$MODULE_ALIAS_ERROR" && [ -n "$MODULE" ]; then
-	if grep "^alias lirc $MODULE" /etc/modules.conf >/dev/zero; then
-		:
-	else
-		echo "You need to configure a kernel module for the selected driver"
-		echo "Add \`alias lirc $MODULE' to /etc/modules.conf."
-		exit 1
-	fi
-fi
-
-[ "$DRIVER" = animax -o "$DRIVER" = avermedia -o "$DRIVER" = avermedia98 \
--o "$DRIVER" = bestbuy -o "$DRIVER" = fly98 -o "$DRIVER" = hauppauge -o \
-"$DRIVER" = pixelview_pro -o "$DRIVER" = pixelview_pak -o \
-"$DRIVER" = serial -o "$DRIVER" = sir -o "$DRIVER"=tekram -o \
-"$DRIVER" = packard_bell -o "$DRIVER" = parallel -o \
-"$DRIVER" = pixelview_bt878 -o "$DRIVER" = cph03x -o "$DRIVER" = cph06x \
--o "$DRIVER" = provideo -o "$DRIVER" = chronos ] && DRIVER=default
-[ "$DRIVER" = remotemaster -o "$DRIVER" = realmagic ] && DRIVER=pixelview
+[ -f /etc/sysconfig/lircd ] && . /etc/sysconfig/lircd
 
 # See how we were called.
 case "$1" in
