@@ -327,14 +327,14 @@ SMP="-D__KERNEL_SMP=1"
 %endif
 
 cd drivers
-LIRC_NORMAL="$(ls -d lirc_* | grep -v lirc_dev)"
-LIRC_SYMTAB="lirc_dev"
-
 # 2.4 only drivers
 %{?_with_kernel_2_2:rm -rf lirc_dev lirc_gpio lirc_i2c}
 
 # Not SMP safe
 %{?_with_smp:rm -rf lirc_parallel}
+
+LIRC_NORMAL="$(ls -d lirc_* 2> /dev/null | grep -v lirc_dev)"
+LIRC_SYMTAB="$(ls -d lirc_dev 2> /dev/null)"
 
 if [ -n "$LIRC_NORMAL" ]; then
   for drv in $LIRC_NORMAL; do
