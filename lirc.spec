@@ -4,7 +4,7 @@
 
 %define		_kernel24	%(echo %{_kernel_ver} | grep -q '2\.[012]\.' ; echo $?)
 # needed because of release macro expansion
-%define		_release	1
+%define		_release	2
 
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl):	Serwery do zdalnej kontroli Linuxa za pomoc± podczerwieni
@@ -339,7 +339,7 @@ Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
 Release:	%{_release}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Prereq:		modutils >= 2.4.6-4
-Prereq:		/sbindepmod
+Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_smp}
 Requires:	dev >= 2.8.0-3
 Requires:	%{name} = %{version}
