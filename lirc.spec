@@ -2,14 +2,13 @@
 # Conditional build:
 # _without_dist_kernel	- without sources of distribution kernel
 # _with_kernel_2_4	- build for 2.4 kernel
-#
 
 %define		_kernel_ver %(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
 %define		_kernel_ver_str %(echo %{_kernel_ver} | sed s/-/_/g)
 %define		smpstr	%{?_with_smp:-smp}
 %define		smp	%{?_with_smp:1}%{!?_with_smp:0}
 # needed because of release macro expansion
-%define		_release	2
+%define		_release	3
 
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl):	Serwery do zdalnej kontroli Linuxa za pomoc± podczerwieni
@@ -38,7 +37,7 @@ BuildRequires:	automake
 BuildRequires:	libtool
 BuildRequires:	XFree86-devel
 BuildRequires:	egcs
-Prereq:		chkconfig
+PreReq:		chkconfig
 Conflicts:	%{name}-libs < 0.6.3-3
 # didn't use /tmp/.lircd
 
@@ -342,7 +341,7 @@ LIRC_SYMTAB="lirc_dev"
 
 if [ -n "$LIRC_NORMAL" ]; then
   for drv in $LIRC_NORMAL; do
-	kgcc %{rpmcflags} -D__KERNEL__ -DMODULE -DHAVE_CONFIG_H $SMP \
+	%{__cc} %{rpmcflags} -D__KERNEL__ -DMODULE -DHAVE_CONFIG_H $SMP \
 	-DIRCTL_DEV_MAJOR=61 -I.. -I%{_kernelsrcdir}/include \
 	-fno-strict-aliasing -fno-common \
 	-c -o $drv/$drv.o $drv/$drv.c
@@ -351,7 +350,7 @@ fi
 
 if [ -n "$LIRC_SYMTAB" ]; then
   for drv in $LIRC_SYMTAB; do
-	kgcc %{rpmcflags} -D__KERNEL__ -DMODULE -DHAVE_CONFIG_H $SMP \
+	%{__cc} %{rpmcflags} -D__KERNEL__ -DMODULE -DHAVE_CONFIG_H $SMP \
 	-DEXPORT_SYMTAB \
 	-DIRCTL_DEV_MAJOR=61 -I.. -I%{_kernelsrcdir}/include \
 	-fno-strict-aliasing -fno-common \
