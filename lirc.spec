@@ -425,8 +425,8 @@ echo '#' > drivers/Makefile.am
 rm -f missing
 libtoolize --copy --force
 aclocal
-automake -a -c -f
-autoconf
+%{__automake}
+%{__autoconf}
 
 %configure \
 	--with-driver=any \
