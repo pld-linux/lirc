@@ -9,7 +9,7 @@
 %ifnarch %{ix86} alpha
 %undefine	with_svga
 %endif
-%define		_kernel24	%(echo %{_kernel_ver} | grep -q '2\.[012]\.' ; echo $?)
+%define		_kernel24	%(echo %{_kernel_ver} | grep -qv '2\.4\.' ; echo $?)
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl):	Serwery do zdalnej kontroli Linuksa za pomoc± podczerwieni
 Name:		lirc
