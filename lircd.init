@@ -1,0 +1,96 @@
+#!/bin/sh  
+#
+# lircd		Linux Infrared Remote Control daemon
+#
+# chkconfig:	2345 65 35
+# description:  LIRC is a package that allows you to decode and send
+#		infra-red signals of many (but not all) commonly used
+#		remote controls.
+#
+# processname:	lircd
+# pidfile:	/var/run/lircd.pid
+# config:	/etc/lircd.conf
+# config:	/etc/sysconfig/lirc
+
+# Source function library
+. /etc/rc.d/init.d/functions
+
+# Get service config
+[ -f /etc/sysconfig/lirc ] && . /etc/sysconfig/lirc
+
+[ "$DRIVER" = serial -o "$DRIVER" = animax -o "$DRIVER" = packard_bell ] && \
+	MODULE=lirc_serial
+[ "$DRIVER" = sir -o "$DRIVER" = tekram ] && MODULE=lirc_sir
+[ "$DRIVER" = parallel ] && MODULE=lirc_parallel
+[ "$DRIVER" = avermedia -o "$DRIVER" = avermedia98 -o "$DRIVER" = fly98 -o \
+	"$DRIVER" = cph03x -o "$DRIVER" = cph06x -o \
+	"$DRIVER" = pixelview_pro -o "$DRIVER" = chronos -o \
+	"$DRIVER" = pixelview_pak -o "$DRIVER" = bestbuy ] && MODULE=lirc_gpio
+[ "$DRIVER" = hauppauge -o "$DRIVER" = pixelview_bt878 -o \
+	"$DRIVER" = provideo ] && MODULE=lirc_i2c
+
+if is_yes "$MODULE_ALIAS_ERROR" && [ -n "$MODULE" ]; then
+	if grep "^alias lirc $MODULE" /etc/modules.conf >/dev/zero; then
+		:
+	else
+		echo "You need to configure a kernel module for the selected driver"
+		echo "Add \`alias lirc $MODULE' to /etc/modules.conf."
+		exit 1
+	fi
+fi
+
+[ "$DRIVER" = animax -o "$DRIVER" = avermedia -o "$DRIVER" = avermedia98 \
+-o "$DRIVER" = bestbuy -o "$DRIVER" = fly98 -o "$DRIVER" = hauppauge -o \
+"$DRIVER" = pixelview_pro -o "$DRIVER" = pixelview_pak -o \
+"$DRIVER" = serial -o "$DRIVER" = sir -o "$DRIVER"=tekram -o \
+"$DRIVER" = packard_bell -o "$DRIVER" = parallel -o \
+"$DRIVER" = pixelview_bt878 -o "$DRIVER" = cph03x -o "$DRIVER" = cph06x \
+-o "$DRIVER" = provideo -o "$DRIVER" = chronos ] && DRIVER=default
+[ "$DRIVER" = remotemaster -o "$DRIVER" = realmagic ] && DRIVER=pixelview
+
+# See how we were called.
+case "$1" in
+  start)
+        # Check if the service is already running?
+        if [ ! -f /var/lock/subsys/lircd ]; then
+                msg_starting "Linux Infrared Remote Control daemon"
+		OPTIONS=""
+		[ -n "$DRIVER" ] && OPTIONS="--driver=$DRIVER"
+		[ -n "$DEVICE" ] && OPTIONS="$OPTIONS --device=$DEVICE"
+                daemon lircd $OPTIONS
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/lircd
+        else
+                msg_Already_Running "Linux Infrared Remote Control daemon"
+		exit 1
+        fi
+        ;;
+  stop)
+	# Stop daemons.
+        if [ -f /var/lock/subsys/lircd ]; then
+		msg_stopping "Linux Infrared Remote Control daemon"
+		killproc lircd
+		rm -f /var/lock/subsys/lircd >/dev/null 2>&1
+	else
+		msg_Not_Running "Linux Infrared Remote Control daemon"
+                exit 1
+        fi
+        ;;
+  status)
+        status lircd
+        ;;
+  restart)
+        $0 stop
+        $0 start
+        ;;
+  reload)
+	msg_reloading "Linux Infrared Remote Control daemon"
+	killproc lircd -HUP
+	;;
+  *)
+        msg_Usage "$0 {start|stop|status|restart|reload}"
+        exit 1
+	;;
+esac
+
+exit $RETVAL

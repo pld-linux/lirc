@@ -1,0 +1,79 @@
+#!/bin/sh  
+#
+# lircmd	Linux Infrared Remote Control mouse daemon
+#
+# chkconfig:	2345 92 8
+# description:  LIRC is a package that allows you to decode and send
+#		infra-red signals of many (but not all) commonly used
+#		remote controls.
+#
+# processname:	lircmd
+# pidfile:	/var/run/lircmd.pid
+# config:	/etc/lircmd.conf
+# config:	/etc/sysconfig/lirc
+
+
+# Source function library
+. /etc/rc.d/init.d/functions
+
+# Get service config
+[ -f /etc/sysconfig/lirc ] && . /etc/sysconfig/lirc
+
+[ "$DRIVER" = cph06x ] && DRIVER=cph03x
+[ "$DRIVER" = pixelview_pro -o "$DRIVER" = pixelview_pak ] && \
+	DRIVER=playtv_pro
+[ "$DRIVER" = provideo ] && DRIVER=pv951
+
+CFGFILE=/usr/share/lircmd/lircmd.conf.$DRIVER
+
+if [ ! -f "$CFGFILE" ]; then
+	echo The selected driver does not support mouse emulation.
+	exit 1
+fi
+
+# See how we were called.
+case "$1" in
+  start)
+        # Check if the service is already running?
+        if [ ! -f /var/lock/subsys/lircmd ]; then
+                msg_starting "Linux Infrared Remote Control mouse daemon"
+		rm -f /var/state/lircmd.conf >/dev/null 2>&1
+		ln -s $CFGFILE /var/state/lircmd.conf
+                daemon lircmd
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/lircmd
+        else
+                msg_Already_Running "Linux Infrared Remote Control mouse daemon"
+		exit 1
+        fi
+        ;;
+  stop)
+	# Stop daemons.
+        if [ -f /var/lock/subsys/lircmd ]; then
+		msg_stopping "Linux Infrared Remote Control mouse daemon"
+		killproc lircmd
+		rm -f /var/state/lircmd.conf >/dev/null 2>&1
+		rm -f /var/lock/subsys/lircmd >/dev/null 2>&1
+	else
+		msg_Not_Running "Linux Infrared Remote Control mouse daemon"
+                exit 1
+        fi
+        ;;
+  status)
+        status lircmd
+        ;;
+  restart)
+        $0 stop
+        $0 start
+        ;;
+  reload)
+	msg_reloading "Linux Infrared Remote Control mouse daemon"
+	killproc lircmd -HUP
+	;;
+  *)
+        msg_Usage "$0 {start|stop|status|restart|reload}"
+        exit 1
+	;;
+esac
+
+exit $RETVAL

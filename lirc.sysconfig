@@ -1,0 +1,14 @@
+# Customized setings for lirc
+
+# The hardware driver to use, see DRIVERS.gz for more information.
+
+#DRIVER=avermedia98
+
+# The device node that communicates with the IR device.
+
+DEVICE=/dev/lirc
+
+# Set this to `no', if you're loading your module in another way than by
+# a modules.conf alias.
+
+MODULE_ALIAS_ERROR=yes
