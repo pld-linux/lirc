@@ -29,6 +29,7 @@ Patch3:		%{name}-no-svgalib.patch
 Patch4:		%{name}-alpha.patch
 Patch5:		%{name}-makpc.patch
 Patch6:		%{name}-udp.patch
+Patch7:		http://delvare.free.fr/i2c/other/%{name}-0.6.6-i2c-2.8.0.patch
 URL:		http://www.lirc.org/
 %{!?_without_x:BuildRequires:	XFree86-devel}
 BuildRequires:	autoconf
@@ -429,6 +430,7 @@ na LIRC.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%{!?_without_dist_kernel:%patch7 -p1}
 
 %build
 echo '#' > drivers/Makefile.am
