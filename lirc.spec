@@ -699,8 +699,8 @@ Group:		Documentation
 Requires:	%{name} = %{version}-%{_rel}
 
 %description remotes
-This package contains configuration files for many remotes
-supported by lirc.
+This package contains configuration files for many remotes supported
+by lirc.
 
 %description remotes -l pl
 Ten pakiet zawiera pliki konfiguracyjne dla wielu pilotów
