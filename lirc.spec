@@ -178,7 +178,7 @@ lirc-parallel module for devices connected to parallel port.
 Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
 pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_parallel  dla urz±dzeñ pod³±czanych do portu równoleg³ego.
+Modu³ lirc_parallel dla urz±dzeñ pod³±czanych do portu równoleg³ego.
 
 %package modules-sir
 Summary:	Kernel modules for Linux Infrared Remote Control
@@ -292,11 +292,11 @@ Group(pl):	Serwery
 Requires:	%{name}
 
 %description remotes
-This package contains LIRC configuraion files for more than 400 
+This package contains LIRC configuraion files for more than 400
 popular remotes.
 
 %description remotes -l pl
-Pakiet ten zawiera pliki konfiguracyjne LIRC'a dla ponad 400 
+Pakiet ten zawiera pliki konfiguracyjne LIRC'a dla ponad 400
 popularnych pilotów.
 
 %prep
@@ -331,7 +331,7 @@ for drv in lirc_*; do
 	kgcc %{rpmcflags} -D__KERNEL__ -DMODULE -DHAVE_CONFIG_H $SMP \
 	-DIRCTL_DEV_MAJOR=61 -I.. -I%{_kernelsrcdir}/include \
 	-fno-strict-aliasing -fno-common \
-	-c -o $drv/$drv.o $drv/$drv.c || true
+	-c -o $drv/$drv.o $drv/$drv.c
 done
 
 %install
@@ -483,6 +483,7 @@ fi
 %doc doc/*.gz doc/doc.html doc/html doc/images
 
 %files remotes
+%defattr(644,root,root,755)
 %{_datadir}/lircmd
 %{_datadir}/lircd
 
