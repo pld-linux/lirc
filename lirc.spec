@@ -34,9 +34,9 @@ BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
 %if %{with dist_kernel} && %{with kernel}
-BuildRequires:	kernel-headers
+BuildRequires:	kernel24-headers
 BuildRequires:	kernel-i2c-devel >= 2.8.0
-BuildRequires:	kernel-source
+BuildRequires:	kernel24-source
 %endif
 %{?with_kernel:BuildRequires:	%{kgcc_package}}
 BuildRequires:	rpmbuild(macros) >= 1.118
