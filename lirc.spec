@@ -11,14 +11,14 @@ Summary:	Linux Infrared Remote Control daemons
 Summary(pl):	Serwery do zdalnej kontroli Linuksa za pomoc± podczerwieni
 Name:		lirc
 Version:	0.6.6
-%define _rel	7
+%define _rel	8
 Release:	%{_rel}
 License:	GPL
 Group:		Daemons
 Source0:	http://dl.sourceforge.net/lirc/%{name}-%{version}.tar.bz2
-# Source0-md5: 6e7b5ba2fd479961d067730e16df7c54
+# Source0-md5:	6e7b5ba2fd479961d067730e16df7c54
 Source1:	http://lirc.sourceforge.net/remotes.tar.bz2
-# Source1-md5: ab33d57db1fc5782c209d90be8c6962e
+# Source1-md5:	367be71922338f75c27c461880302f54
 Source2:	%{name}d.sysconfig
 Source3:	%{name}d.init
 Source4:	%{name}md.init
