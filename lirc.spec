@@ -1,7 +1,7 @@
-
+#
 # Conditional build:
 # _without_dist_kernel	- without sources of distribution kernel
-
+#
 %define		_kernel24	%(echo %{_kernel_ver} | grep -q '2\.[012]\.' ; echo $?)
 # needed because of release macro expansion
 
@@ -32,7 +32,7 @@ BuildRequires:	automake
 BuildRequires:	libtool
 %{!?_without_dist_kernel:BuildRequires:	kernel-source}
 BuildRequires:	%{kgcc_package}
-PreReq:		chkconfig
+Requires(post,preun):	/sbin/chkconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Conflicts:	%{name}-libs < 0.6.3-3
 
@@ -52,11 +52,11 @@ Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-Prereq:		modutils >= 2.4.6-4
-Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_up}
-Conflicts:	dev < 2.8.0-3
+PreReq:		modutils >= 2.4.6-4
+Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
+Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-dev
 
@@ -78,12 +78,12 @@ Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-Prereq:		modutils >= 2.4.6-4
-Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_up}
-Conflicts:	dev < 2.8.0-3
+PreReq:		modutils >= 2.4.6-4
+Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
 Requires:	kernel-char-lirc-dev = %{version}
+Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-gpio
 
@@ -105,12 +105,12 @@ Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-Prereq:		modutils >= 2.4.6-4
-Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_up}
-Conflicts:	dev < 2.8.0-3
+PreReq:		modutils >= 2.4.6-4
+Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
 Requires:	kernel-char-lirc-dev = %{version}
+Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-i2c
 
@@ -132,11 +132,11 @@ Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-Prereq:		modutils >= 2.4.6-4
-Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_up}
-Conflicts:	dev < 2.8.0-3
+PreReq:		modutils >= 2.4.6-4
+Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
+Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-serial
 
@@ -158,11 +158,11 @@ Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-Prereq:		modutils >= 2.4.6-4
-Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_up}
-Conflicts:	dev < 2.8.0-3
+PreReq:		modutils >= 2.4.6-4
+Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
+Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-parallel
 
@@ -184,11 +184,11 @@ Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-Prereq:		modutils >= 2.4.6-4
-Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_up}
-Conflicts:	dev < 2.8.0-3
+PreReq:		modutils >= 2.4.6-4
+Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
+Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-sir
 
@@ -210,11 +210,11 @@ Summary:	SMP kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-Prereq:		modutils >= 2.4.6-4
-Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_smp}
-Conflicts:	dev < 2.8.0-3
+PreReq:		modutils >= 2.4.6-4
+Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
+Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-dev
 
@@ -236,12 +236,12 @@ Summary:	SMP kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-Prereq:		modutils >= 2.4.6-4
-Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_smp}
-Conflicts:	dev < 2.8.0-3
+PreReq:		modutils >= 2.4.6-4
+Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
 Requires:	kernel-smp-char-lirc-dev = %{version}
+Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-gpio
 
@@ -263,12 +263,12 @@ Summary:	SMP kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-Prereq:		modutils >= 2.4.6-4
-Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_smp}
-Conflicts:	dev < 2.8.0-3
+PreReq:		modutils >= 2.4.6-4
+Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
 Requires:	kernel-smp-char-lirc-dev = %{version}
+Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-i2c
 
@@ -290,11 +290,11 @@ Summary:	SMP kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-Prereq:		modutils >= 2.4.6-4
-Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_smp}
-Conflicts:	dev < 2.8.0-3
+PreReq:		modutils >= 2.4.6-4
+Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
+Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-serial
 
@@ -316,11 +316,11 @@ Summary:	SMP kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-Prereq:		modutils >= 2.4.6-4
-Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_smp}
-Conflicts:	dev < 2.8.0-3
+PreReq:		modutils >= 2.4.6-4
+Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
+Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-parallel
 
@@ -342,11 +342,11 @@ Summary:	SMP kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-Prereq:		modutils >= 2.4.6-4
-Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_smp}
-Conflicts:	dev < 2.8.0-3
+PreReq:		modutils >= 2.4.6-4
+Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}
+Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-sir
 
@@ -565,117 +565,117 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del lircmd
 fi
 
-%post -n kernel-char-lirc-dev
-/sbin/depmod -a
+%post	-n kernel-char-lirc-dev
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver} %{_kernel_ver}
 
 %postun -n kernel-char-lirc-dev
-/sbin/depmod -a
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver} %{_kernel_ver}
 
-%post -n kernel-char-lirc-gpio
-/sbin/depmod -a
+%post	-n kernel-char-lirc-gpio
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver} %{_kernel_ver}
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_gpio' line"
 	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-char-lirc-gpio
-/sbin/depmod -a
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver} %{_kernel_ver}
 
-%post -n kernel-char-lirc-i2c
-/sbin/depmod -a
+%post	-n kernel-char-lirc-i2c
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver} %{_kernel_ver}
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_i2c' line"
 	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-char-lirc-i2c
-/sbin/depmod -a
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver} %{_kernel_ver}
 
-%post -n kernel-char-lirc-serial
-/sbin/depmod -a
+%post	-n kernel-char-lirc-serial
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver} %{_kernel_ver}
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_serial' line"
 	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-char-lirc-serial
-/sbin/depmod -a
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver} %{_kernel_ver}
 
-%post -n kernel-char-lirc-parallel
-/sbin/depmod -a
+%post	-n kernel-char-lirc-parallel
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver} %{_kernel_ver}
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_parallel' line"
 	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-char-lirc-parallel
-/sbin/depmod -a
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver} %{_kernel_ver}
 
-%post -n kernel-char-lirc-sir
-/sbin/depmod -a
+%post	-n kernel-char-lirc-sir
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver} %{_kernel_ver}
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_sir' line"
 	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-char-lirc-sir
-/sbin/depmod -a
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver} %{_kernel_ver}
 
-%post -n kernel-smp-char-lirc-dev
-/sbin/depmod -a
+%post	-n kernel-smp-char-lirc-dev
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver}smp %{_kernel_ver}smp
 
 %postun -n kernel-smp-char-lirc-dev
-/sbin/depmod -a
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver}smp %{_kernel_ver}smp
 
-%post -n kernel-smp-char-lirc-gpio
-/sbin/depmod -a
+%post	-n kernel-smp-char-lirc-gpio
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver}smp %{_kernel_ver}smp
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_gpio' line"
 	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-smp-char-lirc-gpio
-/sbin/depmod -a
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver}smp %{_kernel_ver}smp
 
-%post -n kernel-smp-char-lirc-i2c
-/sbin/depmod -a
+%post	-n kernel-smp-char-lirc-i2c
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver}smp %{_kernel_ver}smp
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_i2c' line"
 	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-smp-char-lirc-i2c
-/sbin/depmod -a
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver}smp %{_kernel_ver}smp
 
-%post -n kernel-smp-char-lirc-serial
-/sbin/depmod -a
+%post	-n kernel-smp-char-lirc-serial
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver}smp %{_kernel_ver}smp
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_serial' line"
 	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-smp-char-lirc-serial
-/sbin/depmod -a
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver}smp %{_kernel_ver}smp
 
 %post -n kernel-smp-char-lirc-parallel
-/sbin/depmod -a
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver}smp %{_kernel_ver}smp
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_parallel' line"
 	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-smp-char-lirc-parallel
-/sbin/depmod -a
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver}smp %{_kernel_ver}smp
 
-%post -n kernel-smp-char-lirc-sir
-/sbin/depmod -a
+%post	-n kernel-smp-char-lirc-sir
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver}smp %{_kernel_ver}smp
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_sir' line"
 	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-smp-char-lirc-sir
-/sbin/depmod -a
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver}smp %{_kernel_ver}smp
 
 %files
 %defattr(644,root,root,755)
