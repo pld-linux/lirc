@@ -6,7 +6,6 @@
 %bcond_without	svga		# without svgalib-based utility
 %bcond_without	x		# without X11-based utilitied
 #
-%define		_kernel24	%(echo %{_kernel_ver} | grep -qv '2\.4\.' ; echo $?)
 %define		_kernelsrcdir	/usr/src/linux-2.4
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl):	Serwery do zdalnego sterowania Linuksem za pomoc± podczerwieni
@@ -25,12 +24,14 @@ Source3:	%{name}d.init
 Source4:	%{name}md.init
 Patch0:		%{name}-opt.patch
 Patch1:		%{name}-tmp.patch
-#Patch2:		%{name}-devfs.patch
+Patch2:		%{name}-bttv-headers.patch
 Patch3:		%{name}-no-svgalib.patch
 Patch4:		%{name}-alpha.patch
-Patch7:		%{name}-i2c-2.8.x.patch
-Patch8:		%{name}-sparc.patch
-Patch9:		%{name}-am18.patch
+Patch5:		%{name}-i2c-2.8.x.patch
+Patch6:		%{name}-sparc.patch
+Patch7:		%{name}-am18.patch
+# drop?
+#Patch8:		%{name}-devfs.patch
 URL:		http://www.lirc.org/
 %{?with_x:BuildRequires:	XFree86-devel}
 BuildRequires:	autoconf
@@ -39,7 +40,6 @@ BuildRequires:	libtool
 %if %{with dist_kernel} && %{with kernel}
 BuildRequires:	kernel24-headers
 BuildRequires:	kernel-i2c-devel >= 2.8.0
-BuildRequires:	kernel24-source
 %endif
 %{?with_kernel:BuildRequires:	%{kgcc_package}}
 BuildRequires:	rpmbuild(macros) >= 1.118
@@ -696,18 +696,18 @@ Modu³ lirc_sir.
 %setup -q -a 1
 %patch0 -p1
 %patch1 -p1
-#%%patch2 -p1
+%patch2 -p1
 %if %{without svga}
 %patch3 -p1
 %endif
 %patch4 -p1
 %if %{with kernel}
 if grep -qs 'I2C_VERSION.*"2\.8\.' %{_kernelsrcdir}/include/linux/i2c.h ; then
-%patch7 -p0
+%patch5 -p0
 fi
 %endif
-%patch8 -p1
-%patch9 -p1
+%patch6 -p1
+%patch7 -p1
 
 %build
 echo '#' > drivers/Makefile.am
@@ -729,16 +729,10 @@ echo '#' > drivers/Makefile.am
 %if %{with kernel}
 cd drivers
 
-%if %{_kernel24}
 # 2.4 drivers
 LIRC_NORMAL="lirc_atiusb lirc_bt829 lirc_it87 lirc_mceusb lirc_sasem \
 	     lirc_gpio lirc_i2c lirc_serial lirc_sir"
 LIRC_SYMTAB="lirc_dev"
-%else
-# 2.2 drivers
-LIRC_NORMAL="lirc_serial lirc_sir"
-LIRC_SYMTAB=""
-%endif
 
 # lirc_parallel is not smp safe
 
@@ -1116,7 +1110,6 @@ fi
 %endif
 
 %if %{with kernel}
-%if %{_kernel24}
 %files -n kernel-char-lirc-atiusb
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/*/lirc_atiusb*
@@ -1148,7 +1141,6 @@ fi
 %files -n kernel-char-lirc-sasem
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/*/lirc_sasem*
-%endif
 
 %files -n kernel-char-lirc-serial
 %defattr(644,root,root,755)
@@ -1162,7 +1154,6 @@ fi
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/*/lirc_sir*
 
-%if %{_kernel24}
 %files -n kernel-smp-char-lirc-atiusb
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}smp/*/lirc_atiusb*
@@ -1182,7 +1173,6 @@ fi
 %files -n kernel-smp-char-lirc-i2c
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}smp/*/lirc_i2c*
-%endif
 
 %files -n kernel-smp-char-lirc-it87
 %defattr(644,root,root,755)
