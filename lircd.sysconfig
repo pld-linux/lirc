@@ -1,4 +1,4 @@
-# Customized setings for lirc daemon
+# Customized settings for lirc daemon
 
 # The hardware driver to use, run lircd --driver=? for a list
 
