@@ -11,7 +11,7 @@ Summary:	Linux Infrared Remote Control daemons
 Summary(pl):	Serwery do zdalnego sterowania Linuksem za pomoc± podczerwieni
 Name:		lirc
 Version:	0.7.0
-%define	_rel	0.1
+%define	_rel	1
 Release:	%{_rel}
 License:	GPL
 Group:		Daemons
@@ -30,8 +30,6 @@ Patch4:		%{name}-alpha.patch
 Patch5:		%{name}-i2c-2.8.x.patch
 Patch6:		%{name}-sparc.patch
 Patch7:		%{name}-am18.patch
-# drop?
-#Patch8:		%{name}-devfs.patch
 URL:		http://www.lirc.org/
 %{?with_x:BuildRequires:	XFree86-devel}
 BuildRequires:	autoconf
@@ -39,7 +37,7 @@ BuildRequires:	automake
 BuildRequires:	libtool
 %if %{with dist_kernel} && %{with kernel}
 BuildRequires:	kernel24-headers
-BuildRequires:	kernel-i2c-devel >= 2.8.0
+#BuildRequires:	kernel-i2c-devel >= 2.8.0
 %endif
 %{?with_kernel:BuildRequires:	%{kgcc_package}}
 BuildRequires:	rpmbuild(macros) >= 1.118
