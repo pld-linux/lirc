@@ -7,12 +7,12 @@
 %bcond_without	x		# without X11-based utilitied
 #
 %define		_kernel24	%(echo %{_kernel_ver} | grep -qv '2\.4\.' ; echo $?)
-%define         _kernelsrcdir   /usr/src/linux-2.4
+%define		_kernelsrcdir	/usr/src/linux-2.4
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl):	Serwery do zdalnego sterowania Linuksem za pomoc± podczerwieni
 Name:		lirc
 Version:	0.7.0
-%define _rel	0.1
+%define	_rel	0.1
 Release:	%{_rel}
 License:	GPL
 Group:		Daemons
@@ -126,12 +126,12 @@ na LIRC.
 
 %package -n kernel-char-lirc-atiusb
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):    Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
-Requires(post,postun):  /sbin/depmod
+Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
@@ -156,7 +156,7 @@ Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		 modutils >= 2.4.6-4
-Requires(post,postun):  /sbin/depmod
+Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
@@ -258,10 +258,10 @@ Modu³ lirc_i2c
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
-Group:	  Base/Kernel
+Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
-PreReq:	 modutils >= 2.4.6-4
-Requires(post,postun):  /sbin/depmod
+PreReq:		modutils >= 2.4.6-4
+Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
@@ -283,10 +283,10 @@ Modu³ lirc_it87.
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
-Group:	  	Base/Kernel
+Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:	 	modutils >= 2.4.6-4
-Requires(post,postun):  /sbin/depmod
+Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
@@ -311,7 +311,7 @@ Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
-Requires(post,postun):  /sbin/depmod
+Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
@@ -364,7 +364,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	   %{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{_rel}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-parallel
@@ -390,7 +390,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	   %{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{_rel}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-sir
@@ -441,7 +441,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	   %{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 
@@ -492,7 +492,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	   %{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
@@ -519,7 +519,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	   %{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
@@ -546,7 +546,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	   %{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 
@@ -745,42 +745,42 @@ LIRC_SYMTAB=""
 # UP
 
 if [ -n "$LIRC_NORMAL" ]; then
-  for drv in $LIRC_NORMAL lirc_parallel; do
-	%{kgcc} %{rpmcflags} -D__KERNEL__ -DMODULE -DHAVE_CONFIG_H \
-	-DIRCTL_DEV_MAJOR=61 -I.. -I%{_kernelsrcdir}/include \
-	-fno-strict-aliasing -fno-common \
-	-c -o $drv.o $drv/$drv.c
-  done
+	for drv in $LIRC_NORMAL lirc_parallel; do
+		%{kgcc} %{rpmcflags} -D__KERNEL__ -DMODULE -DHAVE_CONFIG_H \
+		-DIRCTL_DEV_MAJOR=61 -I.. -I%{_kernelsrcdir}/include \
+		-fno-strict-aliasing -fno-common \
+		-c -o $drv.o $drv/$drv.c
+	done
 fi
 
 if [ -n "$LIRC_SYMTAB" ]; then
-  for drv in $LIRC_SYMTAB; do
-	%{kgcc} %{rpmcflags} -D__KERNEL__ -DMODULE -DHAVE_CONFIG_H \
-	-DEXPORT_SYMTAB \
-	-DIRCTL_DEV_MAJOR=61 -I.. -I%{_kernelsrcdir}/include \
-	-fno-strict-aliasing -fno-common \
-	-c -o $drv.o $drv/$drv.c
-  done
+	for drv in $LIRC_SYMTAB; do
+		%{kgcc} %{rpmcflags} -D__KERNEL__ -DMODULE -DHAVE_CONFIG_H \
+		-DEXPORT_SYMTAB \
+		-DIRCTL_DEV_MAJOR=61 -I.. -I%{_kernelsrcdir}/include \
+		-fno-strict-aliasing -fno-common \
+		-c -o $drv.o $drv/$drv.c
+	done
 fi
 
 # SMP
 if [ -n "$LIRC_NORMAL" ]; then
-  for drv in $LIRC_NORMAL; do
-	%{kgcc} %{rpmcflags} -D__KERNEL__ -DMODULE -DHAVE_CONFIG_H \
-	-D__KERNEL_SMP=1 -DIRCTL_DEV_MAJOR=61 -I.. -I%{_kernelsrcdir}/include \
-	-fno-strict-aliasing -fno-common \
-	-c -o $drv/$drv.o $drv/$drv.c
-  done
+	for drv in $LIRC_NORMAL; do
+		%{kgcc} %{rpmcflags} -D__KERNEL__ -DMODULE -DHAVE_CONFIG_H \
+		-D__KERNEL_SMP=1 -DIRCTL_DEV_MAJOR=61 -I.. -I%{_kernelsrcdir}/include \
+		-fno-strict-aliasing -fno-common \
+		-c -o $drv/$drv.o $drv/$drv.c
+	done
 fi
 
 if [ -n "$LIRC_SYMTAB" ]; then
-  for drv in $LIRC_SYMTAB; do
-	%{kgcc} %{rpmcflags} -D__KERNEL__ -DMODULE -DHAVE_CONFIG_H \
-	-D__KERNEL_SMP=1 -DEXPORT_SYMTAB \
-	-DIRCTL_DEV_MAJOR=61 -I.. -I%{_kernelsrcdir}/include \
-	-fno-strict-aliasing -fno-common \
-	-c -o $drv/$drv.o $drv/$drv.c
-  done
+	for drv in $LIRC_SYMTAB; do
+		%{kgcc} %{rpmcflags} -D__KERNEL__ -DMODULE -DHAVE_CONFIG_H \
+		-D__KERNEL_SMP=1 -DEXPORT_SYMTAB \
+		-DIRCTL_DEV_MAJOR=61 -I.. -I%{_kernelsrcdir}/include \
+		-fno-strict-aliasing -fno-common \
+		-c -o $drv/$drv.o $drv/$drv.c
+	done
 fi
 %endif
 
@@ -852,30 +852,30 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del lircmd
 fi
 
-%post -n kernel-char-lirc-atiusb
+%post	-n kernel-char-lirc-atiusb
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_atiusb' line"
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel-char-lirc-atiusb
+%postun	-n kernel-char-lirc-atiusb
 %depmod %{_kernel_ver}
 
-%post -n kernel-char-lirc-bt829
+%post	-n kernel-char-lirc-bt829
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_bt829' line"
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel-char-lirc-bt829
+%postun	-n kernel-char-lirc-bt829
 %depmod %{_kernel_ver}
 
 %post	-n kernel-char-lirc-dev
 %depmod %{_kernel_ver}
 
-%postun -n kernel-char-lirc-dev
+%postun	-n kernel-char-lirc-dev
 %depmod %{_kernel_ver}
 
 %post	-n kernel-char-lirc-gpio
@@ -885,7 +885,7 @@ if [ "$1" = "1" ]; then
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel-char-lirc-gpio
+%postun	-n kernel-char-lirc-gpio
 %depmod %{_kernel_ver}
 
 %post	-n kernel-char-lirc-i2c
@@ -895,37 +895,37 @@ if [ "$1" = "1" ]; then
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel-char-lirc-i2c
+%postun	-n kernel-char-lirc-i2c
 %depmod %{_kernel_ver}
 
-%post   -n kernel-char-lirc-it87
+%post	-n kernel-char-lirc-it87
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_it87' line"
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel-char-lirc-it87
+%postun	-n kernel-char-lirc-it87
 %depmod %{_kernel_ver}
 
-%post   -n kernel-char-lirc-mceusb
+%post	-n kernel-char-lirc-mceusb
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_mceusb' line"
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel-char-lirc-mceusb
+%postun	-n kernel-char-lirc-mceusb
 %depmod %{_kernel_ver}
 
-%post   -n kernel-char-lirc-sasem
+%post	-n kernel-char-lirc-sasem
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_sasem' line"
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel-char-lirc-sasem
+%postun	-n kernel-char-lirc-sasem
 %depmod %{_kernel_ver}
 
 %post	-n kernel-char-lirc-serial
@@ -935,7 +935,7 @@ if [ "$1" = "1" ]; then
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel-char-lirc-serial
+%postun	-n kernel-char-lirc-serial
 %depmod %{_kernel_ver}
 
 %post	-n kernel-char-lirc-parallel
@@ -945,7 +945,7 @@ if [ "$1" = "1" ]; then
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel-char-lirc-parallel
+%postun	-n kernel-char-lirc-parallel
 %depmod %{_kernel_ver}
 
 %post	-n kernel-char-lirc-sir
@@ -955,33 +955,33 @@ if [ "$1" = "1" ]; then
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel-char-lirc-sir
+%postun	-n kernel-char-lirc-sir
 %depmod %{_kernel_ver}
 
-%post -n kernel-smp-char-lirc-atiusb
+%post	-n kernel-smp-char-lirc-atiusb
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_atiusb' line"
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel-smp-char-lirc-atiusb
+%postun	-n kernel-smp-char-lirc-atiusb
 %depmod %{_kernel_ver}
 
-%post   -n kernel-smp-char-lirc-bt829
+%post	-n kernel-smp-char-lirc-bt829
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_bt829' line"
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel-smp-char-lirc-bt829
+%postun	-n kernel-smp-char-lirc-bt829
 %depmod %{_kernel_ver}
 
 %post	-n kernel-smp-char-lirc-dev
 %depmod %{_kernel_ver}smp
 
-%postun -n kernel-smp-char-lirc-dev
+%postun	-n kernel-smp-char-lirc-dev
 %depmod %{_kernel_ver}smp
 
 %post	-n kernel-smp-char-lirc-gpio
@@ -991,7 +991,7 @@ if [ "$1" = "1" ]; then
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel-smp-char-lirc-gpio
+%postun	-n kernel-smp-char-lirc-gpio
 %depmod %{_kernel_ver}smp
 
 %post	-n kernel-smp-char-lirc-i2c
@@ -1001,37 +1001,37 @@ if [ "$1" = "1" ]; then
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel-smp-char-lirc-i2c
+%postun	-n kernel-smp-char-lirc-i2c
 %depmod %{_kernel_ver}smp
 
-%post -n kernel-smp-char-lirc-it87
+%post	-n kernel-smp-char-lirc-it87
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_it87' line"
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel-smp-char-lirc-it87
+%postun	-n kernel-smp-char-lirc-it87
 %depmod %{_kernel_ver}
 
-%post   -n kernel-smp-char-lirc-mceusb
+%post	-n kernel-smp-char-lirc-mceusb
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_mceusb' line"
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel-smp-char-lirc-mceusb
+%postun	-n kernel-smp-char-lirc-mceusb
 %depmod %{_kernel_ver}
 
-%post   -n kernel-smp-char-lirc-sasem
+%post	-n kernel-smp-char-lirc-sasem
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_sasem' line"
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel-smp-char-lirc-sasem
+%postun	-n kernel-smp-char-lirc-sasem
 %depmod %{_kernel_ver}
 
 %post	-n kernel-smp-char-lirc-serial
@@ -1041,17 +1041,17 @@ if [ "$1" = "1" ]; then
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel-smp-char-lirc-serial
+%postun	-n kernel-smp-char-lirc-serial
 %depmod %{_kernel_ver}smp
 
-%post -n kernel-smp-char-lirc-parallel
+%post	-n kernel-smp-char-lirc-parallel
 %depmod %{_kernel_ver}smp
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_parallel' line"
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel-smp-char-lirc-parallel
+%postun	-n kernel-smp-char-lirc-parallel
 %depmod %{_kernel_ver}smp
 
 %post	-n kernel-smp-char-lirc-sir
@@ -1061,7 +1061,7 @@ if [ "$1" = "1" ]; then
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel-smp-char-lirc-sir
+%postun	-n kernel-smp-char-lirc-sir
 %depmod %{_kernel_ver}smp
 
 %if %{with userspace}
