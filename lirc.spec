@@ -759,4 +759,4 @@ fi
 
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/*a
+%{_libdir}/*.a
