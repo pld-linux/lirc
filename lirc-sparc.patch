@@ -1,0 +1,16 @@
+--- lirc-0.6.6/drivers/lirc_parallel/lirc_parallel.c.orig	2003-11-10 16:04:43.000000000 +0000
++++ lirc-0.6.6/drivers/lirc_parallel/lirc_parallel.c	2003-11-10 16:27:55.000000000 +0000
+@@ -75,6 +75,13 @@
+ #include <asm/signal.h>
+ #include <asm/irq.h>
+ 
++#if defined(__sparc__) && defined(enable_irq)
++#  undef enable_irq
++#endif
++#if defined(__sparc__) && defined(disable_irq)
++#  undef disable_irq
++#endif
++
+ #ifdef KERNEL_2_2
+ #include <asm/uaccess.h>
+ #include <linux/poll.h>
