@@ -1,14 +1,6 @@
 diff -urN lirc-0.6.3.org/drivers/lirc_parallel/lirc_parallel.c lirc-0.6.3/drivers/lirc_parallel/lirc_parallel.c
 --- lirc-0.6.3.org/drivers/lirc_parallel/lirc_parallel.c	Thu Jul 12 00:41:24 2001
 +++ lirc-0.6.3/drivers/lirc_parallel/lirc_parallel.c	Fri Jul 13 10:15:55 2001
-@@ -45,6 +45,7 @@
- #include <asm/io.h>
- #include <asm/signal.h>
- #include <asm/irq.h>
-+#include <asm/spinlock.h>
- 
- #ifdef KERNEL_2_2
- #include <asm/uaccess.h>
 @@ -447,6 +448,7 @@
  	unsigned int i;
  	unsigned int level,newlevel;
@@ -54,14 +46,6 @@ diff -urN lirc-0.6.3.org/drivers/lirc_parallel/lirc_parallel.c lirc-0.6.3/driver
 diff -urN lirc-0.6.3.org/drivers/lirc_serial/lirc_serial.c lirc-0.6.3/drivers/lirc_serial/lirc_serial.c
 --- lirc-0.6.3.org/drivers/lirc_serial/lirc_serial.c	Thu Jul 12 00:41:24 2001
 +++ lirc-0.6.3/drivers/lirc_serial/lirc_serial.c	Fri Jul 13 10:12:32 2001
-@@ -66,6 +66,7 @@
- #include <asm/segment.h>
- #include <asm/io.h>
- #include <asm/irq.h>
-+#include <asm/spinlock.h>
- #include <asm/fcntl.h>
- 
- #include "drivers/lirc.h"
 @@ -439,6 +440,7 @@
  static int init_port(void)
  {
