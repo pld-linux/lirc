@@ -383,7 +383,10 @@ Summary:	Linux Infrared Remote Control - X11 utilities
 Summary(pl):	Zdalna kontrola Linuxa za pomoc± podczerwieni - narzêdzia X11
 Group:		X11/Applications
 Group(de):	X11/Applikationen
+Group(es):	X11/Aplicaciones
 Group(pl):	X11/Aplikacje
+Group(pt_BR):	X11/Aplicações
+Group(pt):	X11/Aplicações
 
 %description X11
 Linux Infrared Remote Control - X11 utilities.
