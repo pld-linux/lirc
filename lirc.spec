@@ -26,7 +26,7 @@ BuildRequires:	libtool
 BuildRequires:	XFree86-devel
 BuildRequires:	egcs
 Prereq:		/sbin/depmod
-Prereq:		chkconfig
+Prereq:		/sbin/chkconfig
 Requires:	dev >= 2.8.0-3
 Requires:	modutils >= 2.4.6-4
 %conflicts_kernel_ver
@@ -172,35 +172,15 @@ mv remotes/generic remotes/remotes
 
 %post
 /sbin/depmod -a
-/sbin/chkconfig --add lircd
-if [ -f /var/lock/subsys/lircd ]; then
-	/etc/rc.d/init.d/lircd restart >&2
-else
-	echo "Run \"/etc/rc.d/init.d/lircd start\" to start lircd." >&2
-fi
-/sbin/chkconfig --add lircmd
-if [ -f /var/lock/subsys/lircmd ]; then
-	/etc/rc.d/init.d/lircmd restart >&2
-else
-	echo "Run \"/etc/rc.d/init.d/lircmd start\" to start lircmd." >&2
-fi
+NAME=lircd; DESC="lirc daemon"; %chkconfig_add
+NAME=lircmd; DESC="lirc mouse daemon"; %chkconfig_add
 echo "If you are using a kernel-module-based driver, don't forget to add an"
 echo "'alias lirc <your_driver>' line to your /etc/modules.conf. See"
 echo "%{_docdir}/%{name}-%{version}/DRIVERS.gz for details."
 
 %preun
-if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/lircd ]; then
-		/etc/rc.d/init.d/lircd stop >&2
-	fi
-	/sbin/chkconfig --del lircd
-fi
-if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/lircmd ]; then
-		/etc/rc.d/init.d/lircmd stop >&2
-	fi
-	/sbin/chkconfig --del lircmd
-fi
+NAME=lircd; %chkconfig_del
+NAME=lircmd; %chkconfig_del
 
 %postun
 /sbin/depmod -a
