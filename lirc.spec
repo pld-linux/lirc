@@ -13,7 +13,7 @@ Version:	0.6.5
 Release:	%{_rel}
 License:	GPL
 Group:		Daemons
-Source0:	http://download.sourceforge.net/LIRC/%{name}-%{version}.tar.bz2
+Source0:	http://dl.sourceforge.net/lirc/%{name}-%{version}.tar.bz2
 Source1:	http://www.lirc.org/remotes.tar.gz
 Source2:	%{name}d.sysconfig
 Source3:	%{name}d.init
