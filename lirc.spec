@@ -6,7 +6,7 @@
 %define		_kernel_ver %(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
 %define		_kernel_ver_str %(echo %{_kernel_ver} | sed s/-/_/g)
 # needed because of release macro expansion
-%define		_release	0
+%define		_release	0.9
 
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl):	Serwery do zdalnej kontroli Linuxa za pomoc± podczerwieni
@@ -19,9 +19,8 @@ Source2:	lircd.sysconfig
 Source3:	lircd.init
 Source4:	lircmd.init
 Patch0:		%{name}-opt.patch
-#Patch1:		%{name}-spinlock.patch
-Patch2:		%{name}-tmp.patch
-Patch3:		%{name}-devfs.patch
+Patch1:		%{name}-tmp.patch
+Patch2:		%{name}-devfs.patch
 License:	GPL
 URL:		http://www.lirc.org/
 Group:		Daemons
@@ -459,9 +458,8 @@ na LIRC.
 %prep
 %setup -q -a 1
 %patch0 -p1
-#%patch1 -p1
+%patch1 -p1
 %patch2 -p1
-%patch3 -p1
 
 %build
 echo '#' > drivers/Makefile.am
