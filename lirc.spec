@@ -8,6 +8,7 @@ Name:		lirc
 Version:	0.6.3 
 Release:	3
 Source0:	http://download.sourceforge.net/LIRC/%{name}-%{version}.tar.gz
+Source1:	http://www.lirc.org/remotes.tar.gz
 Source2:	%{name}.sysconfig
 Source3:	%{name}d.init
 Source4:	%{name}md.init
@@ -32,7 +33,7 @@ BuildRequires:	XFree86-devel
 BuildRequires:	egcs
 Prereq:		chkconfig
 # didn't use /tmp/.lircd
-Conflicts:	lirc-libs < 0.6.3-3
+Conflicts:	%{name}-libs < 0.6.3-3
 
 %define		_x11bindir	%{_prefix}/X11R6/bin
 
@@ -86,7 +87,7 @@ Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 # didn't use /tmp/.lircd
-Conflicts:	lirc < 0.6.3-3
+Conflicts:	%{name} < 0.6.3-3
 
 %description libs
 This package provides the libraries necessary to run lirc client
@@ -129,8 +130,24 @@ programs.
 Pliki potrzebne do tworzenia ³±czonych statycznie programów opartych
 na LIRC.
 
+%package remotes
+Summary:	LIRC configuration files for many popular remotes
+Summary(pl):	Pliki konfiguracyjne LIRC'a dla wielu popularnych pilotów
+Group:		Daemons
+Group(de):	Server
+Group(pl):	Serwery
+Requires:	%{name}
+
+%description remotes
+This package contains LIRC configuraion files for more than 400 
+popular remotes.
+
+%description remotes -l pl
+Pakiet ten zawiera pliki konfiguracyjne LIRC'a dla ponad 400 
+popularnych pilotów.
+
 %prep
-%setup -q
+%setup -q -a 1
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -173,6 +190,7 @@ install -d $RPM_BUILD_ROOT%{_bindir}
 install -d $RPM_BUILD_ROOT/dev
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,sysconfig}
 install -d $RPM_BUILD_ROOT%{_datadir}/lircmd
+install -d $RPM_BUILD_ROOT%{_datadir}/lircd
 install -d $RPM_BUILD_ROOT%{_x11bindir}
 install -d $RPM_BUILD_ROOT%{_aclocaldir}
 install -d $RPM_BUILD_ROOT%{_localstatedir}/log
@@ -182,7 +200,9 @@ install -d $RPM_BUILD_ROOT%{_localstatedir}/log
 install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
 install -m644 drivers/*/*.o $RPM_BUILD_ROOT/lib/modules/*/misc
 
+# this files would also suit good in "remotes" package
 cat remotes/*/lircd.conf.* > $RPM_BUILD_ROOT%{_sysconfdir}/lircd.conf
+
 cp remotes/*/lircmd.conf.* $RPM_BUILD_ROOT%{_datadir}/lircmd
 install contrib/*.m4 $RPM_BUILD_ROOT%{_aclocaldir}
 mv $RPM_BUILD_ROOT%{_bindir}/{irxevent,xmode2} $RPM_BUILD_ROOT%{_x11bindir}
@@ -193,9 +213,20 @@ install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/lirc
 install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/lircd
 install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/lircmd
 
-gzip -9nf ANNOUNCE AUTHORS DRIVERS NEWS README TODO doc/irxevent.keys
-gzip -9nf remotes/generic/*.conf contrib/lircrc
-mv remotes/generic remotes/remotes
+cd remotes
+for dir in *; do
+    for file in $dir/!(*.conf.*|*.jpg); do
+        if [ -f $file ]; then 
+	    cp $file generic/$dir-`basename $file`.conf; 
+	fi
+    done
+done 
+cd -
+
+install remotes/generic/*.conf $RPM_BUILD_ROOT%{_datadir}/lircd
+
+gzip -9nf ANNOUNCE DRIVERS AUTHORS NEWS README TODO doc/irxevent.keys
+gzip -9nf contrib/lircrc
 
 %post libs -p /sbin/ldconfig
 %postun libs -p /sbin/ldconfig
@@ -249,9 +280,12 @@ fi
 %config %{_sysconfdir}/sysconfig/*
 %config %{_sysconfdir}/*.conf
 %ghost %attr(600,root,root) %{_localstatedir}/log/lircd
-%{_datadir}/lircmd
 %doc *.gz remotes/remotes contrib/*.gz
 %doc doc/*.gz doc/doc.html doc/html doc/images
+
+%files remotes
+%{_datadir}/lircmd
+%{_datadir}/lircd
 
 %files modules
 %defattr(644,root,root,755)
