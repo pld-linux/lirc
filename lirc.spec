@@ -12,13 +12,13 @@ Summary:	Linux Infrared Remote Control daemons
 Summary(pl):	Serwery do zdalnego sterowania Linuksem za pomoc± podczerwieni
 Name:		lirc
 Version:	0.7.0
-%define _pre	pre7
+%define _pre	pre8
 %define _rel	0.%{_pre}.1
 Release:	%{_rel}
 License:	GPL
 Group:		Daemons
 Source0:	http://lirc.sourceforge.net/software/snapshots/%{name}-%{version}%{_pre}.tar.bz2
-# Source0-md5:	6e8e6d847042e17151eaf58266b58759
+# Source0-md5:	aa3b1dccf187753753e392d681bc8b21
 Source1:	http://lirc.sourceforge.net/remotes.tar.bz2
 # Source1-md5:	d62dac74373baebb2a61cae40d98ae9e
 Source2:	%{name}d.sysconfig
@@ -26,7 +26,14 @@ Source3:	%{name}d.init
 Source4:	%{name}md.init
 Patch0:		%{name}-opt.patch
 Patch1:		%{name}-tmp.patch
+Patch2:		%{name}-devfs.patch
 Patch3:		%{name}-no-svgalib.patch
+Patch4:		%{name}-alpha.patch
+#Patch5:	%{name}-makpc.patch obsolete? makpc=pcmak ?
+#Patch6:	%{name}-udp.patch Obsolete
+#Patch7:	http://delvare.free.fr/i2c/other/%{name}-0.6.6-i2c-2.8.0.patch
+Patch7:		lirc-i2c-2.8.x.patch
+Patch8:		%{name}-sparc.patch
 Patch9:		%{name}-am18.patch
 URL:		http://www.lirc.org/
 %{?with_x:BuildRequires:	XFree86-devel}
@@ -441,12 +448,24 @@ Modu³ lirc_sir.
 
 %prep
 %setup -q -a 1 -n %{name}-%{version}%{_pre}
+%patch0 -p1
+%patch1 -p1
+#%%patch2 -p1
 %if %{without svga}
 %patch3 -p1
 %endif
-
+#%%patch4 -p1
+#%%patch6 -p1
+%if %{with kernel}
+if grep -qs 'I2C_VERSION.*"2\.8\.' %{_kernelsrcdir}/include/linux/i2c.h ; then
+%patch7 -p0
+fi
+%endif
+#%%patch8 -p1
+%patch9 -p1
 
 %build
+echo '#' > drivers/Makefile.am
 %{__libtoolize}
 %{__aclocal}
 %{__automake}
@@ -707,7 +726,7 @@ fi
 %doc contrib/lircrc doc/{html,images,lirc.css} remotes
 %attr(755,root,root) %{_bindir}/ir[!x]*
 %attr(755,root,root) %{_bindir}/mode2
-%attr(755,root,root) %{_bindir}/rc
+#%%attr(755,root,root) %{_bindir}/rc
 %attr(755,root,root) %{_sbindir}/*
 %attr(754,root,root) /etc/rc.d/init.d/*
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/sysconfig/*
