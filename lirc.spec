@@ -2,7 +2,7 @@ Summary:	Linux Infrared Remote Control
 Summary(pl):	Zdalna kontrola Linuxa za pomoc± podczerwieni
 Name:		lirc
 Version:	0.6.3 
-Release:	1
+Release:	1@%{_kernel_ver}
 Source0:	http://download.sourceforge.net/LIRC/%{name}-%{version}.tar.gz
 Source1:	%{name}-mksocket.c
 Source2:	%{name}.sysconfig
@@ -29,8 +29,8 @@ Prereq:		/sbin/depmod
 Prereq:		chkconfig
 Requires:	dev >= 2.8.0-3
 Requires:	modutils >= 2.4.6-4
+%conflicts_kernel_ver
 
-%define		_kernel_ver	%(grep UTS_RELEASE /usr/src/linux/include/linux/version.h 2>/dev/null |cut -d'"' -f2)
 %define		_x11bindir	%{_prefix}/X11R6/bin
 
 %description
