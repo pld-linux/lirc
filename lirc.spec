@@ -692,6 +692,20 @@ pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
 
 Modu³ lirc_sir.
 
+%package	remotes
+Summary:        Lirc remotes database
+#Summary(pl):	?
+Group:		Documentation
+Requires:	%{name} = %{version}-%{_rel}
+
+%description remotes
+This package contains configuration files for many remotes
+supported by lirc.
+
+%description remotes -l pl
+Ten pakiet zawiera pliki konfiguracyjne dla wielu pilotów
+obs³ugiwanych przez lirc.
+
 %prep
 %setup -q -a 1
 %patch0 -p1
@@ -1061,9 +1075,8 @@ fi
 %if %{with userspace}
 %files
 %defattr(644,root,root,755)
-# XXX: are jpegs in docs (remotes) a good idea?
 %doc ANNOUNCE AUTHORS NEWS README TODO ChangeLog
-%doc contrib/lircrc doc/{html,images,lirc.css} remotes
+%doc contrib/lircrc doc/{html,images,lirc.css}
 %attr(755,root,root) %{_bindir}/ir[!x]*
 %attr(755,root,root) %{_bindir}/mode2
 #%%attr(755,root,root) %{_bindir}/rc
@@ -1075,6 +1088,11 @@ fi
 %{_mandir}/man1/[!isx]*
 %{_mandir}/man8/*
 %ghost %attr(600,root,root) /var/log/lircd
+
+%files remotes
+# XXX: are jpegs in docs (remotes) a good idea?
+%defattr(644,root,root,755)
+%doc remotes
 
 %if %{with x}
 %files X11
