@@ -757,7 +757,7 @@ fi
 /lib/modules/%{_kernel_ver}smp/*/lirc_sir*
 %endif
 
-%if %{!?_without_x:1)%{?_without_x:0}
+%if %{!?_without_x:1}%{?_without_x:0}
 %files X11
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/irxevent
