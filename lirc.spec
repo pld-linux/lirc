@@ -5,8 +5,6 @@
 
 %define		_kernel_ver %(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
 %define		_kernel_ver_str %(echo %{_kernel_ver} | sed s/-/_/g)
-%define		smpstr	%{?_with_smp:-smp}
-%define		smp	%{?_with_smp:1}%{!?_with_smp:0}
 # needed because of release macro expansion
 %define		_release	3
 
@@ -52,7 +50,7 @@ LIRC to program pozwalaj±cy na dekodowanie nadchodz±cych oraz
 wysy³anie sygna³ów w podczerwieni za pomoc± wielu (ale nie wszystkich)
 popularnych urz±dzeñ do zdalnej kontroli
 
-%package -n kernel%{smpstr}-char-lirc-dev
+%package -n kernel-char-lirc-dev
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
@@ -61,26 +59,25 @@ Group(pl):	Podstawowe/J±dro
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
-%{!?_without_dist_kernel:Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
-%{!?_without_dist_kernel:Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}}
+%{!?_without_dist_kernel:Requires:	kernel-up = %{_kernel_ver}}
 Requires:	%{name} = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-dev
 
-%description -n kernel%{smpstr}-char-lirc-dev
+%description -n kernel-char-lirc-dev
 This package contains the kernel modules necessary to operate some
 infrared remote control devices (such as the ones bundled with TV
 cards).
 
 lirc_dev module.
 
-%description -n kernel%{smpstr}-char-lirc-dev -l pl
+%description -n kernel-char-lirc-dev -l pl
 Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
 pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
 
 Modu³ lirc_dev.
 
-%package -n kernel%{smpstr}-char-lirc-gpio
+%package -n kernel-char-lirc-gpio
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
@@ -89,27 +86,26 @@ Group(pl):	Podstawowe/J±dro
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
-%{!?_without_dist_kernel:Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
-%{!?_without_dist_kernel:Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}}
+%{!?_without_dist_kernel:Requires:	kernel-up = %{_kernel_ver}}
 Requires:	%{name} = %{version}
-Requires:	kernel%{smpstr}-char-lirc-dev = %{version}
+Requires:	kernel-char-lirc-dev = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-gpio
 
-%description -n kernel%{smpstr}-char-lirc-gpio
+%description -n kernel-char-lirc-gpio
 This package contains the kernel modules necessary to operate some
 infrared remote control devices (such as the ones bundled with TV
 cards).
 
 lirc_gpio module.
 
-%description -n kernel%{smpstr}-char-lirc-gpio -l pl
+%description -n kernel-char-lirc-gpio -l pl
 Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
 pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
 
 Modu³ lirc_gpio.
 
-%package -n kernel%{smpstr}-char-lirc-i2c
+%package -n kernel-char-lirc-i2c
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
@@ -118,27 +114,26 @@ Group(pl):	Podstawowe/J±dro
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
-%{!?_without_dist_kernel:Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
-%{!?_without_dist_kernel:Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}}
+%{!?_without_dist_kernel:Requires:	kernel-up = %{_kernel_ver}}
 Requires:	%{name} = %{version}
-Requires:	kernel%{smpstr}-char-lirc-dev = %{version}
+Requires:	kernel-char-lirc-dev = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-i2c
 
-%description -n kernel%{smpstr}-char-lirc-i2c
+%description -n kernel-char-lirc-i2c
 This package contains the kernel modules necessary to operate some
 infrared remote control devices (such as the ones bundled with TV
 cards).
 
 lirc_i2c module.
 
-%description -n kernel%{smpstr}-char-lirc-i2c -l pl
+%description -n kernel-char-lirc-i2c -l pl
 Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
 pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
 
 Modu³ lirc_i2c
 
-%package -n kernel%{smpstr}-char-lirc-serial
+%package -n kernel-char-lirc-serial
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
@@ -147,26 +142,25 @@ Group(pl):	Podstawowe/J±dro
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
-%{!?_without_dist_kernel:Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
-%{!?_without_dist_kernel:Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}}
+%{!?_without_dist_kernel:Requires:	kernel-up = %{_kernel_ver}}
 Requires:	%{name} = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-serial
 
-%description -n kernel%{smpstr}-char-lirc-serial
+%description -n kernel-char-lirc-serial
 This package contains the kernel modules necessary to operate some
 infrared remote control devices (such as the ones bundled with TV
 cards).
 
 lirc_serial module for devices connected to serial port.
 
-%description -n kernel%{smpstr}-char-lirc-serial -l pl
+%description -n kernel-char-lirc-serial -l pl
 Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
 pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
 
 Modu³ lirc_serial dla urz±dzeñ pod³±czanych do serial portu.
 
-%package -n kernel%{smpstr}-char-lirc-parallel
+%package -n kernel-char-lirc-parallel
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
@@ -175,26 +169,25 @@ Group(pl):	Podstawowe/J±dro
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
-%{!?_without_dist_kernel:Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
-%{!?_without_dist_kernel:Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}}
+%{!?_without_dist_kernel:Requires:	kernel-up = %{_kernel_ver}}
 Requires:	%{name} = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-parallel
 
-%description -n kernel%{smpstr}-char-lirc-parallel
+%description -n kernel-char-lirc-parallel
 This package contains the kernel modules necessary to operate some
 infrared remote control devices (such as the ones bundled with TV
 cards).
 
 lirc-parallel module for devices connected to parallel port.
 
-%description -n kernel%{smpstr}-char-lirc-parallel -l pl
+%description -n kernel-char-lirc-parallel -l pl
 Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
 pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
 
 Modu³ lirc_parallel dla urz±dzeñ pod³±czanych do portu równoleg³ego.
 
-%package -n kernel%{smpstr}-char-lirc-sir
+%package -n kernel-char-lirc-sir
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
@@ -203,21 +196,184 @@ Group(pl):	Podstawowe/J±dro
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
-%{!?_without_dist_kernel:Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
-%{!?_without_dist_kernel:Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}}
+%{!?_without_dist_kernel:Requires:	kernel-up = %{_kernel_ver}}
 Requires:	%{name} = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-sir
 
-%description -n kernel%{smpstr}-char-lirc-sir
+%description -n kernel-char-lirc-sir
 This package contains the kernel modules necessary to operate some
 infrared remote control devices (such as the ones bundled with TV
 cards).
 
 lirc_sir module.
 
-%description -n kernel%{smpstr}-char-lirc-sir -l pl
+%description -n kernel-char-lirc-sir -l pl
 Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
+pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+
+Modu³ lirc_sir.
+
+%package -n kernel-smp-char-lirc-dev
+Summary:	SMP kernel modules for Linux Infrared Remote Control
+Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
+Group:		Base/Kernel
+Group(de):	Grundsätzlich/Kern
+Group(pl):	Podstawowe/J±dro
+Release:	%{_release}@%{_kernel_ver_str}
+Prereq:		modutils >= 2.4.6-4
+Requires:	dev >= 2.8.0-3
+%{!?_without_dist_kernel:Requires:	kernel-smp = %{_kernel_ver}}
+Requires:	%{name} = %{version}
+Obsoletes:	lirc-modules
+Obsoletes:	lirc-modules-dev
+
+%description -n kernel-smp-char-lirc-dev
+This package contains the SMP kernel modules necessary to operate some
+infrared remote control devices (such as the ones bundled with TV
+cards).
+
+lirc_dev module.
+
+%description -n kernel-smp-char-lirc-dev -l pl
+Ten pakiet zawiera modu³y j±dra SMP niezbêdne do obs³ugi niektórych
+pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+
+Modu³ lirc_dev.
+
+%package -n kernel-smp-char-lirc-gpio
+Summary:	SMP kernel modules for Linux Infrared Remote Control
+Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
+Group:		Base/Kernel
+Group(de):	Grundsätzlich/Kern
+Group(pl):	Podstawowe/J±dro
+Release:	%{_release}@%{_kernel_ver_str}
+Prereq:		modutils >= 2.4.6-4
+Requires:	dev >= 2.8.0-3
+%{!?_without_dist_kernel:Requires:	kernel-smp = %{_kernel_ver}}
+Requires:	%{name} = %{version}
+Requires:	kernel-smp-char-lirc-dev = %{version}
+Obsoletes:	lirc-modules
+Obsoletes:	lirc-modules-gpio
+
+%description -n kernel-smp-char-lirc-gpio
+This package contains the SMP kernel modules necessary to operate some
+infrared remote control devices (such as the ones bundled with TV
+cards).
+
+lirc_gpio module.
+
+%description -n kernel-smp-char-lirc-gpio -l pl
+Ten pakiet zawiera modu³y j±dra SMP niezbêdne do obs³ugi niektórych
+pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+
+Modu³ lirc_gpio.
+
+%package -n kernel-smp-char-lirc-i2c
+Summary:	SMP kernel modules for Linux Infrared Remote Control
+Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
+Group:		Base/Kernel
+Group(de):	Grundsätzlich/Kern
+Group(pl):	Podstawowe/J±dro
+Release:	%{_release}@%{_kernel_ver_str}
+Prereq:		modutils >= 2.4.6-4
+Requires:	dev >= 2.8.0-3
+%{!?_without_dist_kernel:Requires:	kernel-smp = %{_kernel_ver}}
+Requires:	%{name} = %{version}
+Requires:	kernel-smp-char-lirc-dev = %{version}
+Obsoletes:	lirc-modules
+Obsoletes:	lirc-modules-i2c
+
+%description -n kernel-smp-char-lirc-i2c
+This package contains the SMP kernel modules necessary to operate some
+infrared remote control devices (such as the ones bundled with TV
+cards).
+
+lirc_i2c module.
+
+%description -n kernel-smp-char-lirc-i2c -l pl
+Ten pakiet zawiera modu³y j±dra SMP niezbêdne do obs³ugi niektórych
+pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+
+Modu³ lirc_i2c
+
+%package -n kernel-smp-char-lirc-serial
+Summary:	SMP kernel modules for Linux Infrared Remote Control
+Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
+Group:		Base/Kernel
+Group(de):	Grundsätzlich/Kern
+Group(pl):	Podstawowe/J±dro
+Release:	%{_release}@%{_kernel_ver_str}
+Prereq:		modutils >= 2.4.6-4
+Requires:	dev >= 2.8.0-3
+%{!?_without_dist_kernel:Requires:	kernel-smp = %{_kernel_ver}}
+Requires:	%{name} = %{version}
+Obsoletes:	lirc-modules
+Obsoletes:	lirc-modules-serial
+
+%description -n kernel-smp-char-lirc-serial
+This package contains the SMP kernel modules necessary to operate some
+infrared remote control devices (such as the ones bundled with TV
+cards).
+
+lirc_serial module for devices connected to serial port.
+
+%description -n kernel-smp-char-lirc-serial -l pl
+Ten pakiet zawiera modu³y j±dra SMP niezbêdne do obs³ugi niektórych
+pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+
+Modu³ lirc_serial dla urz±dzeñ pod³±czanych do serial portu.
+
+%package -n kernel-smp-char-lirc-parallel
+Summary:	SMP kernel modules for Linux Infrared Remote Control
+Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
+Group:		Base/Kernel
+Group(de):	Grundsätzlich/Kern
+Group(pl):	Podstawowe/J±dro
+Release:	%{_release}@%{_kernel_ver_str}
+Prereq:		modutils >= 2.4.6-4
+Requires:	dev >= 2.8.0-3
+%{!?_without_dist_kernel:Requires:	kernel-smp = %{_kernel_ver}}
+Requires:	%{name} = %{version}
+Obsoletes:	lirc-modules
+Obsoletes:	lirc-modules-parallel
+
+%description -n kernel-smp-char-lirc-parallel
+This package contains the SMP kernel modules necessary to operate some
+infrared remote control devices (such as the ones bundled with TV
+cards).
+
+lirc-parallel module for devices connected to parallel port.
+
+%description -n kernel-char-lirc-parallel -l pl
+Ten pakiet zawiera modu³y j±dra SMP niezbêdne do obs³ugi niektórych
+pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+
+Modu³ lirc_parallel dla urz±dzeñ pod³±czanych do portu równoleg³ego.
+
+%package -n kernel-smp-char-lirc-sir
+Summary:	SMP kernel modules for Linux Infrared Remote Control
+Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
+Group:		Base/Kernel
+Group(de):	Grundsätzlich/Kern
+Group(pl):	Podstawowe/J±dro
+Release:	%{_release}@%{_kernel_ver_str}
+Prereq:		modutils >= 2.4.6-4
+Requires:	dev >= 2.8.0-3
+%{!?_without_dist_kernel:Requires:	kernel-smp = %{_kernel_ver}}
+Requires:	%{name} = %{version}
+Obsoletes:	lirc-modules
+Obsoletes:	lirc-modules-sir
+
+%description -n kernel-smp-char-lirc-sir
+This package contains the SMP kernel modules necessary to operate some
+infrared remote control devices (such as the ones bundled with TV
+cards).
+
+lirc_sir module.
+
+%description -n kernel-smp-char-lirc-sir -l pl
+Ten pakiet zawiera modu³y j±dra SMP niezbêdne do obs³ugi niektórych
 pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
 
 Modu³ lirc_sir.
@@ -323,26 +479,44 @@ autoconf
 	--without-soft-carrier
 %{__make}
 
-%if %{smp}
-SMP="-D__KERNEL_SMP=1"
-%endif
-
 cd drivers
 
 # lirc_parallel is not smp safe
 
 # 2.4 drivers
-LIRC_NORMAL="lirc_gpio lirc_i2c %{!?_with_smp:lirc_parallel} lirc_serial lirc_sir"
+LIRC_NORMAL="lirc_gpio lirc_i2c lirc_serial lirc_sir"
 LIRC_SYMTAB="lirc_dev"
 
 # 2.2 drivers
-%{!?_with_kernel_2_4:LIRC_NORMAL="%{!?_with_smp:lirc_parallel} lirc_serial lirc_sir"}
+%{!?_with_kernel_2_4:LIRC_NORMAL="lirc_serial lirc_sir"}
 %{!?_with_kernel_2_4:LIRC_SYMTAB=""}
 
+# UP
+
+if [ -n "$LIRC_NORMAL" ]; then
+  for drv in $LIRC_NORMAL lirc_parallel; do
+	kgcc %{rpmcflags} -D__KERNEL__ -DMODULE -DHAVE_CONFIG_H \
+	-DIRCTL_DEV_MAJOR=61 -I.. -I%{_kernelsrcdir}/include \
+	-fno-strict-aliasing -fno-common \
+	-c -o $drv.o $drv/$drv.c
+  done
+fi
+
+if [ -n "$LIRC_SYMTAB" ]; then
+  for drv in $LIRC_SYMTAB; do
+	kgcc %{rpmcflags} -D__KERNEL__ -DMODULE -DHAVE_CONFIG_H \
+	-DEXPORT_SYMTAB \
+	-DIRCTL_DEV_MAJOR=61 -I.. -I%{_kernelsrcdir}/include \
+	-fno-strict-aliasing -fno-common \
+	-c -o $drv.o $drv/$drv.c
+  done
+fi
+
+# SMP
 if [ -n "$LIRC_NORMAL" ]; then
   for drv in $LIRC_NORMAL; do
-	%{__cc} %{rpmcflags} -D__KERNEL__ -DMODULE -DHAVE_CONFIG_H $SMP \
-	-DIRCTL_DEV_MAJOR=61 -I.. -I%{_kernelsrcdir}/include \
+	kgcc %{rpmcflags} -D__KERNEL__ -DMODULE -DHAVE_CONFIG_H \
+	-D__KERNEL_SMP=1 -DIRCTL_DEV_MAJOR=61 -I.. -I%{_kernelsrcdir}/include \
 	-fno-strict-aliasing -fno-common \
 	-c -o $drv/$drv.o $drv/$drv.c
   done
@@ -350,8 +524,8 @@ fi
 
 if [ -n "$LIRC_SYMTAB" ]; then
   for drv in $LIRC_SYMTAB; do
-	%{__cc} %{rpmcflags} -D__KERNEL__ -DMODULE -DHAVE_CONFIG_H $SMP \
-	-DEXPORT_SYMTAB \
+	kgcc %{rpmcflags} -D__KERNEL__ -DMODULE -DHAVE_CONFIG_H \
+	-D__KERNEL_SMP=1 -DEXPORT_SYMTAB \
 	-DIRCTL_DEV_MAJOR=61 -I.. -I%{_kernelsrcdir}/include \
 	-fno-strict-aliasing -fno-common \
 	-c -o $drv/$drv.o $drv/$drv.c
@@ -369,8 +543,9 @@ install -d $RPM_BUILD_ROOT%{_localstatedir}/log
 %{__make} install DESTDIR=$RPM_BUILD_ROOT \
 	sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir}
 
-install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
-cp drivers/*/*.o $RPM_BUILD_ROOT/lib/modules/*/misc
+install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}{,smp}/misc
+cp drivers/*.o $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
+cp drivers/*/*.o $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/misc
 
 cat>$RPM_BUILD_ROOT%{_sysconfdir}/lircd.conf<<END
 #
@@ -426,60 +601,116 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del lircmd
 fi
 
-%post -n kernel%{smpstr}-char-lirc-dev
+%post -n kernel-char-lirc-dev
 /sbin/depmod -a
 
-%postun -n kernel%{smpstr}-char-lirc-dev
+%postun -n kernel-char-lirc-dev
 /sbin/depmod -a
 
-%post -n kernel%{smpstr}-char-lirc-gpio
+%post -n kernel-char-lirc-gpio
 /sbin/depmod -a
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_gpio' line"
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel%{smpstr}-char-lirc-gpio
+%postun -n kernel-char-lirc-gpio
 /sbin/depmod -a
 
-%post -n kernel%{smpstr}-char-lirc-i2c
+%post -n kernel-char-lirc-i2c
 /sbin/depmod -a
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_i2c' line"
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel%{smpstr}-char-lirc-i2c
+%postun -n kernel-char-lirc-i2c
 /sbin/depmod -a
 
-%post -n kernel%{smpstr}-char-lirc-serial
+%post -n kernel-char-lirc-serial
 /sbin/depmod -a
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_serial' line"
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel%{smpstr}-char-lirc-serial
+%postun -n kernel-char-lirc-serial
 /sbin/depmod -a
 
-%post -n kernel%{smpstr}-char-lirc-parallel
+%post -n kernel-char-lirc-parallel
 /sbin/depmod -a
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_parallel' line"
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel%{smpstr}-char-lirc-parallel
+%postun -n kernel-char-lirc-parallel
 /sbin/depmod -a
 
-%post -n kernel%{smpstr}-char-lirc-sir
+%post -n kernel-char-lirc-sir
 /sbin/depmod -a
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_sir' line"
 	echo "to your /etc/modules.conf."
 fi
 
-%postun -n kernel%{smpstr}-char-lirc-sir
+%postun -n kernel-char-lirc-sir
+/sbin/depmod -a
+
+%post -n kernel-smp-char-lirc-dev
+/sbin/depmod -a
+
+%postun -n kernel-smp-char-lirc-dev
+/sbin/depmod -a
+
+%post -n kernel-smp-char-lirc-gpio
+/sbin/depmod -a
+if [ "$1" = "1" ]; then
+	echo "Don't forget to add an 'alias lirc lirc_gpio' line"
+	echo "to your /etc/modules.conf."
+fi
+
+%postun -n kernel-smp-char-lirc-gpio
+/sbin/depmod -a
+
+%post -n kernel-smp-char-lirc-i2c
+/sbin/depmod -a
+if [ "$1" = "1" ]; then
+	echo "Don't forget to add an 'alias lirc lirc_i2c' line"
+	echo "to your /etc/modules.conf."
+fi
+
+%postun -n kernel-smp-char-lirc-i2c
+/sbin/depmod -a
+
+%post -n kernel-smp-char-lirc-serial
+/sbin/depmod -a
+if [ "$1" = "1" ]; then
+	echo "Don't forget to add an 'alias lirc lirc_serial' line"
+	echo "to your /etc/modules.conf."
+fi
+
+%postun -n kernel-smp-char-lirc-serial
+/sbin/depmod -a
+
+%post -n kernel-smp-char-lirc-parallel
+/sbin/depmod -a
+if [ "$1" = "1" ]; then
+	echo "Don't forget to add an 'alias lirc lirc_parallel' line"
+	echo "to your /etc/modules.conf."
+fi
+
+%postun -n kernel-smp-char-lirc-parallel
+/sbin/depmod -a
+
+%post -n kernel-smp-char-lirc-sir
+/sbin/depmod -a
+if [ "$1" = "1" ]; then
+	echo "Don't forget to add an 'alias lirc lirc_sir' line"
+	echo "to your /etc/modules.conf."
+fi
+
+%postun -n kernel-smp-char-lirc-sir
 /sbin/depmod -a
 
 %files
@@ -493,29 +724,56 @@ fi
 %doc *.gz remotes contrib/*.gz
 %doc doc/*.gz doc/doc.html doc/html doc/images
 
-%{?_with_kernel_2_4:%files -n kernel%{smpstr}-char-lirc-dev}
+%{?_with_kernel_2_4:%files -n kernel-char-lirc-dev}
 %{?_with_kernel_2_4:%defattr(644,root,root,755)}
-%{?_with_kernel_2_4:/lib/modules/*/*/lirc_dev*}
+%{?_with_kernel_2_4:/lib/modules/%{_kernel_ver}/*/lirc_dev*}
 
-%{?_with_kernel_2_4:%files -n kernel%{smpstr}-char-lirc-gpio}
+%{?_with_kernel_2_4:%files -n kernel-char-lirc-gpio}
 %{?_with_kernel_2_4:%defattr(644,root,root,755)}
-%{?_with_kernel_2_4:/lib/modules/*/*/lirc_gpio*}
+%{?_with_kernel_2_4:/lib/modules/%{_kernel_ver}/*/lirc_gpio*}
 
-%{?_with_kernel_2_4:%files -n kernel%{smpstr}-char-lirc-i2c}
+%{?_with_kernel_2_4:%files -n kernel-char-lirc-i2c}
 %{?_with_kernel_2_4:%defattr(644,root,root,755)}
-%{?_with_kernel_2_4:/lib/modules/*/*/lirc_i2c*}
+%{?_with_kernel_2_4:/lib/modules/%{_kernel_ver}/*/lirc_i2c*}
 
-%files -n kernel%{smpstr}-char-lirc-serial
+%files -n kernel-char-lirc-serial
 %defattr(644,root,root,755)
-/lib/modules/*/*/lirc_serial*
+/lib/modules/%{_kernel_ver}/*/lirc_serial*
 
-%{!?_with_smp:%files -n kernel%{smpstr}-char-lirc-parallel}
-%{!?_with_smp:%defattr(644,root,root,755)}
-%{!?_with_smp:/lib/modules/*/*/lirc_parallel*}
-
-%files -n kernel%{smpstr}-char-lirc-sir
+%files -n kernel-char-lirc-parallel
 %defattr(644,root,root,755)
-/lib/modules/*/*/lirc_sir*
+/lib/modules/%{_kernel_ver}/*/lirc_parallel*
+
+%files -n kernel-char-lirc-sir
+%defattr(644,root,root,755)
+/lib/modules/%{_kernel_ver}/*/lirc_sir*
+
+%{?_with_kernel_2_4:%files -n kernel-smp-char-lirc-dev}
+%{?_with_kernel_2_4:%defattr(644,root,root,755)}
+%{?_with_kernel_2_4:/lib/modules/%{_kernel_ver}smp/*/lirc_dev*}
+
+%{?_with_kernel_2_4:%files -n kernel-smp-char-lirc-gpio}
+%{?_with_kernel_2_4:%defattr(644,root,root,755)}
+%{?_with_kernel_2_4:/lib/modules/%{_kernel_ver}smp/*/lirc_gpio*}
+
+%{?_with_kernel_2_4:%files -n kernel-smp-char-lirc-i2c}
+%{?_with_kernel_2_4:%defattr(644,root,root,755)}
+%{?_with_kernel_2_4:/lib/modules/%{_kernel_ver}smp/*/lirc_i2c*}
+
+%files -n kernel-smp-char-lirc-serial
+%defattr(644,root,root,755)
+/lib/modules/%{_kernel_ver}smp/*/lirc_serial*
+
+# currently not SMP-safe
+%if 0
+%files -n kernel-smp-char-lirc-parallel
+%defattr(644,root,root,755)
+/lib/modules/%{_kernel_ver}smp/*/lirc_parallel*
+%endif
+
+%files -n kernel-smp-char-lirc-sir
+%defattr(644,root,root,755)
+/lib/modules/%{_kernel_ver}smp/*/lirc_sir*
 
 %files X11
 %defattr(644,root,root,755)
