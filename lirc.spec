@@ -1,11 +1,12 @@
 %define		_kernel_ver %(grep UTS_RELEASE /usr/src/linux/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
-%define		rel 2
+%define		smpstr	%{?_with_smp:smp}%{!?_with_smp:up}
+%define		smp	%{?_with_smp:1}%{!?_with_smp:0}
 
-Summary:	Linux Infrared Remote Control
-Summary(pl):	Zdalna kontrola Linuxa za pomoc± podczerwieni
+Summary:	Linux Infrared Remote Control daemons
+Summary(pl):	Serwery do zdalnej kontroli Linuxa za pomoc± podczerwieni
 Name:		lirc
 Version:	0.6.3 
-Release:	%{rel}@%{_kernel_ver}
+Release:	2
 Source0:	http://download.sourceforge.net/LIRC/%{name}-%{version}.tar.gz
 Source2:	%{name}.sysconfig
 Source3:	%{name}d.init
@@ -47,13 +48,27 @@ LIRC to program pozwalaj±cy na dekodowanie nadchodz±cych oraz
 wysy³anie sygna³ów w podczerwieni za pomoc± wielu (ale nie wszystkich)
 popularnych urz±dzeñ do zdalnej kontroli
 
+%package modules-%{smpstr}
+Summary:	Kernel modules for Linux Infrared Remote Control
+Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
+Group:		Base/Kernel
+Release:	%{release}@%{_kernel_ver}
+Provides:	lirc-modules = %{version}
+
+%description modules-%{smpstr}
+This package contains the kernel modules necessary to operate some 
+infrared remote control devices (such as the ones bundled with TV cards).
+
+%description modules-%{smpstr} -l pl
+Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych pilotów na 
+podczerwieñ (w tym tych dostarczanych z kartami TV).
+
 %package X11
 Summary:	Linux Infrared Remote Control - X11 utilities
 Summary(pl):	Zdalna kontrola Linuxa za pomoc± podczerwieni - narzêdzia X11
 Group:		X11/Applications
 Group(de):	X11/Applikationen
 Group(pl):	X11/Aplikacje
-Release:	%{rel}
 
 %description X11
 Linux Infrared Remote Control - X11 utilities.
@@ -69,7 +84,6 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Release:	%{rel}
 # didn't use /tmp/.lircd
 Conflicts:	lirc < 0.6.3-3
 
@@ -88,7 +102,6 @@ Group(de):	Entwicklung/Libraries
 Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
 Requires:	%{name}-libs = %{version}
-Release:	%{rel}
 
 %description devel
 This package provides the files necessary to develop LIRC-based
@@ -106,7 +119,6 @@ Group(de):	Entwicklung/Libraries
 Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
 Requires:	%{name}-devel = %{version}
-Release:	%{rel}
 
 %description static
 The files necessary for development of statically-linked lirc-based
@@ -126,30 +138,32 @@ na LIRC.
 %patch5 -p1
 
 %build
+echo '#' > drivers/Makefile.am
 rm -f missing
 libtoolize --copy --force
 aclocal
 automake -a -c
 autoconf
 
-# <Ugly part of this spec>
-mkdir kernel && cd kernel
-ln -s %{_prefix}/src/linux/* .
-rm include scripts
-cp -a %{_prefix}/src/linux/{include,scripts,.[a-z]*} .
-cd ..
-# </Ugly>
-
 %configure \
 	--with-driver=any \
-	--with-kerneldir=$(pwd)/kernel \
+	--with-kerneldir=/usr/src/linux \
 	--with-x \
 	--with-port=0x2f8 \
 	--with-irq=3 \
 	--without-soft-carrier
-#./config.status
-yes ''|%{__make} -C kernel oldconfig
-%{__make} HOSTCC=kgcc
+%{__make}
+
+%if %{smp}
+SMP="-D__KERNEL_SMP=1"
+%endif
+cd drivers
+for drv in lirc_*; do
+	kgcc %{rpmcflags} -D__KERNEL__ -DMODULE -DHAVE_CONFIG_H $SMP \
+	-DIRCTL_DEV_MAJOR=61 -I.. -I/usr/src/linux/include \
+	-fno-strict-aliasing -fno-common \
+	-c -o $drv/$drv.o $drv/$drv.c || true
+done
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -162,15 +176,21 @@ install -d $RPM_BUILD_ROOT%{_aclocaldir}
 install -d $RPM_BUILD_ROOT%{_localstatedir}/log
 %{__make} install DESTDIR=$RPM_BUILD_ROOT \
 	sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir}
+
+install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
+install -m644 drivers/*/*.o $RPM_BUILD_ROOT/lib/modules/*/misc
+
 cat remotes/*/lircd.conf.* > $RPM_BUILD_ROOT%{_sysconfdir}/lircd.conf
 cp remotes/*/lircmd.conf.* $RPM_BUILD_ROOT%{_datadir}/lircmd
 install contrib/*.m4 $RPM_BUILD_ROOT%{_aclocaldir}
 mv $RPM_BUILD_ROOT%{_bindir}/{irxevent,xmode2} $RPM_BUILD_ROOT%{_x11bindir}
 :> $RPM_BUILD_ROOT%{_localstatedir}/log/lircd
+
 ln -s %{_localstatedir}/state/lircmd.conf $RPM_BUILD_ROOT%{_sysconfdir}
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/lirc
 install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/lircd
 install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/lircmd
+
 gzip -9nf ANNOUNCE AUTHORS DRIVERS NEWS README TODO doc/irxevent.keys
 gzip -9nf remotes/generic/*.conf contrib/lircrc
 mv remotes/generic remotes/remotes
@@ -179,7 +199,6 @@ mv remotes/generic remotes/remotes
 %postun libs -p /sbin/ldconfig
 
 %post
-/sbin/depmod -a
 /sbin/chkconfig --add lircd
 if [ -f /var/lock/subsys/lircd ]; then
 	/etc/rc.d/init.d/lircd restart >&2
@@ -192,8 +211,8 @@ if [ -f /var/lock/subsys/lircmd ]; then
 else
 	echo "Run \"/etc/rc.d/init.d/lircmd start\" to start lircmd." >&2
 fi
-echo "If you are using a kernel-module-based driver, don't forget to add an"
-echo "'alias lirc <your_driver>' line to your /etc/modules.conf. See"
+echo "If you are using a kernel-module-based driver, don't forget to"
+echo "install the lirc-modules-up or lirc-modules-smp package. See"
 echo "%{_docdir}/%{name}-%{version}/DRIVERS.gz for details."
 
 %preun
@@ -210,7 +229,12 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del lircmd
 fi
 
-%postun
+%post modules-%{smpstr}
+/sbin/depmod -a
+echo "Don't forget to add an 'alias lirc <your_driver>' line to your 
+echo "/etc/modules.conf."
+
+%postun modules-%{smpstr}
 /sbin/depmod -a
 
 %files
@@ -220,11 +244,14 @@ fi
 %attr(754,root,root) %{_sysconfdir}/rc.d/init.d/*
 %config %{_sysconfdir}/sysconfig/*
 %config %{_sysconfdir}/*.conf
-/lib/modules/*/*/*
 %ghost %attr(600,root,root) %{_localstatedir}/log/lircd
 %{_datadir}/lircmd
 %doc *.gz remotes/remotes contrib/*.gz
 %doc doc/*.gz doc/doc.html doc/html doc/images
+
+%files modules-%{smpstr}
+%defattr(644,root,root,755)
+/lib/modules/*/*/*
 
 %files X11
 %defattr(644,root,root,755)
