@@ -426,7 +426,7 @@ na LIRC.
 echo '#' > drivers/Makefile.am
 rm -f missing
 %{__libtoolize}
-aclocal
+%{__aclocal}
 %{__automake}
 %{__autoconf}
 
