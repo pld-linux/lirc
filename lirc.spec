@@ -2,6 +2,7 @@
 # Conditional build:
 # _without_dist_kernel	- without sources of distribution kernel
 # _without_modules	- build only library+programs, no kernel modules
+# _without_x		- without XFree support	
 #
 %define		_kernel24	%(echo %{_kernel_ver} | grep -q '2\.[012]\.' ; echo $?)
 # needed because of release macro expansion
@@ -29,7 +30,7 @@ Patch4:		%{name}-alpha.patch
 Patch5:		%{name}-makpc.patch
 Patch6:		%{name}-udp.patch
 URL:		http://www.lirc.org/
-BuildRequires:	XFree86-devel
+%{!?_without_x:BuildRequires:	XFree86-devel}
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
@@ -439,7 +440,7 @@ rm -f missing
 %configure \
 	--with-driver=any \
 	--with-kerneldir=%{_kernelsrcdir} \
-	--with-x \
+	%{!?_without_x:--with-x }\
 	--with-port=0x2f8 \
 	--with-irq=3 \
 	--without-soft-carrier
@@ -756,10 +757,12 @@ fi
 /lib/modules/%{_kernel_ver}smp/*/lirc_sir*
 %endif
 
+%if %{!?_without_x:1)%{?_without_x:0}
 %files X11
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/irxevent
 %attr(755,root,root) %{_bindir}/xmode2
+%endif
 
 %files libs
 %defattr(644,root,root,755)
