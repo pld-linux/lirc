@@ -756,7 +756,7 @@ fi
 %{_includedir}/lirc
 %{_aclocaldir}/*
 %attr(755,root,root) %{_libdir}/*.so
-%attr(755,root,root) %{_libdir}/*.la
+%{_libdir}/*.la
 
 %files static
 %defattr(644,root,root,755)
