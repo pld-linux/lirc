@@ -1,7 +1,7 @@
 
 # Conditional build:
 # _without_dist_kernel	- without sources of distribution kernel
-# _with_kernel_2_2	- build for 2.2 kernel
+# _with_kernel_2_4	- build for 2.4 kernel
 #
 
 %define		_kernel_ver %(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
@@ -32,7 +32,7 @@ Group:		Daemons
 Group(de):	Server
 Group(pl):	Serwery
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-%{!?_without_dist_kernel:BuildRequires:	kernel-source %{?_with_kernel_2_2: < 2.3.0}}
+%{!?_without_dist_kernel:BuildRequires:	kernel-source %{!?_with_kernel_2_4: < 2.3.0}}
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
@@ -337,8 +337,8 @@ LIRC_NORMAL="lirc_gpio lirc_i2c %{!?_with_smp:lirc_parallel} lirc_serial lirc_si
 LIRC_SYMTAB="lirc_dev"
 
 # 2.2 drivers
-%{?_with_kernel_2_2:LIRC_NORMAL="%{!?_with_smp:lirc_parallel} lirc_serial lirc_sir"}
-%{?_with_kernel_2_2:LIRC_SYMTAB=""}
+%{!?_with_kernel_2_4:LIRC_NORMAL="%{!?_with_smp:lirc_parallel} lirc_serial lirc_sir"}
+%{!?_with_kernel_2_4:LIRC_SYMTAB=""}
 
 if [ -n "$LIRC_NORMAL" ]; then
   for drv in $LIRC_NORMAL; do
@@ -494,17 +494,17 @@ fi
 %doc *.gz remotes contrib/*.gz
 %doc doc/*.gz doc/doc.html doc/html doc/images
 
-%{!?_with_kernel_2_2:%files -n kernel%{smpstr}-char-lirc-dev}
-%{!?_with_kernel_2_2:%defattr(644,root,root,755)}
-%{!?_with_kernel_2_2:/lib/modules/*/*/lirc_dev*}
+%{?_with_kernel_2_4:%files -n kernel%{smpstr}-char-lirc-dev}
+%{?_with_kernel_2_4:%defattr(644,root,root,755)}
+%{?_with_kernel_2_4:/lib/modules/*/*/lirc_dev*}
 
-%{!?_with_kernel_2_2:%files -n kernel%{smpstr}-char-lirc-gpio}
-%{!?_with_kernel_2_2:%defattr(644,root,root,755)}
-%{!?_with_kernel_2_2:/lib/modules/*/*/lirc_gpio*}
+%{?_with_kernel_2_4:%files -n kernel%{smpstr}-char-lirc-gpio}
+%{?_with_kernel_2_4:%defattr(644,root,root,755)}
+%{?_with_kernel_2_4:/lib/modules/*/*/lirc_gpio*}
 
-%{!?_with_kernel_2_2:%files -n kernel%{smpstr}-char-lirc-i2c}
-%{!?_with_kernel_2_2:%defattr(644,root,root,755)}
-%{!?_with_kernel_2_2:/lib/modules/*/*/lirc_i2c*}
+%{?_with_kernel_2_4:%files -n kernel%{smpstr}-char-lirc-i2c}
+%{?_with_kernel_2_4:%defattr(644,root,root,755)}
+%{?_with_kernel_2_4:/lib/modules/*/*/lirc_i2c*}
 
 %files -n kernel%{smpstr}-char-lirc-serial
 %defattr(644,root,root,755)
