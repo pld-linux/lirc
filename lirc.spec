@@ -520,9 +520,9 @@ install contrib/*.m4 $RPM_BUILD_ROOT%{_aclocaldir}
 mv -f $RPM_BUILD_ROOT%{_bindir}/{irxevent,xmode2} $RPM_BUILD_ROOT%{_x11bindir}
 :> $RPM_BUILD_ROOT%{_localstatedir}/log/lircd
 
-install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/lircd
-install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/lircd
-install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/lircmd
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/lircd
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/lircd
+install %{SOURCE4} $RPM_BUILD_ROOT/etc/rc.d/init.d/lircmd
 
 find remotes -type f '!' '(' -name '*.jpg' -o -name '*.gif' ')' -print0 |\
 	xargs -0 gzip -9nf
@@ -682,8 +682,8 @@ fi
 %doc contrib/lircrc doc/*
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_sbindir}/*
-%attr(754,root,root) %{_sysconfdir}/rc.d/init.d/*
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/sysconfig/*
+%attr(754,root,root) /etc/rc.d/init.d/*
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/sysconfig/*
 %config(noreplace) %{_sysconfdir}/*.conf
 %{_mandir}/man?/*
 %ghost %attr(600,root,root) %{_localstatedir}/log/lircd
