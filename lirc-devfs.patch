@@ -1,3 +1,18 @@
+diff -urN lirc-0.6.6.org/drivers/lirc_dev/lirc_dev.c lirc-0.6.6/drivers/lirc_dev/lirc_dev.c
+--- lirc-0.6.6.org/drivers/lirc_dev/lirc_dev.c	Thu May  1 23:25:29 2003
++++ lirc-0.6.6/drivers/lirc_dev/lirc_dev.c	Fri May  2 00:07:52 2003
+@@ -318,7 +318,10 @@
+ 	ir->p.minor = minor;
+ 
+ #ifdef LIRC_HAVE_DEVFS
+-	sprintf (name, DEV_LIRC "/%d", ir->p.minor);
++	if (ir->p.minor == 0)
++	    strcpy (name, DEV_LIRC);
++	else
++    	    sprintf (name, DEV_LIRC "%d", ir->p.minor);
+ 	ir->devfs_handle = devfs_register(NULL, name, DEVFS_FL_DEFAULT,
+ 					  IRCTL_DEV_MAJOR, ir->p.minor,
+ 					  S_IFCHR | S_IRUSR | S_IWUSR,
 diff -urN lirc-0.6.6.org/drivers/lirc_it87/lirc_it87.c lirc-0.6.6/drivers/lirc_it87/lirc_it87.c
 --- lirc-0.6.6.org/drivers/lirc_it87/lirc_it87.c	Thu May  1 23:25:29 2003
 +++ lirc-0.6.6/drivers/lirc_it87/lirc_it87.c	Thu May  1 23:35:49 2003
