@@ -1,171 +1,195 @@
-diff -urN lirc-0.6.5.orig/drivers/lirc_dev/lirc_dev.c lirc-0.6.5/drivers/lirc_dev/lirc_dev.c
---- lirc-0.6.5.orig/drivers/lirc_dev/lirc_dev.c	Wed Dec 12 23:27:38 2001
-+++ lirc-0.6.5/drivers/lirc_dev/lirc_dev.c	Fri Feb 15 21:18:08 2002
-@@ -26,7 +26,7 @@
- #endif
-  
+diff -urN lirc-0.6.6.org/drivers/lirc_it87/lirc_it87.c lirc-0.6.6/drivers/lirc_it87/lirc_it87.c
+--- lirc-0.6.6.org/drivers/lirc_it87/lirc_it87.c	Thu May  1 23:25:29 2003
++++ lirc-0.6.6/drivers/lirc_it87/lirc_it87.c	Thu May  1 23:35:49 2003
+@@ -31,6 +31,10 @@
  #include <linux/version.h>
--#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,4,0)
-+#ifdef CONFIG_DEVFS_FS
- #define LIRC_HAVE_DEVFS
- #endif
+ #include <linux/module.h>
  
-diff -urN lirc-0.6.5.orig/drivers/lirc_parallel/lirc_parallel.c lirc-0.6.5/drivers/lirc_parallel/lirc_parallel.c
---- lirc-0.6.5.orig/drivers/lirc_parallel/lirc_parallel.c	Sun Jan  6 14:33:30 2002
-+++ lirc-0.6.5/drivers/lirc_parallel/lirc_parallel.c	Fri Feb 15 22:07:47 2002
-@@ -69,6 +69,9 @@
- #include <linux/poll.h>
- #include <linux/parport.h>
- #endif
-+#ifdef CONFIG_DEVFS_FS
-+#include <linux/devfs_fs_kernel.h>
-+#endif 
- 
- #include "drivers/lirc.h"
- 
-@@ -109,6 +112,10 @@
- int is_claimed=0;
- #endif
- 
-+#ifdef CONFIG_DEVFS_FS
-+static devfs_handle_t lirc_devfs;
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,4,0)
++#define LIRC_HAVE_DEVFS
 +#endif
 +
- /***********************************************************************
-  *************************   Interne Funktionen  ***********************
-  ***********************************************************************/
-@@ -882,9 +889,19 @@
- 	parport_release(ppdevice);
-  skip_init:
+ #ifdef HAVE_CONFIG_H
+ # include <config.h>
  #endif
-+#ifdef CONFIG_DEVFS_FS
-+       lirc_devfs = devfs_register(NULL, "lirc/parallel", DEVFS_FL_DEFAULT,
-+                                   LIRC_MAJOR, 0,
-+                                   S_IFCHR | S_IRUSR | S_IWUSR, &lirc_fops,
-+                                   NULL);
-+       if (lirc_devfs == NULL) {
-+               printk(KERN_NOTICE LIRC_DRIVER_NAME
-+                      ": devfs_register() failed\n");
-+#else       
- 	if(register_chrdev(LIRC_MAJOR, LIRC_DRIVER_NAME, &lirc_fops)<0)
- 	{
- 		printk(KERN_NOTICE "%s: register_chrdev() failed\n",LIRC_DRIVER_NAME);
+@@ -54,6 +58,10 @@
+ #include <linux/mm.h>
+ #include <linux/delay.h>
+ #include <linux/poll.h>
++#ifdef LIRC_HAVE_DEVFS
++#include <linux/devfs_fs_kernel.h>
 +#endif
- #ifdef KERNEL_2_2
- 		parport_unregister_device(ppdevice);
- #else
-@@ -904,6 +921,10 @@
- #else
- 	release_region(io,LIRC_PORT_LEN);
- #endif
-+#ifdef CONFIG_DEVFS_FS
-+       devfs_unregister(lirc_devfs);
++
+ #include <asm/system.h>
+ #include <asm/segment.h>
+ #include <asm/io.h>
+@@ -383,7 +391,11 @@
+ {
+ 	int retval;
+ 	
++#ifndef LIRC_HAVE_DEVFS
+ 	retval = register_chrdev(major,
 +#else
- 	unregister_chrdev(LIRC_MAJOR,LIRC_DRIVER_NAME);
++	retval = devfs_register_chrdev(major,
++#endif
+ 				 LIRC_DRIVER_NAME,
+ 				 &lirc_fops);
+ 	if (retval < 0) {
+@@ -396,8 +408,13 @@
+ 
+ static void drop_chrdev(void)
+ {
++#ifndef LIRC_HAVE_DEVFS
+ 	unregister_chrdev(major,
+ 			  LIRC_DRIVER_NAME);
++#else
++	devfs_unregister_chrdev(major,
++	    		  LIRC_DRIVER_NAME);
 +#endif
  }
  #endif
-diff -urN lirc-0.6.5.orig/drivers/lirc_serial/lirc_serial.c lirc-0.6.5/drivers/lirc_serial/lirc_serial.c
---- lirc-0.6.5.orig/drivers/lirc_serial/lirc_serial.c	Sun Jan  6 14:33:30 2002
-+++ lirc-0.6.5/drivers/lirc_serial/lirc_serial.c	Fri Feb 15 21:48:10 2002
-@@ -96,6 +96,9 @@
+ 
+diff -urN lirc-0.6.6.org/drivers/lirc_parallel/lirc_parallel.c lirc-0.6.6/drivers/lirc_parallel/lirc_parallel.c
+--- lirc-0.6.6.org/drivers/lirc_parallel/lirc_parallel.c	Thu May  1 23:25:29 2003
++++ lirc-0.6.6/drivers/lirc_parallel/lirc_parallel.c	Thu May  1 23:32:39 2003
+@@ -44,6 +44,10 @@
+ #define KERNEL_2_4
+ #endif
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,4,0)
++#define LIRC_HAVE_DEVFS
++#endif
++
+ #ifdef CONFIG_SMP
+ #error "--- Sorry, this driver is not SMP safe. ---"
+ #endif
+@@ -59,6 +63,9 @@
+ #include <linux/time.h>
+ #include <linux/mm.h>
+ #include <linux/delay.h>
++#ifdef LIRC_HAVE_DEVFS
++#include <linux/devfs_fs_kernel.h>
++#endif
+ 
+ #include <asm/io.h>
+ #include <asm/signal.h>
+@@ -882,7 +889,11 @@
+ 	parport_release(ppdevice);
+  skip_init:
+ #endif
++#ifndef LIRC_HAVE_DEVFS
+ 	if(register_chrdev(LIRC_MAJOR, LIRC_DRIVER_NAME, &lirc_fops)<0)
++#else
++	if(devfs_register_chrdev(LIRC_MAJOR, LIRC_DRIVER_NAME, &lirc_fops)<0)
++#endif
+ 	{
+ 		printk(KERN_NOTICE "%s: register_chrdev() failed\n",LIRC_DRIVER_NAME);
+ #ifdef KERNEL_2_2
+@@ -904,6 +915,10 @@
+ #else
+ 	release_region(io,LIRC_PORT_LEN);
+ #endif
++#ifndef LIRC_HAVE_DEVFS
+ 	unregister_chrdev(LIRC_MAJOR,LIRC_DRIVER_NAME);
++#else
++	devfs_unregister_chrdev(LIRC_MAJOR,LIRC_DRIVER_NAME);
++#endif
+ }
+ #endif
+diff -urN lirc-0.6.6.org/drivers/lirc_serial/lirc_serial.c lirc-0.6.6/drivers/lirc_serial/lirc_serial.c
+--- lirc-0.6.6.org/drivers/lirc_serial/lirc_serial.c	Thu May  1 23:25:29 2003
++++ lirc-0.6.6/drivers/lirc_serial/lirc_serial.c	Thu May  1 23:30:53 2003
+@@ -66,6 +66,11 @@
+ #define LIRC_LOOPS_PER_JIFFY
+ #endif
+ 
++#include <linux/version.h>
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,4,0)
++#define LIRC_HAVE_DEVFS
++#endif
++
+ #include <linux/config.h>
+ 
+ #ifndef CONFIG_SERIAL_MODULE
+@@ -96,6 +101,9 @@
  #ifdef KERNEL_2_1
  #include <linux/poll.h>
  #endif
-+#ifdef CONFIG_DEVFS_FS
++#ifdef LIRC_HAVE_DEVFS
 +#include <linux/devfs_fs_kernel.h>
 +#endif
  
  #include <asm/system.h>
  #include <asm/segment.h>
-@@ -244,6 +247,10 @@
- static int major = LIRC_MAJOR;
- static int sense = -1;   /* -1 = auto, 0 = active high, 1 = active low */
- 
-+#ifdef CONFIG_DEVFS_FS
-+static devfs_handle_t lirc_devfs;
-+#endif
-+
- #ifdef KERNEL_2_3
- static DECLARE_WAIT_QUEUE_HEAD(lirc_wait_in);
- #else
-@@ -1306,9 +1313,18 @@
+@@ -1306,7 +1314,12 @@
  	}
  	if ((result = init_port()) < 0)
  		return result;
-+#ifdef CONFIG_DEVFS_FS
-+       lirc_devfs = devfs_register(NULL, "lirc/serial", DEVFS_FL_DEFAULT,
-+    				   major, 0, S_IFCHR | S_IRUSR | S_IWUSR,
-+                                   &lirc_fops, NULL);
-+       if (lirc_devfs == NULL) {
-+               printk(KERN_ERR  LIRC_DRIVER_NAME
-+                      ": devfs_register failed!\n");
-+#else
++
++#ifndef LIRC_HAVE_DEVFS	
  	if (register_chrdev(major, LIRC_DRIVER_NAME, &lirc_fops) < 0) {
++#else
++	if (devfs_register_chrdev(major, LIRC_DRIVER_NAME, &lirc_fops) < 0) {
++#endif
  		printk(KERN_ERR  LIRC_DRIVER_NAME  
  		       ": register_chrdev failed!\n");
-+#endif
  		release_region(io, 8);
- 		return -EIO;
- 	}
-@@ -1318,6 +1334,9 @@
+@@ -1318,7 +1331,11 @@
  void cleanup_module(void)
  {
  	release_region(io, 8);
-+#ifdef CONFIG_DEVFS_FS 
-+       devfs_unregister(lirc_devfs);
-+#endif
++#ifndef LIRC_HAVE_DEVFS
  	unregister_chrdev(major, LIRC_DRIVER_NAME);
++#else
++	devfs_unregister_chrdev(major, LIRC_DRIVER_NAME);
++#endif
  #       ifdef DEBUG
  	printk(KERN_INFO  LIRC_DRIVER_NAME  ": cleaned up module\n");
-diff -urN lirc-0.6.5.orig/drivers/lirc_sir/lirc_sir.c lirc-0.6.5/drivers/lirc_sir/lirc_sir.c
---- lirc-0.6.5.orig/drivers/lirc_sir/lirc_sir.c	Sun Jan  6 13:50:18 2002
-+++ lirc-0.6.5/drivers/lirc_sir/lirc_sir.c	Fri Feb 15 21:42:24 2002
-@@ -89,6 +89,9 @@
+ #       endif
+diff -urN lirc-0.6.6.org/drivers/lirc_sir/lirc_sir.c lirc-0.6.6/drivers/lirc_sir/lirc_sir.c
+--- lirc-0.6.6.org/drivers/lirc_sir/lirc_sir.c	Thu May  1 23:25:29 2003
++++ lirc-0.6.6/drivers/lirc_sir/lirc_sir.c	Thu May  1 23:33:54 2003
+@@ -43,6 +43,9 @@
+ #else
+ #define KERNEL_2_0
  #endif
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,4,0)
++#define LIRC_HAVE_DEVFS
++#endif
  
- #include <linux/timer.h>
-+#ifdef CONFIG_DEVFS_FS
+ #include <linux/module.h>
+ 
+@@ -79,6 +82,10 @@
+ #ifdef KERNEL_2_1
+ #include <linux/poll.h>
+ #endif
++#ifdef LIRC_HAVE_DEVFS
 +#include <linux/devfs_fs_kernel.h>
 +#endif
- 
- #include "drivers/lirc.h"
- 
-@@ -166,6 +169,10 @@
- static int irq = LIRC_IRQ;
- #endif
- 
-+#ifdef CONFIG_DEVFS_FS
-+static devfs_handle_t lirc_devfs;
-+#endif
 +
- static spinlock_t timer_lock = SPIN_LOCK_UNLOCKED;
- static struct timer_list timerlist;
- /* time of last signal change detected */
-@@ -609,8 +616,15 @@
+ #include <asm/system.h>
+ #include <asm/segment.h>
+ #include <asm/io.h>
+@@ -620,7 +627,11 @@
  {
  	int retval;
  
-+#ifdef CONFIG_DEVFS_FS
-+       lirc_devfs = devfs_register(NULL, "lirc/sir", DEVFS_FL_DEFAULT,
-+                                   major, 0, S_IFCHR | S_IRUSR | S_IWUSR,
-+                                   &lirc_fops, NULL);
-+       if (lirc_devfs == NULL) {
-+#else
++#ifndef LIRC_HAVE_DEVFS
  	retval = register_chrdev(major, LIRC_DRIVER_NAME, &lirc_fops);
- 	if (retval < 0) {
++#else
++	retval = devfs_register_chrdev(major, LIRC_DRIVER_NAME, &lirc_fops);
 +#endif
+ 	if (retval < 0) {
  		printk(KERN_ERR LIRC_DRIVER_NAME ": init_chrdev() failed.\n");
  		return retval;
- 	}
-@@ -619,7 +633,11 @@
+@@ -630,7 +641,11 @@
  
  static void drop_chrdev(void)
  {
-+#ifdef CONFIG_DEVFS_FS
-+       devfs_unregister(lirc_devfs);
-+#else
++#ifndef LIRC_HAVE_DEVFS
  	unregister_chrdev(major, LIRC_DRIVER_NAME);
++#else
++	devfs_unregister_chrdev(major, LIRC_DRIVER_NAME);
 +#endif
  }
  #endif
