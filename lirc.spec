@@ -423,7 +423,7 @@ na LIRC.
 %build
 echo '#' > drivers/Makefile.am
 rm -f missing
-libtoolize --copy --force
+%{__libtoolize}
 aclocal
 %{__automake}
 %{__autoconf}
