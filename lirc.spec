@@ -1,6 +1,7 @@
 #
 # Conditional build:
 # _without_dist_kernel	- without sources of distribution kernel
+# _without_modules	- build only library+programs, no kernel modules
 #
 %define		_kernel24	%(echo %{_kernel_ver} | grep -q '2\.[012]\.' ; echo $?)
 # needed because of release macro expansion
@@ -30,7 +31,8 @@ BuildRequires:	XFree86-devel
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
-%{!?_without_dist_kernel:BuildRequires:	kernel-source}
+%{!?_without_dist_kernel:BuildRequires:	kernel-headers}
+%{!?_without_dist_kernel:%{!?_without_modules:BuildRequires:	kernel-source}}
 BuildRequires:	%{kgcc_package}
 Requires(post,preun):	/sbin/chkconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -443,10 +445,6 @@ rm -f missing
 	--without-soft-carrier
 %{__make}
 
-cd drivers
-
-# lirc_parallel is not smp safe
-
 %if %{_kernel24}
 # 2.4 drivers
 LIRC_NORMAL="lirc_gpio lirc_i2c lirc_serial lirc_sir"
@@ -456,6 +454,11 @@ LIRC_SYMTAB="lirc_dev"
 LIRC_NORMAL="lirc_serial lirc_sir"
 LIRC_SYMTAB=""
 %endif
+
+%if 0%{!?_without_modules:1}
+cd drivers
+
+# lirc_parallel is not smp safe
 
 # UP
 
@@ -497,6 +500,7 @@ if [ -n "$LIRC_SYMTAB" ]; then
 	-c -o $drv/$drv.o $drv/$drv.c
   done
 fi
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -509,9 +513,11 @@ install -d $RPM_BUILD_ROOT%{_localstatedir}/log
 %{__make} install DESTDIR=$RPM_BUILD_ROOT \
 	sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir}
 
+%if 0%{!?_without_modules:1}
 install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}{,smp}/misc
 cp -f drivers/*.o $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
 cp -f drivers/*/*.o $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/misc
+%endif
 
 cat>$RPM_BUILD_ROOT%{_sysconfdir}/lircd.conf<<END
 #
@@ -689,7 +695,7 @@ fi
 %{_mandir}/man?/*
 %ghost %attr(600,root,root) %{_localstatedir}/log/lircd
 
-%if %{_kernel24}
+%if 0%{!?_without_modules:%{_kernel24}}
 %files -n kernel-char-lirc-dev
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/*/lirc_dev*
@@ -703,6 +709,7 @@ fi
 /lib/modules/%{_kernel_ver}/*/lirc_i2c*
 %endif
 
+%if 0%{!?_without_modules:1}
 %files -n kernel-char-lirc-serial
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/*/lirc_serial*
@@ -714,8 +721,9 @@ fi
 %files -n kernel-char-lirc-sir
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/*/lirc_sir*
+%endif
 
-%if %{_kernel24}
+%if 0%{!?_without_modules:%{_kernel24}}
 %files -n kernel-smp-char-lirc-dev
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}smp/*/lirc_dev*
@@ -729,9 +737,11 @@ fi
 /lib/modules/%{_kernel_ver}smp/*/lirc_i2c*
 %endif
 
+%if 0%{!?_without_modules:1}
 %files -n kernel-smp-char-lirc-serial
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}smp/*/lirc_serial*
+%endif
 
 # currently not SMP-safe
 %if 0
@@ -740,9 +750,11 @@ fi
 /lib/modules/%{_kernel_ver}smp/*/lirc_parallel*
 %endif
 
+%if 0%{!?_without_modules:1}
 %files -n kernel-smp-char-lirc-sir
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}smp/*/lirc_sir*
+%endif
 
 %files X11
 %defattr(644,root,root,755)
