@@ -1,9 +1,9 @@
-#!/bin/sh  
+#!/bin/sh
 #
 # lircmd	Linux Infrared Remote Control mouse daemon
 #
 # chkconfig:	2345 92 8
-# description:  LIRC is a package that allows you to decode and send
+# description:	LIRC is a package that allows you to decode and send
 #		infra-red signals of many (but not all) commonly used
 #		remote controls.
 #
@@ -17,42 +17,45 @@
 # See how we were called.
 case "$1" in
   start)
-        # Check if the service is already running?
-        if [ ! -f /var/lock/subsys/lircmd ]; then
-                msg_starting "Linux Infrared Remote Control mouse daemon"
-                daemon lircmd
+	# Check if the service is already running?
+	if [ ! -f /var/lock/subsys/lircmd ]; then
+		msg_starting "Linux Infrared Remote Control mouse daemon"
+		daemon lircmd
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/lircmd
-        else
-                msg_Already_Running "Linux Infrared Remote Control mouse daemon"
+	else
+		msg_already_running "Linux Infrared Remote Control mouse daemon"
 		exit 1
-        fi
-        ;;
+	fi
+	;;
   stop)
 	# Stop daemons.
-        if [ -f /var/lock/subsys/lircmd ]; then
+	if [ -f /var/lock/subsys/lircmd ]; then
 		msg_stopping "Linux Infrared Remote Control mouse daemon"
 		killproc lircmd
 		rm -f /var/lock/subsys/lircmd >/dev/null 2>&1
 	else
-		msg_Not_Running "Linux Infrared Remote Control mouse daemon"
-                exit 1
-        fi
-        ;;
+		msg_not_running "Linux Infrared Remote Control mouse daemon"
+		exit 1
+	fi
+	;;
   status)
-        status lircmd
-        ;;
+	status lircmd
+	;;
   restart)
-        $0 stop
-        $0 start
-        ;;
+	$0 stop
+	$0 start
+	;;
   reload)
 	msg_reloading "Linux Infrared Remote Control mouse daemon"
+	busy
 	killproc lircmd -HUP
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] && ok || died
 	;;
   *)
-        msg_Usage "$0 {start|stop|status|restart|reload}"
-        exit 1
+	msg_usage "$0 {start|stop|restart|reload|status}"
+	exit 1
 	;;
 esac
 

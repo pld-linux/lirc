@@ -1,9 +1,9 @@
-#!/bin/sh  
+#!/bin/sh
 #
 # lircd		Linux Infrared Remote Control daemon
 #
 # chkconfig:	2345 65 35
-# description:  LIRC is a package that allows you to decode and send
+# description:	LIRC is a package that allows you to decode and send
 #		infra-red signals of many (but not all) commonly used
 #		remote controls.
 #
@@ -21,9 +21,9 @@
 # See how we were called.
 case "$1" in
   start)
-        # Check if the service is already running?
-        if [ ! -f /var/lock/subsys/lircd ]; then
-                msg_starting "Linux Infrared Remote Control daemon"
+	# Check if the service is already running?
+	if [ ! -f /var/lock/subsys/lircd ]; then
+		msg_starting "Linux Infrared Remote Control daemon"
 		OPTIONS=""
 		[ -n "$DRIVER" ] && OPTIONS="--driver=$DRIVER"
 		[ -n "$DEVICE" ] && OPTIONS="$OPTIONS --device=$DEVICE"
@@ -31,39 +31,42 @@ case "$1" in
                 daemon lircd $OPTIONS
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/lircd
-        else
-                msg_Already_Running "Linux Infrared Remote Control daemon"
+	else
+		msg_already_running "Linux Infrared Remote Control daemon"
 		exit 1
-        fi
-        ;;
+	fi
+	;;
   stop)
 	# Stop daemons.
-        if [ -f /var/lock/subsys/lircd ]; then
+	if [ -f /var/lock/subsys/lircd ]; then
 		msg_stopping "Linux Infrared Remote Control daemon"
 		killproc lircd
 		rm -f /var/lock/subsys/lircd >/dev/null 2>&1
 	else
-		msg_Not_Running "Linux Infrared Remote Control daemon"
-                exit 1
-        fi
-        ;;
+		msg_not_running "Linux Infrared Remote Control daemon"
+		exit 1
+	fi
+	;;
   status)
-        status lircd
-        ;;
+	status lircd
+	;;
   restart)
 	test -f /var/lock/subsys/lircmd && RESTART_LIRCMD=yes
 	test -n "$RESTART_LIRCMD" && /etc/rc.d/init.d/lircmd stop
-        $0 stop
-        $0 start
+	$0 stop
+	$0 start
 	test -n "$RESTART_LIRCMD" && /etc/rc.d/init.d/lircmd start
-        ;;
+	;;
   reload)
 	msg_reloading "Linux Infrared Remote Control daemon"
+	busy
 	killproc lircd -HUP
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] && ok || died
 	;;
   *)
-        msg_Usage "$0 {start|stop|status|restart|reload}"
-        exit 1
+	msg_usage "$0 {start|stop|restart|reload|status}"
+	exit 1
 	;;
 esac
 
