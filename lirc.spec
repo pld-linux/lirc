@@ -13,8 +13,8 @@ Summary(pl):	Serwery do zdalnej kontroli Linuksa za pomoc± podczerwieni
 Name:		lirc
 Version:	0.7.0
 %define _pre	pre7
-%define _rel	1
-Release:	0.%{_pre}.%{_rel}
+%define _rel	0.%{_pre}.1
+Release:	%{_rel}
 License:	GPL
 Group:		Daemons
 Source0:	http://lirc.sourceforge.net/software/snapshots/%{name}-%{version}%{_pre}.tar.bz2
@@ -42,7 +42,7 @@ BuildRequires:	kernel-source
 BuildRequires:	rpmbuild(macros) >= 1.118
 %{?with_svga:BuildRequires:	svgalib-devel}
 Requires(post,preun):	/sbin/chkconfig
-Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{name}-libs = %{version}-%{_rel}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -58,7 +58,7 @@ popularnych urz±dzeñ do zdalnej kontroli
 Summary:	Linux Infrared Remote Control - X11 utilities
 Summary(pl):	Zdalna kontrola Linuksa za pomoc± podczerwieni - narzêdzia X11
 Group:		X11/Applications
-Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{name}-libs = %{version}-%{_rel}
 
 %description X11
 Linux Infrared Remote Control - X11 utilities.
@@ -70,7 +70,7 @@ Zdalna kontrola Linuksa za pomoc± podczerwieni - narzêdzia X11.
 Summary:	Linux Infrared Remote Control - svgalib utilities
 Summary(pl):	Zdalna kontrola Linuksa za pomoc± podczerwieni - narzêdzia svgalib
 Group:		Applications
-Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{name}-libs = %{version}-%{_rel}
 
 %description svga
 Linux Infrared Remote Control - svgalib-based utilities.
@@ -97,7 +97,7 @@ Ten pakiet zawiera biblioteki niezbêdne do dzia³ania klientów LIRC.
 Summary:	Header files for LIRC development
 Summary(pl):	Pliki nag³ówkowe do tworzenia programów z obs³ug± LIRC
 Group:		Development/Libraries
-Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{name}-libs = %{version}-%{_rel}
 
 %description devel
 This package provides the files necessary to develop LIRC-based
@@ -111,7 +111,7 @@ LIRC.
 Summary:	Static library for LIRC development
 Summary(pl):	Biblioteka statyczna LIRC
 Group:		Development/Libraries
-Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-devel = %{version}-%{_rel}
 
 %description static
 The files necessary for development of statically-linked lirc-based
@@ -156,7 +156,7 @@ Group:		Base/Kernel
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
-Requires:	kernel-char-lirc-dev = %{version}-%{release}
+Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-gpio
@@ -183,7 +183,7 @@ Group:		Base/Kernel
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
-Requires:	kernel-char-lirc-dev = %{version}-%{release}
+Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-i2c
@@ -209,7 +209,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{_rel}@%{_kernel_ver_str}
 %{?with_dist_kernel:Requires:	setserial}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
@@ -288,7 +288,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-dev
@@ -315,7 +315,7 @@ Group:		Base/Kernel
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
-Requires:	kernel-smp-char-lirc-dev = %{version}-%{release}
+Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-gpio
@@ -342,7 +342,7 @@ Group:		Base/Kernel
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
-Requires:	kernel-smp-char-lirc-dev = %{version}-%{release}
+Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-i2c
