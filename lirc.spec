@@ -1,4 +1,5 @@
 %define		_kernel_ver %(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
+%define		_kernel_ver_str %(echo %{_kernel_ver} | sed s/-/_/g)
 %define		smpstr	%{?_with_smp:-smp}
 %define		smp	%{?_with_smp:1}%{!?_with_smp:0}
 # needed because of release macro expansion
@@ -51,7 +52,7 @@ Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
 Group(de):	Grundsätzlich/Kern
 Group(pl):	Podstawowe/J±dro
-Release:	%{_release}@%{_kernel_ver}%{smpstr}
+Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
 Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
@@ -79,7 +80,7 @@ Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
 Group(de):	Grundsätzlich/Kern
 Group(pl):	Podstawowe/J±dro
-Release:	%{_release}@%{_kernel_ver}%{smpstr}
+Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
 Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
@@ -108,7 +109,7 @@ Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
 Group(de):	Grundsätzlich/Kern
 Group(pl):	Podstawowe/J±dro
-Release:	%{_release}@%{_kernel_ver}%{smpstr}
+Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
 Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
@@ -137,7 +138,7 @@ Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
 Group(de):	Grundsätzlich/Kern
 Group(pl):	Podstawowe/J±dro
-Release:	%{_release}@%{_kernel_ver}%{smpstr}
+Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
 Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
@@ -165,7 +166,7 @@ Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
 Group(de):	Grundsätzlich/Kern
 Group(pl):	Podstawowe/J±dro
-Release:	%{_release}@%{_kernel_ver}%{smpstr}
+Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
 Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
@@ -193,7 +194,7 @@ Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
 Group(de):	Grundsätzlich/Kern
 Group(pl):	Podstawowe/J±dro
-Release:	%{_release}@%{_kernel_ver}%{smpstr}
+Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
 Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
