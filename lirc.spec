@@ -1,12 +1,12 @@
-%define			_kernel_ver %(grep UTS_RELEASE /usr/src/linux/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
+%define		_kernel_ver %(grep UTS_RELEASE /usr/src/linux/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
+%define		rel 2
 
 Summary:	Linux Infrared Remote Control
 Summary(pl):	Zdalna kontrola Linuxa za pomoc± podczerwieni
 Name:		lirc
 Version:	0.6.3 
-Release:	2@%{_kernel_ver}
+Release:	%{rel}@%{_kernel_ver}
 Source0:	http://download.sourceforge.net/LIRC/%{name}-%{version}.tar.gz
-Source1:	%{name}-mksocket.c
 Source2:	%{name}.sysconfig
 Source3:	%{name}d.init
 Source4:	%{name}md.init
@@ -15,6 +15,7 @@ Patch1:		%{name}-opt.patch
 Patch2:		%{name}-anydriver.patch
 Patch3:		%{name}-foo.patch
 Patch4:		%{name}-spinlock.patch
+Patch5:		%{name}-tmp.patch
 License:	GPL
 URL:		http://www.lirc.org/
 Group:		Daemons
@@ -32,6 +33,8 @@ Prereq:		chkconfig
 Requires:	dev >= 2.8.0-3
 Requires:	modutils >= 2.4.6-4
 Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
+# didn't use /tmp/.lircd
+Conflicts:	lirc-libs < 0.6.3-3
 
 %define		_x11bindir	%{_prefix}/X11R6/bin
 
@@ -50,6 +53,7 @@ Summary(pl):	Zdalna kontrola Linuxa za pomoc± podczerwieni - narzêdzia X11
 Group:		X11/Applications
 Group(de):	X11/Applikationen
 Group(pl):	X11/Aplikacje
+Release:	%{rel}
 
 %description X11
 Linux Infrared Remote Control - X11 utilities.
@@ -65,6 +69,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Release:	%{rel}
+# didn't use /tmp/.lircd
+Conflicts:	lirc < 0.6.3-3
 
 %description libs
 This package provides the libraries necessary to run lirc client
@@ -81,6 +88,7 @@ Group(de):	Entwicklung/Libraries
 Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
 Requires:	%{name}-libs = %{version}
+Release:	%{rel}
 
 %description devel
 This package provides the files necessary to develop LIRC-based
@@ -98,6 +106,7 @@ Group(de):	Entwicklung/Libraries
 Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
 Requires:	%{name}-devel = %{version}
+Release:	%{rel}
 
 %description static
 The files necessary for development of statically-linked lirc-based
@@ -109,12 +118,12 @@ na LIRC.
 
 %prep
 %setup -q
-cp %{SOURCE1} mksocket.c
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 %build
 rm -f missing
@@ -127,7 +136,7 @@ autoconf
 mkdir kernel && cd kernel
 ln -s %{_prefix}/src/linux/* .
 rm include scripts
-cp -a %{_prefix}/src/linux/{.[^.]*,include,scripts} .
+cp -a %{_prefix}/src/linux/{include,scripts,.[a-z]*} .
 cd ..
 # </Ugly>
 
@@ -139,9 +148,8 @@ cd ..
 	--with-irq=3 \
 	--without-soft-carrier
 #./config.status
-%{__make} -C kernel oldconfig </dev/null
+yes ''|%{__make} -C kernel oldconfig
 %{__make} HOSTCC=kgcc
-gcc mksocket.c -o mksocket
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -154,7 +162,6 @@ install -d $RPM_BUILD_ROOT%{_aclocaldir}
 install -d $RPM_BUILD_ROOT%{_localstatedir}/log
 %{__make} install DESTDIR=$RPM_BUILD_ROOT \
 	sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir}
-./mksocket $RPM_BUILD_ROOT/dev/lircd
 cat remotes/*/lircd.conf.* > $RPM_BUILD_ROOT%{_sysconfdir}/lircd.conf
 cp remotes/*/lircmd.conf.* $RPM_BUILD_ROOT%{_datadir}/lircmd
 install contrib/*.m4 $RPM_BUILD_ROOT%{_aclocaldir}
@@ -214,7 +221,6 @@ fi
 %config %{_sysconfdir}/sysconfig/*
 %config %{_sysconfdir}/*.conf
 /lib/modules/*/*/*
-%ghost %attr(660,root,root) /dev/lircd
 %ghost %attr(600,root,root) %{_localstatedir}/log/lircd
 %{_datadir}/lircmd
 %doc *.gz remotes/remotes contrib/*.gz
