@@ -1,3 +1,8 @@
+
+# Conditional build:
+# _without_dist_kernel	- without sources of distribution kernel
+#
+
 %define		_kernel_ver %(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
 %define		_kernel_ver_str %(echo %{_kernel_ver} | sed s/-/_/g)
 %define		smpstr	%{?_with_smp:-smp}
@@ -8,7 +13,7 @@
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl):	Serwery do zdalnej kontroli Linuxa za pomoc± podczerwieni
 Name:		lirc
-Version:	0.6.4 
+Version:	0.6.4
 Release:	%{_release}
 Source0:	http://download.sourceforge.net/LIRC/%{name}-%{version}.tar.bz2
 Source1:	http://www.lirc.org/remotes.tar.gz
@@ -25,7 +30,7 @@ Group:		Daemons
 Group(de):	Server
 Group(pl):	Serwery
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-%{!?no_dist_kernel:BuildRequires:	kernel-source}
+%{!?_without_dist_kernel:BuildRequires:	kernel-source}
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
