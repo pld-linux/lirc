@@ -2,7 +2,7 @@
 # Conditional build:
 # _without_dist_kernel	- without sources of distribution kernel
 # _without_modules	- build only library+programs, no kernel modules
-# _without_x		- without XFree support	
+# _without_x		- without XFree support
 #
 %define		_kernel24	%(echo %{_kernel_ver} | grep -q '2\.[012]\.' ; echo $?)
 # needed because of release macro expansion
