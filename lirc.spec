@@ -38,8 +38,6 @@ Requires(post,preun):	/sbin/chkconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Conflicts:	%{name}-libs < 0.6.3-3
 
-%define		_x11bindir	%{_prefix}/X11R6/bin
-
 %description
 LIRC is a package that allows you to decode and send infra-red signals
 of many (but not all) commonly used remote controls.
@@ -507,7 +505,6 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_bindir}
 install -d $RPM_BUILD_ROOT/dev
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,sysconfig}
-install -d $RPM_BUILD_ROOT%{_x11bindir}
 install -d $RPM_BUILD_ROOT%{_aclocaldir}
 install -d $RPM_BUILD_ROOT%{_localstatedir}/log
 %{__make} install DESTDIR=$RPM_BUILD_ROOT \
@@ -527,7 +524,6 @@ cat>$RPM_BUILD_ROOT%{_sysconfdir}/lircd.conf<<END
 END
 cp -f $RPM_BUILD_ROOT%{_sysconfdir}/lirc{,m}d.conf
 install contrib/*.m4 $RPM_BUILD_ROOT%{_aclocaldir}
-mv -f $RPM_BUILD_ROOT%{_bindir}/{irxevent,xmode2} $RPM_BUILD_ROOT%{_x11bindir}
 :> $RPM_BUILD_ROOT%{_localstatedir}/log/lircd
 
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/lircd
@@ -687,7 +683,9 @@ fi
 %defattr(644,root,root,755)
 %doc ANNOUNCE AUTHORS NEWS README TODO ChangeLog
 %doc contrib/lircrc doc/* remotes
-%attr(755,root,root) %{_bindir}/*
+%attr(755,root,root) %{_bindir}/ir[!x]*
+%attr(755,root,root) %{_bindir}/mode2
+%attr(755,root,root) %{_bindir}/rc
 %attr(755,root,root) %{_sbindir}/*
 %attr(754,root,root) /etc/rc.d/init.d/*
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/sysconfig/*
@@ -758,7 +756,8 @@ fi
 
 %files X11
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_x11bindir}/*
+%attr(755,root,root) %{_bindir}/irxevent
+%attr(755,root,root) %{_bindir}/xmode2
 
 %files libs
 %defattr(644,root,root,755)
