@@ -28,12 +28,15 @@ case "$1" in
 		[ -n "$DRIVER" ] && OPTIONS="--driver=$DRIVER"
 		[ -n "$DEVICE" ] && OPTIONS="$OPTIONS --device=$DEVICE"
 		if [ ! -n "$DEVICE" ]; then
-		    [ ! -e /dev/lirc ] && mknod /dev/lirc c 61 0
+		    if [ ! -d /dev/vc ]; then
+			[ ! -e /dev/lirc ] && mknod /dev/lirc c 61 0
+		    fi
 		else
 		    if [ -d /dev/vc ] && [ ! -d /dev/lirc ] ; then
 			mkdir /dev/lirc
+    		    else
+			[ ! -e $DEVICE ] && mknod $DEVICE c 61 0
 		    fi
-		    [ ! -e $DEVICE ] && mknod $DEVICE c 61 0
 		fi
                 daemon lircd $OPTIONS
 		RETVAL=$?
