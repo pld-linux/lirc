@@ -155,7 +155,7 @@ Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
-PreReq:		 modutils >= 2.4.6-4
+PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
@@ -693,8 +693,8 @@ pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
 Modu³ lirc_sir.
 
 %package	remotes
-Summary:        Lirc remotes database
-#Summary(pl):	?
+Summary:	Lirc remotes database
+Summary(pl):	Baza pilotów obs³ugiwanych przez lirc
 Group:		Documentation
 Requires:	%{name} = %{version}-%{_rel}
 
