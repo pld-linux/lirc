@@ -1,0 +1,21 @@
+diff -urN lirc-0.6.5.org/configure.in lirc-0.6.5/configure.in
+--- lirc-0.6.5.org/configure.in	Fri Mar 15 09:43:46 2002
++++ lirc-0.6.5/configure.in	Fri Mar 15 09:44:26 2002
+@@ -65,17 +65,6 @@
+ fi
+ 
+ vga_progs=
+-AC_CHECK_HEADER(vga.h,
+-  AC_CHECK_HEADER(vgagl.h,
+-    AC_CHECK_LIB(vga, vga_init,
+-      AC_CHECK_LIB(vgagl, gl_setcontextvga,
+-        AC_DEFINE(HAVE_LIBVGA)
+-        vga_progs=smode2,,
+-        -lvga
+-      )
+-    )
+-  )
+-)
+ x_progs="irxevent xmode2"
+ AC_PATH_XTRA
+ if test "$no_x" = "yes"; then
