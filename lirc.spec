@@ -13,29 +13,41 @@ Summary(pl):	Serwery do zdalnej kontroli Linuxa za pomoc± podczerwieni
 Name:		lirc
 Version:	0.6.5
 Release:	%{_release}
+License:	GPL
+Group:		Daemons
+Group(cs):	DÈmoni
+Group(da):	DÊmoner
+Group(de):	Server
+Group(es):	Servidores
+Group(fr):	Serveurs
+Group(is):	P˙kar
+Group(it):	Demoni
+Group(ja):	•«°º•‚•Û
+Group(no):	Daemoner
+Group(pl):	Serwery
+Group(pt):	Servidores
+Group(ru):	‰≈ÕœŒŸ
+Group(sl):	Streæniki
+Group(sv):	Demoner
+Group(uk):	‰≈ÕœŒ…
 Source0:	http://download.sourceforge.net/LIRC/%{name}-%{version}.tar.bz2
 Source1:	http://www.lirc.org/remotes.tar.gz
-Source2:	lircd.sysconfig
-Source3:	lircd.init
-Source4:	lircmd.init
+Source2:	%{name}d.sysconfig
+Source3:	%{name}d.init
+Source4:	%{name}md.init
 Patch0:		%{name}-opt.patch
 Patch1:		%{name}-tmp.patch
 Patch2:		%{name}-devfs.patch
-License:	GPL
 URL:		http://www.lirc.org/
-Group:		Daemons
-Group(de):	Server
-Group(pl):	Serwery
-BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-%{!?_without_dist_kernel:BuildRequires:	kernel-source %{!?_with_kernel_2_4: < 2.3.0}}
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
 BuildRequires:	XFree86-devel
 BuildRequires:	egcs
+%{!?_without_dist_kernel:BuildRequires:	kernel-source %{!?_with_kernel_2_4: < 2.3.0}}
 PreReq:		chkconfig
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Conflicts:	%{name}-libs < 0.6.3-3
-# didn't use /tmp/.lircd
 
 %define		_x11bindir	%{_prefix}/X11R6/bin
 
@@ -52,8 +64,21 @@ popularnych urz±dzeÒ do zdalnej kontroli
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu≥y j±dra dla zdalnej obs≥ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
+Group(cs):	Z·klad/J·dro
+Group(da):	Basal/Kerne
 Group(de):	Grunds‰tzlich/Kern
+Group(es):	Base/N˙cleo
+Group(fr):	Base/Noyau
+Group(is):	Grunnforrit/Kjarninn
+Group(it):	Base/Kernel
+Group(ja):	•Ÿ°º•π/•´°º•Õ•Î
+Group(no):	Basis/Kjerne
 Group(pl):	Podstawowe/J±dro
+Group(pt):	Base/N˙cleo
+Group(ru):	‚¡⁄¡/Òƒ“œ
+Group(sl):	Osnova/Jedro
+Group(sv):	Bas/K‰rna
+Group(uk):	‚¡⁄¡/Òƒ“œ
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
@@ -79,8 +104,21 @@ Modu≥ lirc_dev.
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu≥y j±dra dla zdalnej obs≥ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
+Group(cs):	Z·klad/J·dro
+Group(da):	Basal/Kerne
 Group(de):	Grunds‰tzlich/Kern
+Group(es):	Base/N˙cleo
+Group(fr):	Base/Noyau
+Group(is):	Grunnforrit/Kjarninn
+Group(it):	Base/Kernel
+Group(ja):	•Ÿ°º•π/•´°º•Õ•Î
+Group(no):	Basis/Kjerne
 Group(pl):	Podstawowe/J±dro
+Group(pt):	Base/N˙cleo
+Group(ru):	‚¡⁄¡/Òƒ“œ
+Group(sl):	Osnova/Jedro
+Group(sv):	Bas/K‰rna
+Group(uk):	‚¡⁄¡/Òƒ“œ
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
@@ -107,8 +145,21 @@ Modu≥ lirc_gpio.
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu≥y j±dra dla zdalnej obs≥ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
+Group(cs):	Z·klad/J·dro
+Group(da):	Basal/Kerne
 Group(de):	Grunds‰tzlich/Kern
+Group(es):	Base/N˙cleo
+Group(fr):	Base/Noyau
+Group(is):	Grunnforrit/Kjarninn
+Group(it):	Base/Kernel
+Group(ja):	•Ÿ°º•π/•´°º•Õ•Î
+Group(no):	Basis/Kjerne
 Group(pl):	Podstawowe/J±dro
+Group(pt):	Base/N˙cleo
+Group(ru):	‚¡⁄¡/Òƒ“œ
+Group(sl):	Osnova/Jedro
+Group(sv):	Bas/K‰rna
+Group(uk):	‚¡⁄¡/Òƒ“œ
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
@@ -135,8 +186,21 @@ Modu≥ lirc_i2c
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu≥y j±dra dla zdalnej obs≥ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
+Group(cs):	Z·klad/J·dro
+Group(da):	Basal/Kerne
 Group(de):	Grunds‰tzlich/Kern
+Group(es):	Base/N˙cleo
+Group(fr):	Base/Noyau
+Group(is):	Grunnforrit/Kjarninn
+Group(it):	Base/Kernel
+Group(ja):	•Ÿ°º•π/•´°º•Õ•Î
+Group(no):	Basis/Kjerne
 Group(pl):	Podstawowe/J±dro
+Group(pt):	Base/N˙cleo
+Group(ru):	‚¡⁄¡/Òƒ“œ
+Group(sl):	Osnova/Jedro
+Group(sv):	Bas/K‰rna
+Group(uk):	‚¡⁄¡/Òƒ“œ
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
@@ -162,8 +226,21 @@ Modu≥ lirc_serial dla urz±dzeÒ pod≥±czanych do serial portu.
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu≥y j±dra dla zdalnej obs≥ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
+Group(cs):	Z·klad/J·dro
+Group(da):	Basal/Kerne
 Group(de):	Grunds‰tzlich/Kern
+Group(es):	Base/N˙cleo
+Group(fr):	Base/Noyau
+Group(is):	Grunnforrit/Kjarninn
+Group(it):	Base/Kernel
+Group(ja):	•Ÿ°º•π/•´°º•Õ•Î
+Group(no):	Basis/Kjerne
 Group(pl):	Podstawowe/J±dro
+Group(pt):	Base/N˙cleo
+Group(ru):	‚¡⁄¡/Òƒ“œ
+Group(sl):	Osnova/Jedro
+Group(sv):	Bas/K‰rna
+Group(uk):	‚¡⁄¡/Òƒ“œ
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
@@ -189,8 +266,21 @@ Modu≥ lirc_parallel dla urz±dzeÒ pod≥±czanych do portu rÛwnoleg≥ego.
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu≥y j±dra dla zdalnej obs≥ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
+Group(cs):	Z·klad/J·dro
+Group(da):	Basal/Kerne
 Group(de):	Grunds‰tzlich/Kern
+Group(es):	Base/N˙cleo
+Group(fr):	Base/Noyau
+Group(is):	Grunnforrit/Kjarninn
+Group(it):	Base/Kernel
+Group(ja):	•Ÿ°º•π/•´°º•Õ•Î
+Group(no):	Basis/Kjerne
 Group(pl):	Podstawowe/J±dro
+Group(pt):	Base/N˙cleo
+Group(ru):	‚¡⁄¡/Òƒ“œ
+Group(sl):	Osnova/Jedro
+Group(sv):	Bas/K‰rna
+Group(uk):	‚¡⁄¡/Òƒ“œ
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
@@ -216,8 +306,21 @@ Modu≥ lirc_sir.
 Summary:	SMP kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu≥y j±dra SMP dla zdalnej obs≥ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
+Group(cs):	Z·klad/J·dro
+Group(da):	Basal/Kerne
 Group(de):	Grunds‰tzlich/Kern
+Group(es):	Base/N˙cleo
+Group(fr):	Base/Noyau
+Group(is):	Grunnforrit/Kjarninn
+Group(it):	Base/Kernel
+Group(ja):	•Ÿ°º•π/•´°º•Õ•Î
+Group(no):	Basis/Kjerne
 Group(pl):	Podstawowe/J±dro
+Group(pt):	Base/N˙cleo
+Group(ru):	‚¡⁄¡/Òƒ“œ
+Group(sl):	Osnova/Jedro
+Group(sv):	Bas/K‰rna
+Group(uk):	‚¡⁄¡/Òƒ“œ
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
@@ -243,8 +346,21 @@ Modu≥ lirc_dev.
 Summary:	SMP kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu≥y j±dra dla zdalnej obs≥ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
+Group(cs):	Z·klad/J·dro
+Group(da):	Basal/Kerne
 Group(de):	Grunds‰tzlich/Kern
+Group(es):	Base/N˙cleo
+Group(fr):	Base/Noyau
+Group(is):	Grunnforrit/Kjarninn
+Group(it):	Base/Kernel
+Group(ja):	•Ÿ°º•π/•´°º•Õ•Î
+Group(no):	Basis/Kjerne
 Group(pl):	Podstawowe/J±dro
+Group(pt):	Base/N˙cleo
+Group(ru):	‚¡⁄¡/Òƒ“œ
+Group(sl):	Osnova/Jedro
+Group(sv):	Bas/K‰rna
+Group(uk):	‚¡⁄¡/Òƒ“œ
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
@@ -271,8 +387,21 @@ Modu≥ lirc_gpio.
 Summary:	SMP kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu≥y j±dra SMP dla zdalnej obs≥ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
+Group(cs):	Z·klad/J·dro
+Group(da):	Basal/Kerne
 Group(de):	Grunds‰tzlich/Kern
+Group(es):	Base/N˙cleo
+Group(fr):	Base/Noyau
+Group(is):	Grunnforrit/Kjarninn
+Group(it):	Base/Kernel
+Group(ja):	•Ÿ°º•π/•´°º•Õ•Î
+Group(no):	Basis/Kjerne
 Group(pl):	Podstawowe/J±dro
+Group(pt):	Base/N˙cleo
+Group(ru):	‚¡⁄¡/Òƒ“œ
+Group(sl):	Osnova/Jedro
+Group(sv):	Bas/K‰rna
+Group(uk):	‚¡⁄¡/Òƒ“œ
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
@@ -299,8 +428,21 @@ Modu≥ lirc_i2c
 Summary:	SMP kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu≥y j±dra SMP dla zdalnej obs≥ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
+Group(cs):	Z·klad/J·dro
+Group(da):	Basal/Kerne
 Group(de):	Grunds‰tzlich/Kern
+Group(es):	Base/N˙cleo
+Group(fr):	Base/Noyau
+Group(is):	Grunnforrit/Kjarninn
+Group(it):	Base/Kernel
+Group(ja):	•Ÿ°º•π/•´°º•Õ•Î
+Group(no):	Basis/Kjerne
 Group(pl):	Podstawowe/J±dro
+Group(pt):	Base/N˙cleo
+Group(ru):	‚¡⁄¡/Òƒ“œ
+Group(sl):	Osnova/Jedro
+Group(sv):	Bas/K‰rna
+Group(uk):	‚¡⁄¡/Òƒ“œ
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
@@ -326,8 +468,21 @@ Modu≥ lirc_serial dla urz±dzeÒ pod≥±czanych do serial portu.
 Summary:	SMP kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu≥y j±dra SMP dla zdalnej obs≥ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
+Group(cs):	Z·klad/J·dro
+Group(da):	Basal/Kerne
 Group(de):	Grunds‰tzlich/Kern
+Group(es):	Base/N˙cleo
+Group(fr):	Base/Noyau
+Group(is):	Grunnforrit/Kjarninn
+Group(it):	Base/Kernel
+Group(ja):	•Ÿ°º•π/•´°º•Õ•Î
+Group(no):	Basis/Kjerne
 Group(pl):	Podstawowe/J±dro
+Group(pt):	Base/N˙cleo
+Group(ru):	‚¡⁄¡/Òƒ“œ
+Group(sl):	Osnova/Jedro
+Group(sv):	Bas/K‰rna
+Group(uk):	‚¡⁄¡/Òƒ“œ
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
@@ -353,8 +508,21 @@ Modu≥ lirc_parallel dla urz±dzeÒ pod≥±czanych do portu rÛwnoleg≥ego.
 Summary:	SMP kernel modules for Linux Infrared Remote Control
 Summary(pl):	Modu≥y j±dra dla zdalnej obs≥ugi Linuxa za pomoc± podczerwieni
 Group:		Base/Kernel
+Group(cs):	Z·klad/J·dro
+Group(da):	Basal/Kerne
 Group(de):	Grunds‰tzlich/Kern
+Group(es):	Base/N˙cleo
+Group(fr):	Base/Noyau
+Group(is):	Grunnforrit/Kjarninn
+Group(it):	Base/Kernel
+Group(ja):	•Ÿ°º•π/•´°º•Õ•Î
+Group(no):	Basis/Kjerne
 Group(pl):	Podstawowe/J±dro
+Group(pt):	Base/N˙cleo
+Group(ru):	‚¡⁄¡/Òƒ“œ
+Group(sl):	Osnova/Jedro
+Group(sv):	Bas/K‰rna
+Group(uk):	‚¡⁄¡/Òƒ“œ
 Release:	%{_release}@%{_kernel_ver_str}
 Prereq:		modutils >= 2.4.6-4
 Requires:	dev >= 2.8.0-3
@@ -380,11 +548,23 @@ Modu≥ lirc_sir.
 Summary:	Linux Infrared Remote Control - X11 utilities
 Summary(pl):	Zdalna kontrola Linuxa za pomoc± podczerwieni - narzÍdzia X11
 Group:		X11/Applications
+Group(cs):	X11/Aplikace
+Group(da):	X11/Programmer
 Group(de):	X11/Applikationen
 Group(es):	X11/Aplicaciones
+Group(fr):	X11/Applications
+Group(id):	X11/Aplikasi
+Group(is):	X11/Forrit
+Group(it):	X11/Applicazioni
+Group(ja):	X11/•¢•◊•Í•±°º•∑•Á•Û
+Group(no):	X11/Applikasjoner
 Group(pl):	X11/Aplikacje
 Group(pt_BR):	X11/AplicaÁıes
 Group(pt):	X11/AplicaÁıes
+Group(ru):	X11/“…Ãœ÷≈Œ…—
+Group(sl):	X11/Programi
+Group(sv):	X11/Till‰mpningar
+Group(uk):	X11/“…ÀÃ¡ƒŒ¶ “œ«“¡Õ…
 
 %description X11
 Linux Infrared Remote Control - X11 utilities.
@@ -396,12 +576,21 @@ Zdalna kontrola Linuxa za pomoc± podczerwieni - narzÍdzia X11.
 Summary:	LIRC libraries
 Summary(pl):	Biblioteki LIRC
 Group:		Libraries
-Group(de):	Libraries
+Group(cs):	Knihovny
+Group(da):	Biblioteker
+Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	Agerasˆfn
+Group(it):	Librerie
+Group(ja):	•È•§•÷•È•Í
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
+Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	‚…¬Ã…œ‘≈À…
+Group(sl):	Knjiænice
+Group(sv):	Bibliotek
 Group(uk):	‚¶¬Ã¶œ‘≈À…
 Conflicts:	%{name} < 0.6.3-3
 # didn't use /tmp/.lircd
@@ -417,12 +606,21 @@ Ten pakiet zawiera biblioteki niezbÍdne do dzia≥ania klientÛw LIRC.
 Summary:	Header and library files for LIRC development
 Summary(pl):	Pliki nag≥Ûwkowe i biblioteki dla tworzenia programÛw z obs≥ug± LIRC
 Group:		Development/Libraries
-Group(de):	Entwicklung/Libraries
+Group(cs):	V˝vojovÈ prost¯edky/Knihovny
+Group(da):	Udvikling/Biblioteker
+Group(de):	Entwicklung/Bibliotheken
 Group(es):	Desarrollo/Bibliotecas
 Group(fr):	Development/Librairies
+Group(is):	ﬁrÛunartÛl/Agerasˆfn
+Group(it):	Sviluppo/Librerie
+Group(ja):	≥´»Ø/•È•§•÷•È•Í
+Group(no):	Utvikling/Bibliotek
 Group(pl):	Programowanie/Biblioteki
 Group(pt_BR):	Desenvolvimento/Bibliotecas
+Group(pt):	Desenvolvimento/Bibliotecas
 Group(ru):	Ú¡⁄“¡¬œ‘À¡/‚…¬Ã…œ‘≈À…
+Group(sl):	Razvoj/Knjiænice
+Group(sv):	Utveckling/Bibliotek
 Group(uk):	Úœ⁄“œ¬À¡/‚¶¬Ã¶œ‘≈À…
 Requires:	%{name}-libs = %{version}
 
@@ -438,12 +636,21 @@ LIRC.
 Summary:	Static library for LIRC development
 Summary(pl):	Biblioteka statyczna LIRC
 Group:		Development/Libraries
-Group(de):	Entwicklung/Libraries
+Group(cs):	V˝vojovÈ prost¯edky/Knihovny
+Group(da):	Udvikling/Biblioteker
+Group(de):	Entwicklung/Bibliotheken
 Group(es):	Desarrollo/Bibliotecas
 Group(fr):	Development/Librairies
+Group(is):	ﬁrÛunartÛl/Agerasˆfn
+Group(it):	Sviluppo/Librerie
+Group(ja):	≥´»Ø/•È•§•÷•È•Í
+Group(no):	Utvikling/Bibliotek
 Group(pl):	Programowanie/Biblioteki
 Group(pt_BR):	Desenvolvimento/Bibliotecas
+Group(pt):	Desenvolvimento/Bibliotecas
 Group(ru):	Ú¡⁄“¡¬œ‘À¡/‚…¬Ã…œ‘≈À…
+Group(sl):	Razvoj/Knjiænice
+Group(sv):	Utveckling/Bibliotek
 Group(uk):	Úœ⁄“œ¬À¡/‚¶¬Ã¶œ‘≈À…
 Requires:	%{name}-devel = %{version}
 
