@@ -37,6 +37,7 @@ BuildRequires:	libtool
 %{!?_without_dist_kernel:BuildRequires:	kernel-headers}
 %{!?_without_dist_kernel:%{!?_without_modules:BuildRequires:	kernel-source}}
 BuildRequires:	%{kgcc_package}
+BuildRequires:	rpmbuild(macros) >= 1.118
 Requires(post,preun):	/sbin/chkconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Conflicts:	%{name}-libs < 0.6.3-3
@@ -571,116 +572,116 @@ if [ "$1" = "0" ]; then
 fi
 
 %post	-n kernel-char-lirc-dev
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver} }%{_kernel_ver}
+%depmod %{_kernel_ver}
 
 %postun -n kernel-char-lirc-dev
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver} }%{_kernel_ver}
+%depmod %{_kernel_ver}
 
 %post	-n kernel-char-lirc-gpio
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver} }%{_kernel_ver}
+%depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_gpio' line"
 	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-char-lirc-gpio
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver} }%{_kernel_ver}
+%depmod %{_kernel_ver}
 
 %post	-n kernel-char-lirc-i2c
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver} }%{_kernel_ver}
+%depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_i2c' line"
 	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-char-lirc-i2c
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver} }%{_kernel_ver}
+%depmod %{_kernel_ver}
 
 %post	-n kernel-char-lirc-serial
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver} }%{_kernel_ver}
+%depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_serial' line"
 	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-char-lirc-serial
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver} }%{_kernel_ver}
+%depmod %{_kernel_ver}
 
 %post	-n kernel-char-lirc-parallel
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver} }%{_kernel_ver}
+%depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_parallel' line"
 	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-char-lirc-parallel
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver} }%{_kernel_ver}
+%depmod %{_kernel_ver}
 
 %post	-n kernel-char-lirc-sir
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver} }%{_kernel_ver}
+%depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_sir' line"
 	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-char-lirc-sir
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver} }%{_kernel_ver}
+%depmod %{_kernel_ver}
 
 %post	-n kernel-smp-char-lirc-dev
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver}smp }%{_kernel_ver}smp
+%depmod %{_kernel_ver}smp
 
 %postun -n kernel-smp-char-lirc-dev
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver}smp }%{_kernel_ver}smp
+%depmod %{_kernel_ver}smp
 
 %post	-n kernel-smp-char-lirc-gpio
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver}smp }%{_kernel_ver}smp
+%depmod %{_kernel_ver}smp
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_gpio' line"
 	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-smp-char-lirc-gpio
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver}smp }%{_kernel_ver}smp
+%depmod %{_kernel_ver}smp
 
 %post	-n kernel-smp-char-lirc-i2c
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver}smp }%{_kernel_ver}smp
+%depmod %{_kernel_ver}smp
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_i2c' line"
 	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-smp-char-lirc-i2c
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver}smp }%{_kernel_ver}smp
+%depmod %{_kernel_ver}smp
 
 %post	-n kernel-smp-char-lirc-serial
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver}smp }%{_kernel_ver}smp
+%depmod %{_kernel_ver}smp
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_serial' line"
 	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-smp-char-lirc-serial
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver}smp }%{_kernel_ver}smp
+%depmod %{_kernel_ver}smp
 
 %post -n kernel-smp-char-lirc-parallel
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver}smp }%{_kernel_ver}smp
+%depmod %{_kernel_ver}smp
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_parallel' line"
 	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-smp-char-lirc-parallel
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver}smp }%{_kernel_ver}smp
+%depmod %{_kernel_ver}smp
 
 %post	-n kernel-smp-char-lirc-sir
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver}smp }%{_kernel_ver}smp
+%depmod %{_kernel_ver}smp
 if [ "$1" = "1" ]; then
 	echo "Don't forget to add an 'alias lirc lirc_sir' line"
 	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-smp-char-lirc-sir
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver}smp }%{_kernel_ver}smp
+%depmod %{_kernel_ver}smp
 
 %files
 %defattr(644,root,root,755)
