@@ -4,7 +4,7 @@
 
 %define		_kernel24	%(echo %{_kernel_ver} | grep -q '2\.[012]\.' ; echo $?)
 # needed because of release macro expansion
-%define		_release	2
+%define		_release	3
 
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl):	Serwery do zdalnej kontroli Linuxa za pomoc± podczerwieni
@@ -21,6 +21,7 @@ Source4:	%{name}md.init
 Patch0:		%{name}-opt.patch
 Patch1:		%{name}-tmp.patch
 Patch2:		%{name}-devfs.patch
+Patch3:		%{name}-no-svgalib.patch
 URL:		http://www.lirc.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	autoconf
@@ -417,6 +418,7 @@ na LIRC.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 echo '#' > drivers/Makefile.am
