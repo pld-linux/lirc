@@ -24,7 +24,7 @@ Group:		Daemons
 Group(de):	Server
 Group(pl):	Serwery
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-BuildRequires:	kernel-source
+%{!?no_dist_kernel:BuildRequires:	kernel-source}
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
