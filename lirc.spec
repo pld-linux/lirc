@@ -9,7 +9,7 @@
 %define		smpstr	%{?_with_smp:-smp}
 %define		smp	%{?_with_smp:1}%{!?_with_smp:0}
 # needed because of release macro expansion
-%define		_release	1
+%define		_release	2
 
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl):	Serwery do zdalnej kontroli Linuxa za pomoc± podczerwieni
@@ -25,6 +25,7 @@ Patch0:		%{name}-opt.patch
 Patch1:		%{name}-spinlock.patch
 Patch2:		%{name}-tmp.patch
 Patch3:		%{name}-devfs.patch
+Patch4:		%{name}-pixelview-ptv-fmnicam.patch
 License:	GPL
 URL:		http://www.lirc.org/
 Group:		Daemons
@@ -304,6 +305,7 @@ na LIRC.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 echo '#' > drivers/Makefile.am
