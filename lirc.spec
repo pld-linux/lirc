@@ -7,30 +7,26 @@
 %bcond_without	x		# without X11-based utilitied
 #
 %define		_kernel24	%(echo %{_kernel_ver} | grep -qv '2\.4\.' ; echo $?)
+%define         _kernelsrcdir   /usr/src/linux-2.4
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl):	Serwery do zdalnej kontroli Linuksa za pomoc± podczerwieni
 Name:		lirc
-Version:	0.6.6
-%define _rel	8
-Release:	%{_rel}
+Version:	0.7.0
+%define _pre	pre7
+%define _rel	1
+Release:	0.%{_pre}.%{_rel}
 License:	GPL
 Group:		Daemons
-Source0:	http://dl.sourceforge.net/lirc/%{name}-%{version}.tar.bz2
-# Source0-md5:	6e7b5ba2fd479961d067730e16df7c54
+Source0:	http://lirc.sourceforge.net/software/snapshots/%{name}-%{version}%{_pre}.tar.bz2
+# Source0-md5:	6e8e6d847042e17151eaf58266b58759
 Source1:	http://lirc.sourceforge.net/remotes.tar.bz2
-# Source1-md5:	367be71922338f75c27c461880302f54
+# Source1-md5:	d62dac74373baebb2a61cae40d98ae9e
 Source2:	%{name}d.sysconfig
 Source3:	%{name}d.init
 Source4:	%{name}md.init
 Patch0:		%{name}-opt.patch
 Patch1:		%{name}-tmp.patch
-Patch2:		%{name}-devfs.patch
 Patch3:		%{name}-no-svgalib.patch
-Patch4:		%{name}-alpha.patch
-Patch5:		%{name}-makpc.patch
-Patch6:		%{name}-udp.patch
-Patch7:		http://delvare.free.fr/i2c/other/%{name}-0.6.6-i2c-2.8.0.patch
-Patch8:		%{name}-sparc.patch
 Patch9:		%{name}-am18.patch
 URL:		http://www.lirc.org/
 %{?with_x:BuildRequires:	XFree86-devel}
@@ -133,7 +129,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{_rel}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-dev
@@ -159,7 +155,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-char-lirc-dev = %{version}-%{release}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
@@ -186,7 +182,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-char-lirc-dev = %{version}-%{release}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
@@ -213,7 +209,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{_rel}
 %{?with_dist_kernel:Requires:	setserial}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
@@ -240,7 +236,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{_rel}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-parallel
@@ -266,7 +262,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{_rel}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-sir
@@ -292,7 +288,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{_rel}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-dev
@@ -318,7 +314,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{release}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
@@ -345,7 +341,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{release}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
@@ -372,7 +368,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{_rel}
 %{?with_dist_kernel:Requires:	setserial}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
@@ -399,7 +395,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{_rel}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-parallel
@@ -425,7 +421,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{_rel}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-sir
@@ -444,26 +440,13 @@ pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
 Modu³ lirc_sir.
 
 %prep
-%setup -q -a 1
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
+%setup -q -a 1 -n %{name}-%{version}%{_pre}
 %if %{without svga}
 %patch3 -p1
 %endif
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%if %{with kernel}
-if grep -qs 'I2C_VERSION.*"2\.8\.' %{_kernelsrcdir}/include/linux/i2c.h ; then
-%patch7 -p1
-fi
-%endif
-%patch8 -p1
-%patch9 -p1
+
 
 %build
-echo '#' > drivers/Makefile.am
 %{__libtoolize}
 %{__aclocal}
 %{__automake}
