@@ -154,7 +154,6 @@ install -d $RPM_BUILD_ROOT%{_aclocaldir}
 install -d $RPM_BUILD_ROOT%{_localstatedir}/log
 %{__make} install DESTDIR=$RPM_BUILD_ROOT \
 	sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir}
-mknod $RPM_BUILD_ROOT/dev/lircm p
 ./mksocket $RPM_BUILD_ROOT/dev/lircd
 cat remotes/*/lircd.conf.* > $RPM_BUILD_ROOT%{_sysconfdir}/lircd.conf
 cp remotes/*/lircmd.conf.* $RPM_BUILD_ROOT%{_datadir}/lircmd
@@ -215,7 +214,6 @@ fi
 %config %{_sysconfdir}/sysconfig/*
 %config %{_sysconfdir}/*.conf
 /lib/modules/*/*/*
-%attr(660,root,root) /dev/lircm
 %ghost %attr(660,root,root) /dev/lircd
 %ghost %attr(600,root,root) %{_localstatedir}/log/lircd
 %{_datadir}/lircmd
