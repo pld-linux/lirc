@@ -9,7 +9,7 @@ Summary:	Linux Infrared Remote Control daemons
 Summary(pl):	Serwery do zdalnej kontroli Linuksa za pomoc± podczerwieni
 Name:		lirc
 Version:	0.6.5
-%define _rel	8
+%define _rel	9
 Release:	%{_rel}
 License:	GPL
 Group:		Daemons
@@ -22,6 +22,7 @@ Patch0:		%{name}-opt.patch
 Patch1:		%{name}-tmp.patch
 Patch2:		%{name}-devfs.patch
 Patch3:		%{name}-no-svgalib.patch
+Patch4:		%{name}-alpha.patch
 URL:		http://www.lirc.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	autoconf
@@ -419,6 +420,7 @@ na LIRC.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 echo '#' > drivers/Makefile.am
@@ -676,13 +678,14 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc ANNOUNCE AUTHORS NEWS README TODO ChangeLog doc/irxevent.keys
+%doc ANNOUNCE AUTHORS NEWS README TODO ChangeLog
 %doc contrib/lircrc doc/*
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_sbindir}/*
 %attr(754,root,root) %{_sysconfdir}/rc.d/init.d/*
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/sysconfig/*
 %config(noreplace) %{_sysconfdir}/*.conf
+%{_mandir}/man?/*
 %ghost %attr(600,root,root) %{_localstatedir}/log/lircd
 
 %if %{_kernel24}
