@@ -1,0 +1,12 @@
+diff -urN lirc-0.6.3.orig/acconfig.h lirc-0.6.3/acconfig.h
+--- lirc-0.6.3.orig/acconfig.h	Sat Mar  3 22:02:19 2001
++++ lirc-0.6.3/acconfig.h	Tue Aug  7 12:50:46 2001
+@@ -144,7 +144,7 @@
+ #define LIRC_DRIVER_DEVICE	DEVDIR "/" DEV_LIRC
+ #endif /* LIRC_HAVE_DEVFS */
+ 
+-#define LIRCD			DEVDIR "/" DEV_LIRCD
++#define LIRCD			"/tmp/.lircd"
+ #define LIRCM			DEVDIR "/" DEV_LIRCM
+ 
+ #define LIRCDCFGFILE		SYSCONFDIR "/" CFG_LIRCD
