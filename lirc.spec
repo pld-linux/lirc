@@ -125,16 +125,16 @@ Pliki potrzebne do tworzenia ³±czonych statycznie programów opartych
 na LIRC.
 
 %package -n kernel-char-lirc-atiusb
-Summary:        Kernel modules for Linux Infrared Remote Control
+Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl):    Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
-Release:        %{_rel}@%{_kernel_ver_str}
-Group:          Base/Kernel
+Release:	%{_rel}@%{_kernel_ver_str}
+Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
-PreReq:         modutils >= 2.4.6-4
+PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):  /sbin/depmod
-Requires:       %{name} = %{version}-%{release}
-Requires:       kernel-char-lirc-dev = %{version}-%{_rel}
-Conflicts:      dev < 2.8.0-3
+Requires:	%{name} = %{version}-%{_rel}
+Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
+Conflicts:	dev < 2.8.0-3
 
 %description -n kernel-char-lirc-atiusb
 This package contains the kernel modules necessary to operate some
@@ -150,16 +150,16 @@ pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
 Modu³ lirc_atiusb.
 
 %package -n kernel-char-lirc-bt829
-Summary:        Kernel modules for Linux Infrared Remote Control
-Summary(pl):    Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
-Release:        %{_rel}@%{_kernel_ver_str}
-Group:          Base/Kernel
+Summary:	Kernel modules for Linux Infrared Remote Control
+Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Release:	%{_rel}@%{_kernel_ver_str}
+Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
-PreReq:         modutils >= 2.4.6-4
+PreReq:		 modutils >= 2.4.6-4
 Requires(post,postun):  /sbin/depmod
-Requires:       %{name} = %{version}-%{release}
-Requires:       kernel-char-lirc-dev = %{version}-%{_rel}
-Conflicts:      dev < 2.8.0-3
+Requires:	%{name} = %{version}-%{_rel}
+Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
+Conflicts:	dev < 2.8.0-3
 
 %description -n kernel-char-lirc-bt829
 This package contains the kernel modules necessary to operate some
@@ -182,7 +182,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{_rel}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-dev
@@ -208,8 +208,8 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
-Requires:	kernel-char-lirc-dev = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{_rel}
+Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-gpio
@@ -235,8 +235,8 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
-Requires:	kernel-char-lirc-dev = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{_rel}
+Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-i2c
@@ -255,16 +255,16 @@ pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
 Modu³ lirc_i2c
 
 %package -n kernel-char-lirc-it87
-Summary:        Kernel modules for Linux Infrared Remote Control
-Summary(pl):    Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
-Release:        %{_rel}@%{_kernel_ver_str}
-Group:          Base/Kernel
+Summary:	Kernel modules for Linux Infrared Remote Control
+Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Release:	%{_rel}@%{_kernel_ver_str}
+Group:	  Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
-PreReq:         modutils >= 2.4.6-4
+PreReq:	 modutils >= 2.4.6-4
 Requires(post,postun):  /sbin/depmod
-Requires:       %{name} = %{version}-%{release}
-Requires:       kernel-char-lirc-dev = %{version}-%{_rel}
-Conflicts:      dev < 2.8.0-3
+Requires:	%{name} = %{version}-%{_rel}
+Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
+Conflicts:	dev < 2.8.0-3
 
 %description -n kernel-char-lirc-it87
 This package contains the kernel modules necessary to operate some
@@ -280,16 +280,16 @@ pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
 Modu³ lirc_it87.
 
 %package -n kernel-char-lirc-mceusb
-Summary:        Kernel modules for Linux Infrared Remote Control
-Summary(pl):    Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
-Release:        %{_rel}@%{_kernel_ver_str}
-Group:          Base/Kernel
+Summary:	Kernel modules for Linux Infrared Remote Control
+Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Release:	%{_rel}@%{_kernel_ver_str}
+Group:	  	Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
-PreReq:         modutils >= 2.4.6-4
+PreReq:	 	modutils >= 2.4.6-4
 Requires(post,postun):  /sbin/depmod
-Requires:       %{name} = %{version}-%{release}
-Requires:       kernel-char-lirc-dev = %{version}-%{_rel}
-Conflicts:      dev < 2.8.0-3
+Requires:	%{name} = %{version}-%{_rel}
+Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
+Conflicts:	dev < 2.8.0-3
 
 %description -n kernel-char-lirc-mceusb
 This package contains the kernel modules necessary to operate some
@@ -305,16 +305,16 @@ pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
 Modu³ lirc_mceusb.
 
 %package -n kernel-char-lirc-sasem
-Summary:        Kernel modules for Linux Infrared Remote Control
-Summary(pl):    Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
-Release:        %{_rel}@%{_kernel_ver_str}
-Group:          Base/Kernel
+Summary:	Kernel modules for Linux Infrared Remote Control
+Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Release:	%{_rel}@%{_kernel_ver_str}
+Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
-PreReq:         modutils >= 2.4.6-4
+PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):  /sbin/depmod
-Requires:       %{name} = %{version}-%{release}
-Requires:       kernel-char-lirc-dev = %{version}-%{_rel}
-Conflicts:      dev < 2.8.0-3
+Requires:	%{name} = %{version}-%{_rel}
+Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
+Conflicts:	dev < 2.8.0-3
 
 %description -n kernel-char-lirc-sasem
 This package contains the kernel modules necessary to operate some
@@ -364,7 +364,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
+Requires:	   %{name} = %{version}-%{_rel}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-parallel
@@ -390,7 +390,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
+Requires:	   %{name} = %{version}-%{_rel}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-sir
@@ -416,8 +416,8 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
-Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{_rel}
+Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel-smp-char-lirc-atiusb
@@ -441,8 +441,8 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
-Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}
+Requires:	   %{name} = %{version}-%{_rel}
+Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel-smp-char-lirc-bt829
@@ -466,7 +466,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-dev
@@ -492,8 +492,8 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
-Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}
+Requires:	   %{name} = %{version}-%{_rel}
+Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-gpio
@@ -519,8 +519,8 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
-Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}
+Requires:	   %{name} = %{version}-%{_rel}
+Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-i2c
@@ -546,8 +546,8 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
-Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}
+Requires:	   %{name} = %{version}-%{_rel}
+Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel-smp-char-lirc-it87
@@ -571,8 +571,8 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
-Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{_rel}
+Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel-smp-char-lirc-mceusb
@@ -596,8 +596,8 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
-Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{_rel}
+Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel-smp-char-lirc-sasem
@@ -621,7 +621,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{_rel}
 %{?with_dist_kernel:Requires:	setserial}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
@@ -648,7 +648,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{_rel}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-parallel
@@ -674,7 +674,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{_rel}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-sir
@@ -855,8 +855,8 @@ fi
 %post -n kernel-char-lirc-atiusb
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
-        echo "Don't forget to add an 'alias lirc lirc_atiusb' line"
-        echo "to your /etc/modules.conf."
+	echo "Don't forget to add an 'alias lirc lirc_atiusb' line"
+	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-char-lirc-atiusb
@@ -865,8 +865,8 @@ fi
 %post -n kernel-char-lirc-bt829
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
-        echo "Don't forget to add an 'alias lirc lirc_bt829' line"
-        echo "to your /etc/modules.conf."
+	echo "Don't forget to add an 'alias lirc lirc_bt829' line"
+	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-char-lirc-bt829
@@ -901,8 +901,8 @@ fi
 %post   -n kernel-char-lirc-it87
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
-        echo "Don't forget to add an 'alias lirc lirc_it87' line"
-        echo "to your /etc/modules.conf."
+	echo "Don't forget to add an 'alias lirc lirc_it87' line"
+	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-char-lirc-it87
@@ -911,8 +911,8 @@ fi
 %post   -n kernel-char-lirc-mceusb
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
-        echo "Don't forget to add an 'alias lirc lirc_mceusb' line"
-        echo "to your /etc/modules.conf."
+	echo "Don't forget to add an 'alias lirc lirc_mceusb' line"
+	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-char-lirc-mceusb
@@ -921,8 +921,8 @@ fi
 %post   -n kernel-char-lirc-sasem
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
-        echo "Don't forget to add an 'alias lirc lirc_sasem' line"
-        echo "to your /etc/modules.conf."
+	echo "Don't forget to add an 'alias lirc lirc_sasem' line"
+	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-char-lirc-sasem
@@ -961,8 +961,8 @@ fi
 %post -n kernel-smp-char-lirc-atiusb
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
-        echo "Don't forget to add an 'alias lirc lirc_atiusb' line"
-        echo "to your /etc/modules.conf."
+	echo "Don't forget to add an 'alias lirc lirc_atiusb' line"
+	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-smp-char-lirc-atiusb
@@ -971,8 +971,8 @@ fi
 %post   -n kernel-smp-char-lirc-bt829
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
-        echo "Don't forget to add an 'alias lirc lirc_bt829' line"
-        echo "to your /etc/modules.conf."
+	echo "Don't forget to add an 'alias lirc lirc_bt829' line"
+	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-smp-char-lirc-bt829
@@ -1007,8 +1007,8 @@ fi
 %post -n kernel-smp-char-lirc-it87
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
-        echo "Don't forget to add an 'alias lirc lirc_it87' line"
-        echo "to your /etc/modules.conf."
+	echo "Don't forget to add an 'alias lirc lirc_it87' line"
+	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-smp-char-lirc-it87
@@ -1017,8 +1017,8 @@ fi
 %post   -n kernel-smp-char-lirc-mceusb
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
-        echo "Don't forget to add an 'alias lirc lirc_mceusb' line"
-        echo "to your /etc/modules.conf."
+	echo "Don't forget to add an 'alias lirc lirc_mceusb' line"
+	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-smp-char-lirc-mceusb
@@ -1027,8 +1027,8 @@ fi
 %post   -n kernel-smp-char-lirc-sasem
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
-        echo "Don't forget to add an 'alias lirc lirc_sasem' line"
-        echo "to your /etc/modules.conf."
+	echo "Don't forget to add an 'alias lirc lirc_sasem' line"
+	echo "to your /etc/modules.conf."
 fi
 
 %postun -n kernel-smp-char-lirc-sasem
