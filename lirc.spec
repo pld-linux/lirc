@@ -1204,7 +1204,6 @@ fi
 %files -n kernel-smp-char-lirc-sasem
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}smp/*/lirc_sasem*
-%endif
 
 %files -n kernel-smp-char-lirc-serial
 %defattr(644,root,root,755)
