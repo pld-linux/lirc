@@ -2,7 +2,7 @@ Summary:	Linux Infrared Remote Control
 Summary(pl):	Zdalna kontrola Linuxa za pomoc± podczerwieni
 Name:		lirc
 Version:	0.6.3 
-Release:	1@%{_kernel_ver}
+Release:	2@%{_kernel_ver}
 Source0:	http://download.sourceforge.net/LIRC/%{name}-%{version}.tar.gz
 Source1:	%{name}-mksocket.c
 Source2:	%{name}.sysconfig
@@ -112,9 +112,7 @@ cp %{SOURCE1} mksocket.c
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-if echo %{_kernel_ver}|grep ^2\\.2>/dev/zero; then
 %patch4 -p1
-fi
 
 %build
 rm -f missing
