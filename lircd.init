@@ -58,11 +58,14 @@ case "$1" in
 	test -n "$RESTART_LIRCMD" && /etc/rc.d/init.d/lircmd start
 	;;
   reload)
-	msg_reloading "Linux Infrared Remote Control daemon"
-	busy
-	killproc lircd -HUP
-	RETVAL=$?
-	[ $RETVAL -eq 0 ] && ok || died
+	if [ -f /var/lock/subsys/lircd ]; then
+		msg_reloading "Linux Infrared Remote Control daemon"
+		killproc lircd -HUP
+		RETVAL=$?
+	else
+		msg_not_running fwlogwatch
+		exit 1
+	fi
 	;;
   *)
 	msg_usage "$0 {start|stop|restart|reload|status}"
