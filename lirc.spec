@@ -12,7 +12,8 @@ Summary:	Linux Infrared Remote Control daemons
 Summary(pl):	Serwery do zdalnego sterowania Linuksem za pomoc± podczerwieni
 Name:		lirc
 Version:	0.7.0
-Release:	0.1
+%define _rel	0.1
+Release:	%{_rel}
 License:	GPL
 Group:		Daemons
 Source0:	http://dl.sourceforge.net/lirc/%{name}-%{version}.tar.bz2
@@ -24,13 +25,10 @@ Source3:	%{name}d.init
 Source4:	%{name}md.init
 Patch0:		%{name}-opt.patch
 Patch1:		%{name}-tmp.patch
-Patch2:		%{name}-devfs.patch
+#Patch2:		%{name}-devfs.patch
 Patch3:		%{name}-no-svgalib.patch
 Patch4:		%{name}-alpha.patch
-#Patch5:	%{name}-makpc.patch obsolete? makpc=pcmak ?
-#Patch6:	%{name}-udp.patch Obsolete
-#Patch7:	http://delvare.free.fr/i2c/other/%{name}-0.6.6-i2c-2.8.0.patch
-Patch7:		lirc-i2c-2.8.x.patch
+Patch7:		%{name}-i2c-2.8.x.patch
 Patch8:		%{name}-sparc.patch
 Patch9:		%{name}-am18.patch
 URL:		http://www.lirc.org/
@@ -47,7 +45,7 @@ BuildRequires:	kernel24-source
 BuildRequires:	rpmbuild(macros) >= 1.118
 %{?with_svga:BuildRequires:	svgalib-devel}
 Requires(post,preun):	/sbin/chkconfig
-Requires:	%{name}-libs = %{version}-%{_rel}
+Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -63,7 +61,7 @@ popularnych urz±dzeñ do zdalnego sterowania.
 Summary:	Linux Infrared Remote Control - X11 utilities
 Summary(pl):	Zdalne sterowanie Linuksem za pomoc± podczerwieni - narzêdzia X11
 Group:		X11/Applications
-Requires:	%{name}-libs = %{version}-%{_rel}
+Requires:	%{name}-libs = %{version}-%{release}
 
 %description X11
 Linux Infrared Remote Control - X11 utilities.
@@ -75,7 +73,7 @@ Zdalne sterowanie Linuksem za pomoc± podczerwieni - narzêdzia X11.
 Summary:	Linux Infrared Remote Control - svgalib utilities
 Summary(pl):	Zdalne sterowanie Linuksem za pomoc± podczerwieni - narzêdzia svgalib
 Group:		Applications
-Requires:	%{name}-libs = %{version}-%{_rel}
+Requires:	%{name}-libs = %{version}-%{release}
 
 %description svga
 Linux Infrared Remote Control - svgalib-based utilities.
@@ -102,7 +100,7 @@ Ten pakiet zawiera biblioteki niezbêdne do dzia³ania klientów LIRC.
 Summary:	Header files for LIRC development
 Summary(pl):	Pliki nag³ówkowe do tworzenia programów z obs³ug± LIRC
 Group:		Development/Libraries
-Requires:	%{name}-libs = %{version}-%{_rel}
+Requires:	%{name}-libs = %{version}-%{release}
 
 %description devel
 This package provides the files necessary to develop LIRC-based
@@ -116,7 +114,7 @@ LIRC.
 Summary:	Static library for LIRC development
 Summary(pl):	Biblioteka statyczna LIRC
 Group:		Development/Libraries
-Requires:	%{name}-devel = %{version}-%{_rel}
+Requires:	%{name}-devel = %{version}-%{release}
 
 %description static
 The files necessary for development of statically-linked lirc-based
@@ -134,7 +132,7 @@ Group:          Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:         modutils >= 2.4.6-4
 Requires(post,postun):  /sbin/depmod
-Requires:       %{name} = %{version}-%{_rel}
+Requires:       %{name} = %{version}-%{release}
 Requires:       kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:      dev < 2.8.0-3
 
@@ -159,7 +157,7 @@ Group:          Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:         modutils >= 2.4.6-4
 Requires(post,postun):  /sbin/depmod
-Requires:       %{name} = %{version}-%{_rel}
+Requires:       %{name} = %{version}-%{release}
 Requires:       kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:      dev < 2.8.0-3
 
@@ -184,7 +182,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{release}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-dev
@@ -210,7 +208,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{release}
 Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
@@ -237,7 +235,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{release}
 Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
@@ -264,7 +262,7 @@ Group:          Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:         modutils >= 2.4.6-4
 Requires(post,postun):  /sbin/depmod
-Requires:       %{name} = %{version}-%{_rel}
+Requires:       %{name} = %{version}-%{release}
 Requires:       kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:      dev < 2.8.0-3
 
@@ -289,7 +287,7 @@ Group:          Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:         modutils >= 2.4.6-4
 Requires(post,postun):  /sbin/depmod
-Requires:       %{name} = %{version}-%{_rel}
+Requires:       %{name} = %{version}-%{release}
 Requires:       kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:      dev < 2.8.0-3
 
@@ -314,7 +312,7 @@ Group:          Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:         modutils >= 2.4.6-4
 Requires(post,postun):  /sbin/depmod
-Requires:       %{name} = %{version}-%{_rel}
+Requires:       %{name} = %{version}-%{release}
 Requires:       kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:      dev < 2.8.0-3
 
@@ -366,7 +364,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{release}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-parallel
@@ -392,7 +390,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{release}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-sir
@@ -418,7 +416,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{release}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 
@@ -443,7 +441,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{release}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 
@@ -494,7 +492,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{release}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
@@ -521,7 +519,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{release}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
@@ -548,7 +546,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{release}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 
@@ -573,7 +571,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{release}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 
@@ -598,7 +596,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{release}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 
@@ -623,7 +621,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{release}
 %{?with_dist_kernel:Requires:	setserial}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
@@ -650,7 +648,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{release}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-parallel
@@ -676,7 +674,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{name} = %{version}-%{release}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-sir
@@ -702,14 +700,13 @@ Modu³ lirc_sir.
 %if %{without svga}
 %patch3 -p1
 %endif
-#%%patch4 -p1
-#%%patch6 -p1
+%patch4 -p1
 %if %{with kernel}
 if grep -qs 'I2C_VERSION.*"2\.8\.' %{_kernelsrcdir}/include/linux/i2c.h ; then
 %patch7 -p0
 fi
 %endif
-#%%patch8 -p1
+%patch8 -p1
 %patch9 -p1
 
 %build
