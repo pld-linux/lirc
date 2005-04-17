@@ -12,7 +12,7 @@ Summary(pl):	Serwery do zdalnego sterowania Linuksem za pomoc± podczerwieni
 Name:		lirc
 Version:	0.7.1
 %define	_rel	0.1
-Release:        %{_rel}
+Release:	%{_rel}
 License:	GPL
 Group:		Daemons
 Source0:	http://kent.dl.sourceforge.net/sourceforge/lirc/lirc-0.7.1.tar.gz
@@ -285,7 +285,7 @@ Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
-PreReq:	 	modutils >= 2.4.6-4
+PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel24-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
