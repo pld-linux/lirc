@@ -15,8 +15,7 @@ Version:	0.7.1
 Release:	%{_rel}
 License:	GPL
 Group:		Daemons
-#Source0:	http://dl.sourceforge.net/lirc/%{name}-%{version}.tar.bz2
-Source0:	http://puzzle.dl.sourceforge.net/sourceforge/lirc/%{name}-%{version}.tar.bz2
+Source0:	http://dl.sourceforge.net/lirc/%{name}-%{version}.tar.bz2
 # Source0-md5:	642e543e25dd6ad72416784bb6166d54
 Source1:	http://lirc.sourceforge.net/remotes.tar.bz2
 # Source1-md5:	332ed8695cbef015fef4ffa13cbcde50
