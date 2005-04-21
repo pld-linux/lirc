@@ -19,7 +19,7 @@ Group:		Daemons
 Source0:	http://puzzle.dl.sourceforge.net/sourceforge/lirc/%{name}-%{version}.tar.bz2
 # Source0-md5:	642e543e25dd6ad72416784bb6166d54
 Source1:	http://lirc.sourceforge.net/remotes.tar.bz2
-# Source1-md5:	40245c529141e52c92de57deb77f0095
+# Source1-md5:	332ed8695cbef015fef4ffa13cbcde50
 Source2:	%{name}d.sysconfig
 Source3:	%{name}d.init
 Source4:	%{name}md.init
