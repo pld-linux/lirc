@@ -732,6 +732,7 @@ echo '#' > drivers/Makefile.am
 %{__autoconf}
 
 %configure \
+	ac_cv_header_portaudio_h=no \
 	--with-driver=any \
 	--with-kerneldir=%{_kernelsrcdir} \
 	%{?with_x:--with-x} \
