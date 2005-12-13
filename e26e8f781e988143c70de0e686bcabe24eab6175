@@ -1,0 +1,1 @@
+- added %{!?no_dist_kernel: condition to buildrequires
