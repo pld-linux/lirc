@@ -1,0 +1,10 @@
+- new kernel module naming scheme (kernel{,-smp}-*)
+- UP and SMP versions still not built from one rpm -bb -- filename
+  conflict
+- use lircd.sysconfig instead of lirc.sysconfig
+- no more weird config file handling, make the user configure it themself
+  (examples in %{_docdir}/%{name}-%{version})
+- simplified example gzipping rule
+- lirc_gpio and lirc_i2c depend on lirc_dev
+- no module aliasing at lirc_dev (it's not used directly)
+- s/char-major-61/lirc/
