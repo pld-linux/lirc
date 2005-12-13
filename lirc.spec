@@ -1,3 +1,5 @@
+# TODO
+# - are jpegs in docs (remotes) a good idea?
 #
 # Conditional build:
 %bcond_without	dist_kernel	# without sources of distribution kernel
@@ -128,10 +130,10 @@ Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
-PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel24-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
+Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel24-char-lirc-atiusb
@@ -153,10 +155,10 @@ Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
-PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel24-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
+Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel24-char-lirc-bt829
@@ -178,9 +180,9 @@ Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
-PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
+Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-dev
@@ -204,10 +206,10 @@ Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
-PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel24-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
+Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-gpio
@@ -231,10 +233,10 @@ Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
-PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel24-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
+Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-i2c
@@ -258,10 +260,10 @@ Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
-PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel24-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
+Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel24-char-lirc-it87
@@ -283,10 +285,10 @@ Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
-PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel24-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
+Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel24-char-lirc-mceusb
@@ -308,10 +310,10 @@ Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
-PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel24-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
+Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel24-char-lirc-sasem
@@ -333,10 +335,10 @@ Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
-PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel24-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
+Requires:	modutils >= 2.4.6-4
 %{?with_dist_kernel:Requires:	setserial}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
@@ -361,9 +363,9 @@ Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
-PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
+Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-parallel
@@ -387,9 +389,9 @@ Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
-PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
+Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-sir
@@ -413,10 +415,10 @@ Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
-PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel24-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
+Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel24-smp-char-lirc-atiusb
@@ -438,10 +440,10 @@ Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
-PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel24-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
+Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel24-smp-char-lirc-bt829
@@ -463,9 +465,9 @@ Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
-PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}@%{_kernel_ver_str}
+Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-dev
@@ -489,10 +491,10 @@ Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
-PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel24-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
+Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-gpio
@@ -516,10 +518,10 @@ Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
-PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel24-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
+Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-i2c
@@ -543,10 +545,10 @@ Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
-PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel24-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
+Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel24-smp-char-lirc-it87
@@ -568,10 +570,10 @@ Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
-PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel24-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
+Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel24-smp-char-lirc-mceusb
@@ -593,10 +595,10 @@ Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
-PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel24-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
+Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel24-smp-char-lirc-sasem
@@ -618,10 +620,10 @@ Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
-PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel24-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
+Requires:	modutils >= 2.4.6-4
 %{?with_dist_kernel:Requires:	setserial}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
@@ -646,9 +648,9 @@ Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
-PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
+Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-parallel
@@ -672,9 +674,9 @@ Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
-PreReq:		modutils >= 2.4.6-4
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
+Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-sir
@@ -1083,7 +1085,7 @@ fi
 #%%attr(755,root,root) %{_bindir}/rc
 %attr(755,root,root) %{_sbindir}/*
 %attr(754,root,root) /etc/rc.d/init.d/*
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/sysconfig/*
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/*
 %config(noreplace) %{_sysconfdir}/*.conf
 %{_mandir}/man1/ir[!x]*
 %{_mandir}/man1/[!isx]*
@@ -1091,8 +1093,8 @@ fi
 %ghost %attr(600,root,root) /var/log/lircd
 
 %files remotes
-# XXX: are jpegs in docs (remotes) a good idea?
 %defattr(644,root,root,755)
+# XXX: are jpegs in docs (remotes) a good idea?
 %doc remotes
 
 %if %{with x}
