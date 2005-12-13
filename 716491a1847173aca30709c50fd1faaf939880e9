@@ -1,0 +1,6 @@
+- using %_kernelsrcdir
+- use devfs.patch
+- modules-{smp,up} subpackage renamed to modules
+- cleanups in rpm scripts
+- release 3
+- STB
