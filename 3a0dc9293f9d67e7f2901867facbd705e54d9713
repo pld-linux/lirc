@@ -1,0 +1,3 @@
+- changes in the build process: conditional SMP build, don't use kernel's
+  Makefiles
+- modules go to a subpackage (lirc-modules-%smpstr)
