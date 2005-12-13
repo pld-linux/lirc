@@ -1,0 +1,2 @@
+- don't use macros not available in standard rpm. Define them in the spec.
+  (_kernel_ver, _kernel24)
