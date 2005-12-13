@@ -1,0 +1,2 @@
+- removed %{_smpstr} from @... suffix
+- s/-/_/g in @... suffix
