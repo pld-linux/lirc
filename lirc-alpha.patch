@@ -127,16 +127,16 @@ diff -urN lirc-0.7.1pre1.orig/drivers/lirc_parallel/lirc_parallel.c lirc-0.7.1pr
 diff -urN lirc-0.7.1pre1.orig/drivers/lirc_sasem/lirc_sasem.c lirc-0.7.1pre1/drivers/lirc_sasem/lirc_sasem.c
 --- lirc-0.7.1pre1.orig/drivers/lirc_sasem/lirc_sasem.c	2004-11-07 14:35:45.000000000 +0100
 +++ lirc-0.7.1pre1/drivers/lirc_sasem/lirc_sasem.c	2005-01-25 10:27:53.783443120 +0100
-@@ -46,6 +46,10 @@
- #error "**********************************************************"
- #endif
+@@ -60,6 +60,10 @@
+ 
+ #include <linux/config.h>
  
 +#ifdef __alpha__
 +#include <asm/current.h>
 +#endif
 +
- #include <linux/module.h>
- #include <linux/kmod.h>
+ #include <linux/errno.h>
+ #include <linux/init.h>
  #include <linux/kernel.h>
 diff -urN lirc-0.7.1pre1.orig/drivers/lirc_serial/lirc_serial.c lirc-0.7.1pre1/drivers/lirc_serial/lirc_serial.c
 --- lirc-0.7.1pre1.orig/drivers/lirc_serial/lirc_serial.c	2004-12-31 22:21:39.000000000 +0100
