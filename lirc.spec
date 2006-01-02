@@ -24,7 +24,7 @@ Group:		Daemons
 Source0:	http://lirc.sourceforge.net/software/snapshots/%{name}-%{version}%{_pre}.tar.bz2
 # Source0-md5:	c20cf756b0b5cad96437bc25e81b166a
 Source1:	http://lirc.sourceforge.net/remotes.tar.bz2
-# Source1-md5:	d769f13b0d659170746f221d4a773c81
+# Source1-md5:	a933425b83079d97ebc5c29f4f1f40fd
 Source2:	%{name}d.sysconfig
 Source3:	%{name}d.init
 Source4:	%{name}md.init
