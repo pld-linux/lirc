@@ -35,7 +35,6 @@ Patch3:		%{name}-no-svgalib.patch
 Patch4:		%{name}-alpha.patch
 Patch5:		%{name}-i2c-2.8.x.patch
 Patch6:		%{name}-sparc.patch
-Patch7:		%{name}-am18.patch
 URL:		http://www.lirc.org/
 %{?with_x:BuildRequires:	XFree86-devel}
 BuildRequires:	autoconf
@@ -926,20 +925,19 @@ obs³ugiwanych przez lirc.
 
 %prep
 %setup -q -a 1 -n %{name}-%{version}pre3
-#%patch0 -p1
-#%patch1 -p1
+%patch0 -p1
+%patch1 -p1
 #%patch2 -p1
-#%if %{without svga}
-#%patch3 -p1
-#%endif
-#%patch4 -p1
-#%if %{with kernel}
-#if grep -qs 'I2C_VERSION.*"2\.8\.' %{_kernelsrcdir}/include/linux/i2c.h ; then
-#%patch5 -p0
-#fi
-#%endif
-#%patch6 -p1
-#%patch7 -p1
+%if %{without svga}
+%patch3 -p1
+%endif
+%patch4 -p1
+%if %{with kernel}
+if grep -qs 'I2C_VERSION.*"2\.8\.' %{_kernelsrcdir}/include/linux/i2c.h ; then
+%patch5 -p0
+fi
+%endif
+%patch6 -p1
 
 %build
 echo '#' > drivers/Makefile.am
