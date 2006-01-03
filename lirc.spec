@@ -10,13 +10,12 @@
 %bcond_without	x		# without X11-based utilitied
 #
 %define		_kernelsrcdir	/usr/src/linux
-#%define		drivers		"lirc_gpio lirc_it87 lirc_serial lirc_atiusb lirc_mceusb lirc_sir lirc_bt829 lirc_i2c lirc_mceusb2 lirc_streamzap lirc_cmdir lirc_igorplugusb lirc_parallel lirc_dev lirc_imon lirc_sasem"
 %define		drivers		"lirc_it87 lirc_serial lirc_atiusb lirc_mceusb lirc_sir lirc_bt829 lirc_i2c lirc_mceusb2 lirc_streamzap lirc_cmdir lirc_igorplugusb lirc_dev lirc_imon lirc_sasem lirc_parallel lirc_gpio"
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl):	Serwery do zdalnego sterowania Linuksem za pomoc± podczerwieni
 Name:		lirc
 Version:	0.8.0
-%define	_rel	0.1
+%define	_rel	0.9
 %define	_pre	pre3
 Release:	%{_rel}
 License:	GPL
@@ -136,7 +135,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel-char-lirc-atiusb
@@ -161,7 +159,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel-char-lirc-bt829
@@ -186,7 +183,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel-char-lirc-cmdir
@@ -210,7 +206,6 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-dev
@@ -237,7 +232,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-gpio
@@ -264,7 +258,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-i2c
@@ -291,7 +284,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-igorplugusb
@@ -318,7 +310,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-imon
@@ -345,7 +336,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel-char-lirc-it87
@@ -370,7 +360,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel-char-lirc-mceusb
@@ -395,7 +384,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel-char-lirc-sasem
@@ -420,7 +408,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 %{?with_dist_kernel:Requires:	setserial}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
@@ -448,7 +435,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-streamzap
@@ -474,7 +460,6 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-parallel
@@ -500,7 +485,6 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-sir
@@ -527,7 +511,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel-smp-char-lirc-atiusb
@@ -552,7 +535,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel-smp-char-lirc-bt829
@@ -577,7 +559,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel-smp-char-lirc-cmdir
@@ -601,7 +582,6 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-dev
@@ -628,7 +608,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-gpio
@@ -655,7 +634,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-i2c
@@ -682,7 +660,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-spm-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-igorplugusb
@@ -709,7 +686,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-imon
@@ -736,7 +712,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel-smp-char-lirc-it87
@@ -761,7 +736,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel-smp-char-lirc-mceusb
@@ -786,7 +760,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel-smp-char-lirc-sasem
@@ -811,7 +784,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 %{?with_dist_kernel:Requires:	setserial}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
@@ -839,7 +811,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 Requires:	kernel-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-streamzap
@@ -865,7 +836,6 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-parallel
@@ -891,7 +861,6 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
-Requires:	modutils >= 2.4.6-4
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-sir
@@ -924,7 +893,7 @@ Ten pakiet zawiera pliki konfiguracyjne dla wielu pilotów
 obs³ugiwanych przez lirc.
 
 %prep
-%setup -q -a 1 -n %{name}-%{version}pre3
+%setup -q -a 1 -n %{name}-%{version}%{_pre}
 %patch0 -p1
 %patch1 -p1
 #%patch2 -p1
@@ -1481,6 +1450,7 @@ fi
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/*/lirc_sir*
 
+%if %{with smp}
 %files -n kernel-smp-char-lirc-atiusb
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}smp/*/lirc_atiusb*
@@ -1543,4 +1513,5 @@ fi
 %files -n kernel-smp-char-lirc-sir
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}smp/*/lirc_sir*
+%endif
 %endif
