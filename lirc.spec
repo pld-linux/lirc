@@ -274,7 +274,7 @@ lirc_i2c module.
 Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
 pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_i2c
+Modu³ lirc_i2c.
 
 %package -n kernel-char-lirc-igorplugusb
 Summary:	Kernel modules for Linux Infrared Remote Control
@@ -300,7 +300,7 @@ lirc_igorplugusb module.
 Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
 pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_igorplugusb
+Modu³ lirc_igorplugusb.
 
 %package -n kernel-char-lirc-imon
 Summary:	Kernel modules for Linux Infrared Remote Control
@@ -326,7 +326,7 @@ lirc_imon module.
 Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
 pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_imon
+Modu³ lirc_imon.
 
 %package -n kernel-char-lirc-it87
 Summary:	Kernel modules for Linux Infrared Remote Control
@@ -425,7 +425,7 @@ lirc_serial module for devices connected to serial port.
 Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
 pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_serial dla urz±dzeñ pod³±czanych do serial portu.
+Modu³ lirc_serial dla urz±dzeñ pod³±czanych do portu szeregowego.
 
 %package -n kernel-char-lirc-streamzap
 Summary:	Kernel modules for Linux Infrared Remote Control
@@ -676,7 +676,7 @@ lirc_igorplugusb module.
 Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
 pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_igorplugusb
+Modu³ lirc_igorplugusb.
 
 %package -n kernel-smp-char-lirc-imon
 Summary:	Kernel modules for Linux Infrared Remote Control
@@ -702,7 +702,7 @@ lirc_imon module.
 Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
 pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_imon
+Modu³ lirc_imon.
 
 %package -n kernel-smp-char-lirc-it87
 Summary:	SMP kernel modules for Linux Infrared Remote Control
@@ -801,7 +801,7 @@ lirc_serial module for devices connected to serial port.
 Ten pakiet zawiera modu³y j±dra SMP niezbêdne do obs³ugi niektórych
 pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_serial dla urz±dzeñ pod³±czanych do serial portu.
+Modu³ lirc_serial dla urz±dzeñ pod³±czanych do portu szeregowego.
 
 %package -n kernel-smp-char-lirc-streamzap
 Summary:	Kernel modules for Linux Infrared Remote Control
