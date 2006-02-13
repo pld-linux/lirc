@@ -34,7 +34,7 @@ Patch4:		%{name}-alpha.patch
 Patch5:		%{name}-i2c-2.8.x.patch
 Patch6:		%{name}-sparc.patch
 URL:		http://www.lirc.org/
-%{?with_x:BuildRequires:	XFree86-devel}
+%{?with_x:BuildRequires:	xorg-lib-libX11-devel}
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
@@ -923,6 +923,7 @@ echo '#' > drivers/Makefile.am
 	--with-irq=3 \
 	--without-soft-carrier \
 	--with-driver=serial
+
 %{__make}
 
 %if %{with kernel}
