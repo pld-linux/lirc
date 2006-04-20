@@ -15,7 +15,7 @@ Summary:	Linux Infrared Remote Control daemons
 Summary(pl):	Serwery do zdalnego sterowania Linuksem za pomoc± podczerwieni
 Name:		lirc
 Version:	0.8.0
-%define	_rel	1
+%define	_rel	2
 Release:	%{_rel}
 License:	GPL
 Group:		Daemons
@@ -33,6 +33,7 @@ Patch3:		%{name}-no-svgalib.patch
 Patch4:		%{name}-alpha.patch
 Patch5:		%{name}-i2c-2.8.x.patch
 Patch6:		%{name}-sparc.patch
+Patch8:		%{name}-remotes.patch
 URL:		http://www.lirc.org/
 %{?with_x:BuildRequires:	xorg-lib-libX11-devel}
 BuildRequires:	autoconf
@@ -906,6 +907,7 @@ if grep -qs 'I2C_VERSION.*"2\.8\.' %{_kernelsrcdir}/include/linux/i2c.h ; then
 fi
 %endif
 %patch6 -p1
+%patch8 -p1
 
 %build
 echo '#' > drivers/Makefile.am
@@ -922,7 +924,8 @@ echo '#' > drivers/Makefile.am
 	--with-port=0x2f8 \
 	--with-irq=3 \
 	--without-soft-carrier \
-	--with-driver=serial
+	--with-driver=userspace \
+	--with-igor
 
 %{__make}
 
@@ -931,37 +934,40 @@ cd drivers
 
 for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}; do
 	drivers=%{drivers}
+	rm -rf o
+	if [ ! -r "%{_kernelsrcdir}/config-$cfg" ]; then
+		exit 1
+	fi
+	install -d o/include/{linux,config}
+	ln -sf %{_kernelsrcdir}/config-$cfg o/.config
+	ln -sf %{_kernelsrcdir}/include/linux/autoconf-$cfg.h o/include/linux/autoconf.h
+	[ ! -L o/include/asm ] && ln -sf %{_kernelsrcdir}/include/asm-%{_target_base_arch} o/include/asm
+	ln -sf %{_kernelsrcdir}/Module.symvers-$cfg o/Module.symvers
+	%if %{without dist_kernel}
+		touch o/include/config/MARKER
+		ln -sf %{_kernelsrcdir}/scripts o/
+	%else
+		%{__make} -C %{_kernelsrcdir} O=$PWD/o prepare scripts
+	%endif
 	for drv in $drivers; do
+		cd $drv
 		if [ "$drv" == "lirc_parallel" ] && [ "$cfg" == "smp" ]; then
 			echo "lirc_parallel is not smp safe"
 		else
-		cd $drv
-		if [ ! -r "%{_kernelsrcdir}/config-$cfg" ]; then
-			exit 1
+			ln -sf ../o
+			%{__make} clean \
+				RCS_FIND_IGNORE="-name '*.ko' -o" \
+				M=$PWD O=$PWD/o \
+				%{?with_verbose:V=1}
+			%{__make} \
+				M=$PWD O=$PWD/o \
+				%{?with_verbose:V=1}
+			mv $drv{,-$cfg}.ko
 		fi
-		#rm -rf include
-		install -d include/{linux,config}
-		ln -sf %{_kernelsrcdir}/config-$cfg .config
-		ln -sf %{_kernelsrcdir}/include/linux/autoconf-$cfg.h include/linux/autoconf.h
-		[ ! -L include/asm ] && ln -sf %{_kernelsrcdir}/include/asm-%{_target_base_arch} include/asm
-		ln -sf %{_kernelsrcdir}/Module.symvers-$cfg Module.symvers
-		%if %{without dist_kernel}
-			ln -sf %{_kernelsrcdir}/scripts
-		%endif
-		touch include/config/MARKER
-		%{__make} clean \
-			RCS_FIND_IGNORE="-name '*.ko' -o" \
-			M=$PWD O=$PWD \
-			%{?with_verbose:V=1}
-		%{__make} \
-			M=$PWD O=$PWD \
-			%{?with_verbose:V=1}
-		mv $drv{,-$cfg}.ko
-		cd ../
-		fi
+		cd ..
 	done
 done
-cd ../
+cd ..
 
 %endif
 
