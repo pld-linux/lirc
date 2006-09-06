@@ -951,7 +951,7 @@ for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}
 		touch o/include/config/MARKER
 		ln -sf %{_kernelsrcdir}/scripts o/
 	%else
-		%{__make} -C %{_kernelsrcdir} O=$PWD/o prepare scripts
+		%{__make} -j1 -C %{_kernelsrcdir} O=$PWD/o prepare scripts
 	%endif
 	for drv in $drivers; do
 		cd $drv
