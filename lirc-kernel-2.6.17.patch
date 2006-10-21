@@ -1,0 +1,25 @@
+diff -urN lirc-0.8.0/drivers/lirc_gpio/lirc_gpio.c lirc-0.8.0.new/drivers/lirc_gpio/lirc_gpio.c
+--- lirc-0.8.0/drivers/lirc_gpio/lirc_gpio.c	2006-01-01 14:43:46.000000000 +0100
++++ lirc-0.8.0.new/drivers/lirc_gpio/lirc_gpio.c	2006-10-07 11:44:55.000000000 +0200
+@@ -48,9 +48,12 @@
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(2,4,0)
+ #include "../drivers/char/bttv.h"
+ #include "../drivers/char/bttvp.h"
+-#else
++#elif LINUX_VERSION_CODE < KERNEL_VERSION(2,6,17)
+ #include "../drivers/media/video/bttv.h"
+ #include "../drivers/media/video/bttvp.h"
++#else
++#include "../drivers/media/video/bt8xx/bttv.h"
++#include "../drivers/media/video/bt8xx/bttvp.h"
+ #endif
+ 
+ #if BTTV_VERSION_CODE < KERNEL_VERSION(0,7,45)
+diff -urN lirc-0.8.0/drivers/lirc_gpio/Makefile.am lirc-0.8.0.new/drivers/lirc_gpio/Makefile.am
+--- lirc-0.8.0/drivers/lirc_gpio/Makefile.am	2004-04-25 18:29:25.000000000 +0200
++++ lirc-0.8.0.new/drivers/lirc_gpio/Makefile.am	2006-10-07 12:20:32.000000000 +0200
+@@ -11,3 +11,4 @@
+ module_DATA = lirc_gpio.o
+ 
+ include ../Makefile.common
++LIRC_EXTRA_CFLAGS += -I$(kerneldir)drivers/media/video
