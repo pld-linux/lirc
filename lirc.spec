@@ -902,7 +902,7 @@ echo %{_kernelsrcdir}
 %patch0 -p1
 %patch1 -p1
 #%patch2 -p1
-%if %{without svga}
+%if !%{with svga}
 %patch3 -p1
 %endif
 %patch4 -p1
