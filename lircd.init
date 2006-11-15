@@ -33,6 +33,7 @@ case "$1" in
 		MODULE_OPTIONS=""
 		[ -n "$DRIVER_OPTS" ] && MODULE_OPTIONS="$DRIVER_OPTS"
 		modprobe -s lirc $MODULE_OPTIONS > /dev/null 2>&1
+		ln -sf /tmp/.lircd /dev/lircd
                 daemon lircd $OPTIONS
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/lircd
@@ -45,6 +46,7 @@ case "$1" in
 	if [ -f /var/lock/subsys/lircd ]; then
 		msg_stopping "Linux Infrared Remote Control daemon"
 		killproc lircd
+		rm -f /dev/lircd
 		rm -f /var/lock/subsys/lircd >/dev/null 2>&1
 	else
 		msg_not_running "Linux Infrared Remote Control daemon"
