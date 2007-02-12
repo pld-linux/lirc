@@ -11,7 +11,7 @@
 #
 %define		drivers		"lirc_it87 lirc_serial lirc_atiusb lirc_mceusb lirc_sir lirc_bt829 lirc_i2c lirc_mceusb2 lirc_streamzap lirc_cmdir lirc_igorplugusb lirc_dev lirc_imon lirc_sasem lirc_parallel lirc_gpio"
 Summary:	Linux Infrared Remote Control daemons
-Summary(pl):	Serwery do zdalnego sterowania Linuksem za pomoc± podczerwieni
+Summary(pl.UTF-8):   Serwery do zdalnego sterowania Linuksem za pomocÄ… podczerwieni
 Name:		lirc
 %define		_rel	pre2
 Version:	0.8.1
@@ -56,39 +56,39 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 LIRC is a package that allows you to decode and send infra-red signals
 of many (but not all) commonly used remote controls.
 
-%description -l pl
-LIRC to program pozwalaj±cy na dekodowanie nadchodz±cych oraz
-wysy³anie sygna³ów w podczerwieni za pomoc± wielu (ale nie wszystkich)
-popularnych urz±dzeñ do zdalnego sterowania.
+%description -l pl.UTF-8
+LIRC to program pozwalajÄ…cy na dekodowanie nadchodzÄ…cych oraz
+wysyÅ‚anie sygnaÅ‚Ã³w w podczerwieni za pomocÄ… wielu (ale nie wszystkich)
+popularnych urzÄ…dzeÅ„ do zdalnego sterowania.
 
 %package X11
 Summary:	Linux Infrared Remote Control - X11 utilities
-Summary(pl):	Zdalne sterowanie Linuksem za pomoc± podczerwieni - narzêdzia X11
+Summary(pl.UTF-8):   Zdalne sterowanie Linuksem za pomocÄ… podczerwieni - narzÄ™dzia X11
 Group:		X11/Applications
 Requires:	%{name}-libs = %{version}-%{release}
 
 %description X11
 Linux Infrared Remote Control - X11 utilities.
 
-%description X11 -l pl
-Zdalne sterowanie Linuksem za pomoc± podczerwieni - narzêdzia X11.
+%description X11 -l pl.UTF-8
+Zdalne sterowanie Linuksem za pomocÄ… podczerwieni - narzÄ™dzia X11.
 
 %package svga
 Summary:	Linux Infrared Remote Control - svgalib utilities
-Summary(pl):	Zdalne sterowanie Linuksem za pomoc± podczerwieni - narzêdzia svgalib
+Summary(pl.UTF-8):   Zdalne sterowanie Linuksem za pomocÄ… podczerwieni - narzÄ™dzia svgalib
 Group:		Applications
 Requires:	%{name}-libs = %{version}-%{release}
 
 %description svga
 Linux Infrared Remote Control - svgalib-based utilities.
 
-%description svga -l pl
-Zdalne sterowanie Linuksem za pomoc± podczerwieni - narzêdzia oparte
+%description svga -l pl.UTF-8
+Zdalne sterowanie Linuksem za pomocÄ… podczerwieni - narzÄ™dzia oparte
 na svgalibie.
 
 %package libs
 Summary:	LIRC libraries
-Summary(pl):	Biblioteki LIRC
+Summary(pl.UTF-8):   Biblioteki LIRC
 Group:		Libraries
 Conflicts:	lirc < 0.6.3-3
 # didn't use /tmp/.lircd
@@ -97,12 +97,12 @@ Conflicts:	lirc < 0.6.3-3
 This package provides the libraries necessary to run lirc client
 programs.
 
-%description libs -l pl
-Ten pakiet zawiera biblioteki niezbêdne do dzia³ania klientów LIRC.
+%description libs -l pl.UTF-8
+Ten pakiet zawiera biblioteki niezbÄ™dne do dziaÅ‚ania klientÃ³w LIRC.
 
 %package devel
 Summary:	Header files for LIRC development
-Summary(pl):	Pliki nag³ówkowe do tworzenia programów z obs³ug± LIRC
+Summary(pl.UTF-8):   Pliki nagÅ‚Ã³wkowe do tworzenia programÃ³w z obsÅ‚ugÄ… LIRC
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 
@@ -110,13 +110,13 @@ Requires:	%{name}-libs = %{version}-%{release}
 This package provides the files necessary to develop LIRC-based
 programs.
 
-%description devel -l pl
-Ten pakiet zawiera pliki niezbêdne do tworzenia programów opartych na
+%description devel -l pl.UTF-8
+Ten pakiet zawiera pliki niezbÄ™dne do tworzenia programÃ³w opartych na
 LIRC.
 
 %package static
 Summary:	Static library for LIRC development
-Summary(pl):	Biblioteka statyczna LIRC
+Summary(pl.UTF-8):   Biblioteka statyczna LIRC
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
@@ -124,13 +124,13 @@ Requires:	%{name}-devel = %{version}-%{release}
 The files necessary for development of statically-linked lirc-based
 programs.
 
-%description static -l pl
-Pliki potrzebne do tworzenia ³±czonych statycznie programów opartych
+%description static -l pl.UTF-8
+Pliki potrzebne do tworzenia Å‚Ä…czonych statycznie programÃ³w opartych
 na LIRC.
 
 %package -n kernel%{_alt_kernel}-char-lirc-atiusb
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -146,15 +146,15 @@ cards).
 
 lirc_atiusb module.
 
-%description -n kernel%{_alt_kernel}-char-lirc-atiusb -l pl
-Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-char-lirc-atiusb -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_atiusb.
+ModuÅ‚ lirc_atiusb.
 
 %package -n kernel%{_alt_kernel}-char-lirc-bt829
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -170,15 +170,15 @@ cards).
 
 lirc_bt829 module.
 
-%description -n kernel%{_alt_kernel}-char-lirc-bt829 -l pl
-Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-char-lirc-bt829 -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_bt829.
+ModuÅ‚ lirc_bt829.
 
 %package -n kernel%{_alt_kernel}-char-lirc-cmdir
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -194,15 +194,15 @@ cards).
 
 lirc_cmdir module.
 
-%description -n kernel%{_alt_kernel}-char-lirc-cmdir -l pl
-Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-char-lirc-cmdir -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_cmdir.
+ModuÅ‚ lirc_cmdir.
 
 %package -n kernel%{_alt_kernel}-char-lirc-dev
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -219,15 +219,15 @@ cards).
 
 lirc_dev module.
 
-%description -n kernel%{_alt_kernel}-char-lirc-dev -l pl
-Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-char-lirc-dev -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_dev.
+ModuÅ‚ lirc_dev.
 
 %package -n kernel%{_alt_kernel}-char-lirc-gpio
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -245,15 +245,15 @@ cards).
 
 lirc_gpio module.
 
-%description -n kernel%{_alt_kernel}-char-lirc-gpio -l pl
-Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-char-lirc-gpio -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_gpio.
+ModuÅ‚ lirc_gpio.
 
 %package -n kernel%{_alt_kernel}-char-lirc-i2c
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -271,15 +271,15 @@ cards).
 
 lirc_i2c module.
 
-%description -n kernel%{_alt_kernel}-char-lirc-i2c -l pl
-Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-char-lirc-i2c -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_i2c.
+ModuÅ‚ lirc_i2c.
 
 %package -n kernel%{_alt_kernel}-char-lirc-igorplugusb
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -297,15 +297,15 @@ cards).
 
 lirc_igorplugusb module.
 
-%description -n kernel%{_alt_kernel}-char-lirc-igorplugusb -l pl
-Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-char-lirc-igorplugusb -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_igorplugusb.
+ModuÅ‚ lirc_igorplugusb.
 
 %package -n kernel%{_alt_kernel}-char-lirc-imon
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -323,15 +323,15 @@ cards).
 
 lirc_imon module.
 
-%description -n kernel%{_alt_kernel}-char-lirc-imon -l pl
-Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-char-lirc-imon -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_imon.
+ModuÅ‚ lirc_imon.
 
 %package -n kernel%{_alt_kernel}-char-lirc-it87
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -347,15 +347,15 @@ cards).
 
 lirc_it87 module.
 
-%description -n kernel%{_alt_kernel}-char-lirc-it87 -l pl
-Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-char-lirc-it87 -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_it87.
+ModuÅ‚ lirc_it87.
 
 %package -n kernel%{_alt_kernel}-char-lirc-mceusb
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -371,15 +371,15 @@ cards).
 
 lirc_mceusb module.
 
-%description -n kernel%{_alt_kernel}-char-lirc-mceusb -l pl
-Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-char-lirc-mceusb -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_mceusb.
+ModuÅ‚ lirc_mceusb.
 
 %package -n kernel%{_alt_kernel}-char-lirc-sasem
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -395,15 +395,15 @@ cards).
 
 lirc_sasem module.
 
-%description -n kernel%{_alt_kernel}-char-lirc-sasem -l pl
-Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-char-lirc-sasem -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_sasem.
+ModuÅ‚ lirc_sasem.
 
 %package -n kernel%{_alt_kernel}-char-lirc-serial
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -422,15 +422,15 @@ cards).
 
 lirc_serial module for devices connected to serial port.
 
-%description -n kernel%{_alt_kernel}-char-lirc-serial -l pl
-Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-char-lirc-serial -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_serial dla urz±dzeñ pod³±czanych do portu szeregowego.
+ModuÅ‚ lirc_serial dla urzÄ…dzeÅ„ podÅ‚Ä…czanych do portu szeregowego.
 
 %package -n kernel%{_alt_kernel}-char-lirc-streamzap
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -448,15 +448,15 @@ cards).
 
 lirc_streamzap module.
 
-%description -n kernel%{_alt_kernel}-char-lirc-streamzap -l pl
-Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-char-lirc-streamzap -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_streamzap.
+ModuÅ‚ lirc_streamzap.
 
 %package -n kernel%{_alt_kernel}-char-lirc-parallel
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -473,15 +473,15 @@ cards).
 
 lirc-parallel module for devices connected to parallel port.
 
-%description -n kernel%{_alt_kernel}-char-lirc-parallel -l pl
-Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-char-lirc-parallel -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_parallel dla urz±dzeñ pod³±czanych do portu równoleg³ego.
+ModuÅ‚ lirc_parallel dla urzÄ…dzeÅ„ podÅ‚Ä…czanych do portu rÃ³wnolegÅ‚ego.
 
 %package -n kernel%{_alt_kernel}-char-lirc-sir
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -498,15 +498,15 @@ cards).
 
 lirc_sir module.
 
-%description -n kernel%{_alt_kernel}-char-lirc-sir -l pl
-Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-char-lirc-sir -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_sir.
+ModuÅ‚ lirc_sir.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-atiusb
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra SMP dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
@@ -522,15 +522,15 @@ cards).
 
 lirc_atiusb module.
 
-%description -n kernel%{_alt_kernel}-smp-char-lirc-atiusb -l pl
-Ten pakiet zawiera modu³y j±dra SMP niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-smp-char-lirc-atiusb -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra SMP niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_atiusb.
+ModuÅ‚ lirc_atiusb.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-bt829
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra SMP dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
@@ -546,15 +546,15 @@ cards).
 
 lirc_bt829 module.
 
-%description -n kernel%{_alt_kernel}-smp-char-lirc-bt829 -l pl
-Ten pakiet zawiera modu³y j±dra SMP niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-smp-char-lirc-bt829 -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra SMP niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_bt829.
+ModuÅ‚ lirc_bt829.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-cmdir
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -570,15 +570,15 @@ cards).
 
 lirc_cmdir module.
 
-%description -n kernel%{_alt_kernel}-smp-char-lirc-cmdir -l pl
-Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-smp-char-lirc-cmdir -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_cmdir.
+ModuÅ‚ lirc_cmdir.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-dev
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra SMP dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
@@ -595,15 +595,15 @@ cards).
 
 lirc_dev module.
 
-%description -n kernel%{_alt_kernel}-smp-char-lirc-dev -l pl
-Ten pakiet zawiera modu³y j±dra SMP niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-smp-char-lirc-dev -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra SMP niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_dev.
+ModuÅ‚ lirc_dev.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-gpio
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
@@ -621,15 +621,15 @@ cards).
 
 lirc_gpio module.
 
-%description -n kernel%{_alt_kernel}-smp-char-lirc-gpio -l pl
-Ten pakiet zawiera modu³y j±dra SMP niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-smp-char-lirc-gpio -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra SMP niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_gpio.
+ModuÅ‚ lirc_gpio.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-i2c
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra SMP dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
@@ -647,15 +647,15 @@ cards).
 
 lirc_i2c module.
 
-%description -n kernel%{_alt_kernel}-smp-char-lirc-i2c -l pl
-Ten pakiet zawiera modu³y j±dra SMP niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-smp-char-lirc-i2c -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra SMP niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_i2c.
+ModuÅ‚ lirc_i2c.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-igorplugusb
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -673,15 +673,15 @@ cards).
 
 lirc_igorplugusb module.
 
-%description -n kernel%{_alt_kernel}-smp-char-lirc-igorplugusb -l pl
-Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-smp-char-lirc-igorplugusb -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_igorplugusb.
+ModuÅ‚ lirc_igorplugusb.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-imon
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -699,15 +699,15 @@ cards).
 
 lirc_imon module.
 
-%description -n kernel%{_alt_kernel}-smp-char-lirc-imon -l pl
-Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-smp-char-lirc-imon -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_imon.
+ModuÅ‚ lirc_imon.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-it87
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra SMP dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
@@ -723,15 +723,15 @@ cards).
 
 lirc_it87 module.
 
-%description -n kernel%{_alt_kernel}-smp-char-lirc-it87 -l pl
-Ten pakiet zawiera modu³y j±dra SMP niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-smp-char-lirc-it87 -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra SMP niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_it87.
+ModuÅ‚ lirc_it87.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-mceusb
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra SMP dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
@@ -747,15 +747,15 @@ cards).
 
 lirc_mceusb module.
 
-%description -n kernel%{_alt_kernel}-smp-char-lirc-mceusb -l pl
-Ten pakiet zawiera modu³y j±dra SMP niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-smp-char-lirc-mceusb -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra SMP niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_mceusb.
+ModuÅ‚ lirc_mceusb.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-sasem
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra SMP dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
@@ -771,15 +771,15 @@ cards).
 
 lirc_sasem module.
 
-%description -n kernel%{_alt_kernel}-smp-char-lirc-sasem -l pl
-Ten pakiet zawiera modu³y j±dra SMP niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-smp-char-lirc-sasem -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra SMP niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_sasem.
+ModuÅ‚ lirc_sasem.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-serial
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra SMP dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
@@ -798,15 +798,15 @@ cards).
 
 lirc_serial module for devices connected to serial port.
 
-%description -n kernel%{_alt_kernel}-smp-char-lirc-serial -l pl
-Ten pakiet zawiera modu³y j±dra SMP niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-smp-char-lirc-serial -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra SMP niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_serial dla urz±dzeñ pod³±czanych do portu szeregowego.
+ModuÅ‚ lirc_serial dla urzÄ…dzeÅ„ podÅ‚Ä…czanych do portu szeregowego.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-streamzap
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -824,15 +824,15 @@ cards).
 
 lirc_streamzap module.
 
-%description -n kernel%{_alt_kernel}-smp-char-lirc-streamzap -l pl
-Ten pakiet zawiera modu³y j±dra niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-smp-char-lirc-streamzap -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_streamzap.
+ModuÅ‚ lirc_streamzap.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-parallel
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra SMP dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra SMP dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
@@ -849,15 +849,15 @@ cards).
 
 lirc-parallel module for devices connected to parallel port.
 
-%description -n kernel%{_alt_kernel}-char-lirc-parallel -l pl
-Ten pakiet zawiera modu³y j±dra SMP niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-char-lirc-parallel -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra SMP niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_parallel dla urz±dzeñ pod³±czanych do portu równoleg³ego.
+ModuÅ‚ lirc_parallel dla urzÄ…dzeÅ„ podÅ‚Ä…czanych do portu rÃ³wnolegÅ‚ego.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-sir
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl):	Modu³y j±dra dla zdalnej obs³ugi Linuksa za pomoc± podczerwieni
+Summary(pl.UTF-8):   ModuÅ‚y jÄ…dra dla zdalnej obsÅ‚ugi Linuksa za pomocÄ… podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
@@ -874,15 +874,15 @@ cards).
 
 lirc_sir module.
 
-%description -n kernel%{_alt_kernel}-smp-char-lirc-sir -l pl
-Ten pakiet zawiera modu³y j±dra SMP niezbêdne do obs³ugi niektórych
-pilotów na podczerwieñ (w tym tych dostarczanych z kartami TV).
+%description -n kernel%{_alt_kernel}-smp-char-lirc-sir -l pl.UTF-8
+Ten pakiet zawiera moduÅ‚y jÄ…dra SMP niezbÄ™dne do obsÅ‚ugi niektÃ³rych
+pilotÃ³w na podczerwieÅ„ (w tym tych dostarczanych z kartami TV).
 
-Modu³ lirc_sir.
+ModuÅ‚ lirc_sir.
 
 %package	remotes
 Summary:	Lirc remotes database
-Summary(pl):	Baza pilotów obs³ugiwanych przez lirc
+Summary(pl.UTF-8):   Baza pilotÃ³w obsÅ‚ugiwanych przez lirc
 Group:		Documentation
 Requires:	%{name} = %{version}-%{_rel}
 
@@ -890,9 +890,9 @@ Requires:	%{name} = %{version}-%{_rel}
 This package contains configuration files for many remotes supported
 by lirc.
 
-%description remotes -l pl
-Ten pakiet zawiera pliki konfiguracyjne dla wielu pilotów
-obs³ugiwanych przez lirc.
+%description remotes -l pl.UTF-8
+Ten pakiet zawiera pliki konfiguracyjne dla wielu pilotÃ³w
+obsÅ‚ugiwanych przez lirc.
 
 %prep
 %setup -q -a 1 -n %{name}-%{version}%{_rel}
