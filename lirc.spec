@@ -11,7 +11,7 @@
 #
 %define		drivers		"lirc_it87 lirc_serial lirc_atiusb lirc_mceusb lirc_sir lirc_bt829 lirc_i2c lirc_mceusb2 lirc_streamzap lirc_cmdir lirc_igorplugusb lirc_dev lirc_imon lirc_sasem lirc_parallel lirc_gpio"
 Summary:	Linux Infrared Remote Control daemons
-Summary(pl.UTF-8):   Serwery do zdalnego sterowania Linuksem za pomocą podczerwieni
+Summary(pl.UTF-8):	Serwery do zdalnego sterowania Linuksem za pomocą podczerwieni
 Name:		lirc
 Version:	0.8.0
 %define	_rel	3
@@ -63,7 +63,7 @@ popularnych urządzeń do zdalnego sterowania.
 
 %package X11
 Summary:	Linux Infrared Remote Control - X11 utilities
-Summary(pl.UTF-8):   Zdalne sterowanie Linuksem za pomocą podczerwieni - narzędzia X11
+Summary(pl.UTF-8):	Zdalne sterowanie Linuksem za pomocą podczerwieni - narzędzia X11
 Group:		X11/Applications
 Requires:	%{name}-libs = %{version}-%{release}
 
@@ -75,7 +75,7 @@ Zdalne sterowanie Linuksem za pomocą podczerwieni - narzędzia X11.
 
 %package svga
 Summary:	Linux Infrared Remote Control - svgalib utilities
-Summary(pl.UTF-8):   Zdalne sterowanie Linuksem za pomocą podczerwieni - narzędzia svgalib
+Summary(pl.UTF-8):	Zdalne sterowanie Linuksem za pomocą podczerwieni - narzędzia svgalib
 Group:		Applications
 Requires:	%{name}-libs = %{version}-%{release}
 
@@ -88,7 +88,7 @@ na svgalibie.
 
 %package libs
 Summary:	LIRC libraries
-Summary(pl.UTF-8):   Biblioteki LIRC
+Summary(pl.UTF-8):	Biblioteki LIRC
 Group:		Libraries
 Conflicts:	lirc < 0.6.3-3
 # didn't use /tmp/.lircd
@@ -102,7 +102,7 @@ Ten pakiet zawiera biblioteki niezbędne do działania klientów LIRC.
 
 %package devel
 Summary:	Header files for LIRC development
-Summary(pl.UTF-8):   Pliki nagłówkowe do tworzenia programów z obsługą LIRC
+Summary(pl.UTF-8):	Pliki nagłówkowe do tworzenia programów z obsługą LIRC
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 
@@ -116,7 +116,7 @@ LIRC.
 
 %package static
 Summary:	Static library for LIRC development
-Summary(pl.UTF-8):   Biblioteka statyczna LIRC
+Summary(pl.UTF-8):	Biblioteka statyczna LIRC
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
@@ -130,7 +130,7 @@ na LIRC.
 
 %package -n kernel%{_alt_kernel}-char-lirc-atiusb
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -154,7 +154,7 @@ Moduł lirc_atiusb.
 
 %package -n kernel%{_alt_kernel}-char-lirc-bt829
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -178,7 +178,7 @@ Moduł lirc_bt829.
 
 %package -n kernel%{_alt_kernel}-char-lirc-cmdir
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -202,7 +202,7 @@ Moduł lirc_cmdir.
 
 %package -n kernel%{_alt_kernel}-char-lirc-dev
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -227,7 +227,7 @@ Moduł lirc_dev.
 
 %package -n kernel%{_alt_kernel}-char-lirc-gpio
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -253,7 +253,7 @@ Moduł lirc_gpio.
 
 %package -n kernel%{_alt_kernel}-char-lirc-i2c
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -279,7 +279,7 @@ Moduł lirc_i2c.
 
 %package -n kernel%{_alt_kernel}-char-lirc-igorplugusb
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -305,7 +305,7 @@ Moduł lirc_igorplugusb.
 
 %package -n kernel%{_alt_kernel}-char-lirc-imon
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -331,7 +331,7 @@ Moduł lirc_imon.
 
 %package -n kernel%{_alt_kernel}-char-lirc-it87
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -355,7 +355,7 @@ Moduł lirc_it87.
 
 %package -n kernel%{_alt_kernel}-char-lirc-mceusb
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -379,7 +379,7 @@ Moduł lirc_mceusb.
 
 %package -n kernel%{_alt_kernel}-char-lirc-sasem
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -403,7 +403,7 @@ Moduł lirc_sasem.
 
 %package -n kernel%{_alt_kernel}-char-lirc-serial
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -430,7 +430,7 @@ Moduł lirc_serial dla urządzeń podłączanych do portu szeregowego.
 
 %package -n kernel%{_alt_kernel}-char-lirc-streamzap
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -456,7 +456,7 @@ Moduł lirc_streamzap.
 
 %package -n kernel%{_alt_kernel}-char-lirc-parallel
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -481,7 +481,7 @@ Moduł lirc_parallel dla urządzeń podłączanych do portu równoległego.
 
 %package -n kernel%{_alt_kernel}-char-lirc-sir
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -506,7 +506,7 @@ Moduł lirc_sir.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-atiusb
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra SMP dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra SMP dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
@@ -530,7 +530,7 @@ Moduł lirc_atiusb.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-bt829
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra SMP dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra SMP dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
@@ -554,7 +554,7 @@ Moduł lirc_bt829.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-cmdir
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -578,7 +578,7 @@ Moduł lirc_cmdir.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-dev
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra SMP dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra SMP dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
@@ -603,7 +603,7 @@ Moduł lirc_dev.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-gpio
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
@@ -629,7 +629,7 @@ Moduł lirc_gpio.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-i2c
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra SMP dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra SMP dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
@@ -655,7 +655,7 @@ Moduł lirc_i2c.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-igorplugusb
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -681,7 +681,7 @@ Moduł lirc_igorplugusb.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-imon
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -707,7 +707,7 @@ Moduł lirc_imon.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-it87
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra SMP dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra SMP dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
@@ -731,7 +731,7 @@ Moduł lirc_it87.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-mceusb
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra SMP dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra SMP dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
@@ -755,7 +755,7 @@ Moduł lirc_mceusb.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-sasem
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra SMP dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra SMP dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
@@ -779,7 +779,7 @@ Moduł lirc_sasem.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-serial
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra SMP dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra SMP dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
@@ -806,7 +806,7 @@ Moduł lirc_serial dla urządzeń podłączanych do portu szeregowego.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-streamzap
 Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -832,7 +832,7 @@ Moduł lirc_streamzap.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-parallel
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra SMP dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra SMP dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
@@ -857,7 +857,7 @@ Moduł lirc_parallel dla urządzeń podłączanych do portu równoległego.
 
 %package -n kernel%{_alt_kernel}-smp-char-lirc-sir
 Summary:	SMP kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):   Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
@@ -882,7 +882,7 @@ Moduł lirc_sir.
 
 %package	remotes
 Summary:	Lirc remotes database
-Summary(pl.UTF-8):   Baza pilotów obsługiwanych przez lirc
+Summary(pl.UTF-8):	Baza pilotów obsługiwanych przez lirc
 Group:		Documentation
 Requires:	%{name} = %{version}-%{_rel}
 
