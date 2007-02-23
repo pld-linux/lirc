@@ -661,7 +661,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
-Requires:	kernel%{_alt_kernel}-spm-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
+Requires:	kernel%{_alt_kernel}-smp-char-lirc-dev = %{version}-%{_rel}@%{_kernel_ver_str}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-igorplugusb
