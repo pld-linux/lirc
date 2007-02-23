@@ -13,13 +13,13 @@
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl.UTF-8):	Serwery do zdalnego sterowania Linuksem za pomocą podczerwieni
 Name:		lirc
-Version:	0.8.0
-%define	_rel	3
+Version:	0.8.1
+%define	_rel	0.1
 Release:	%{_rel}
 License:	GPL
 Group:		Daemons
 Source0:	http://dl.sourceforge.net/lirc/%{name}-%{version}.tar.bz2
-# Source0-md5:	0bf28bf82c7766a462f90927b6bf3af1
+# Source0-md5:	3a42083fc6c54797351e52c77537c586
 Source1:	http://lirc.sourceforge.net/remotes.tar.bz2
 # Source1-md5:	a933425b83079d97ebc5c29f4f1f40fd
 Source2:	%{name}d.sysconfig
@@ -32,10 +32,8 @@ Patch3:		%{name}-no-svgalib.patch
 Patch4:		%{name}-alpha.patch
 Patch5:		%{name}-i2c-2.8.x.patch
 Patch6:		%{name}-sparc.patch
-Patch8:		%{name}-remotes.patch
-Patch9:		%{name}-kernel-2.6.16.patch
-Patch10:	%{name}-vserver.patch
-Patch11:	%{name}-kernel-2.6.17.patch
+Patch7:		%{name}-remotes.patch
+Patch8:		%{name}-vserver.patch
 URL:		http://www.lirc.org/
 #%{?with_x:BuildRequires:	xorg-lib-libX11-devel}
 BuildRequires:	autoconf
@@ -912,10 +910,8 @@ if grep -qs 'I2C_VERSION.*"2\.8\.' %{_kernelsrcdir}/include/linux/i2c.h ; then
 fi
 %endif
 %patch6 -p1
+%patch7 -p1
 %patch8 -p1
-%patch9 -p1
-%patch10 -p1
-%patch11 -p1
 
 %build
 echo '#' > drivers/Makefile.am
