@@ -34,6 +34,7 @@ Patch5:		%{name}-i2c-2.8.x.patch
 Patch6:		%{name}-sparc.patch
 Patch7:		%{name}-remotes.patch
 Patch8:		%{name}-vserver.patch
+Patch9:		%{name}-kernel-2.6.20.patch
 URL:		http://www.lirc.org/
 #%{?with_x:BuildRequires:	xorg-lib-libX11-devel}
 BuildRequires:	autoconf
@@ -912,6 +913,7 @@ fi
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
+%patch9 -p1
 
 %build
 echo '#' > drivers/Makefile.am
