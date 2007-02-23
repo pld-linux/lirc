@@ -583,7 +583,7 @@ Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}@%{_kernel_ver_str}
+Requires:	%{name} = %{version}-%{_rel}
 Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-dev
