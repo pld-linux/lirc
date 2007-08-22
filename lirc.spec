@@ -1,6 +1,6 @@
 # TODO
 # - try to make it use builder_kernel_modules and install_kernel_modules; I couldn't make it
-# - take a look at lirc 0.8.2; it's configure.in has some bug in generating kernelcc check script
+# - investigate Patch8: vserver; non-vserver enabled kernels don't have the find_task_by_real_pid function (like kernel-desktop)
 #
 # Conditional build:
 %bcond_without	dist_kernel	# without sources of distribution kernel
@@ -22,13 +22,13 @@
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl.UTF-8):	Serwery do zdalnego sterowania Linuksem za pomocą podczerwieni
 Name:		lirc
-Version:	0.8.1
-%define	_rel	2
+Version:	0.8.2
+%define	_rel	1
 Release:	%{_rel}
 License:	GPL
 Group:		Daemons
 Source0:	http://dl.sourceforge.net/lirc/%{name}-%{version}.tar.bz2
-# Source0-md5:	3a42083fc6c54797351e52c77537c586
+# Source0-md5:	83e7060a6693b81075c178d7e3b215af
 Source1:	http://lirc.sourceforge.net/remotes.tar.bz2
 # Source1-md5:	373ebacae6d9abff25e804bee172d142
 Source2:	%{name}d.sysconfig
@@ -43,7 +43,7 @@ Patch5:		%{name}-i2c-2.8.x.patch
 Patch6:		%{name}-sparc.patch
 Patch7:		%{name}-remotes.patch
 Patch8:		%{name}-vserver.patch
-Patch9:		%{name}-kernel-2.6.20.patch
+Patch9:		%{name}-kernelcc.patch
 URL:		http://www.lirc.org/
 #%{?with_x:BuildRequires:	xorg-lib-libX11-devel}
 BuildRequires:	autoconf
@@ -587,6 +587,16 @@ echo '#' > drivers/Makefile.am
 %{__autoheader}
 %{__autoconf}
 
+# Workround needed for configure script to find kernelcc
+%if %{with dist_kernel}
+%define		cfg	dist
+%else
+%define		cfg	nondist
+%else
+[ -r "%{_kernelsrcdir}/config-%{cfg}" ] || exit 1	
+rm -rf o
+install -d o/include/linux
+ln -sf %{_kernelsrcdir}/include/linux/autoconf-%{cfg}.h o/include/linux/autoconf.h
 %configure \
 	ac_cv_header_portaudio_h=no \
 	--with-kerneldir=%{_kernelsrcdir} \
