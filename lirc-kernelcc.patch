@@ -6,7 +6,7 @@ diff -urN lirc-0.8.2/acinclude.m4 lirc-0.8.2.new/acinclude.m4
        echo "	echo \$(CC)" >>${ac_pkss_makefile}
  
 -      kernelcc=$(make -s -C ${kerneldir} -f ${ac_pkss_makefile} lirc_tell_me_what_cc_is M=$(pwd))
-+      kernelcc=$(make -s -C ${kerneldir} -f ${ac_pkss_makefile} lirc_tell_me_what_cc_is M=$(pwd) O=$(pwd)/o)
++      kernelcc=$(test -n "$KERNELCC" && echo "$KERNELCC" || echo "$CC")
  
        echo "lirc_tell_me_what_version_is:" >>${ac_pkss_makefile}
        echo "	echo \$(VERSION)" >>${ac_pkss_makefile}
@@ -14,8 +14,8 @@ diff -urN lirc-0.8.2/acinclude.m4 lirc-0.8.2.new/acinclude.m4
        echo "	echo \$(PATCHLEVEL)" >>${ac_pkss_makefile}
 -      version=$(make -s -C ${kerneldir} -f ${ac_pkss_makefile} lirc_tell_me_what_version_is M=$(pwd))
 -      patchlevel=$(make -s -C ${kerneldir} -f ${ac_pkss_makefile} lirc_tell_me_what_patchlevel_is M=$(pwd))
-+      version=$(make -s -C ${kerneldir} -f ${ac_pkss_makefile} lirc_tell_me_what_version_is M=$(pwd) O=$(pwd)/o)
-+      patchlevel=$(make -s -C ${kerneldir} -f ${ac_pkss_makefile} lirc_tell_me_what_patchlevel_is M=$(pwd) O=$(pwd)/o)
++      version=$(grep ^VERSION ${kerneldir}/Makefile | cut -d' ' -f3)
++      patchlevel=$(grep ^PATCHLEVEL ${kerneldir}/Makefile | cut -d' ' -f3)
        if test ${version} -eq 2; then
          if test ${patchlevel} -lt 5; then
            kernelext=o
