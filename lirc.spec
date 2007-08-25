@@ -589,18 +589,13 @@ echo '#' > drivers/Makefile.am
 %{__autoheader}
 %{__autoconf}
 
-# Workround needed for configure script to find kernelcc
-%if %{with dist_kernel}
-%define		cfg	dist
-%else
-%define		cfg	nondist
-%else
-[ -r "%{_kernelsrcdir}/config-%{cfg}" ] || exit 1	
-rm -rf o
-install -d o/include/linux
-ln -sf %{_kernelsrcdir}/include/linux/autoconf-%{cfg}.h o/include/linux/autoconf.h
 %configure \
 	ac_cv_header_portaudio_h=no \
+%if %{with kernel}
+	KERNELCC="%{kgcc}" \
+%else
+	ac_cv_have_kernel="no_kernel=yes" \
+%endif
 	--with-kerneldir=%{_kernelsrcdir} \
 	%{?with_x:--with-x} \
 	--with-port=0x2f8 \
