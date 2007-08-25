@@ -1,4 +1,6 @@
 # TODO
+# - fix build --without kernel
+# - restore lirc_parallel driver
 # - try to make it use builder_kernel_modules and install_kernel_modules; I couldn't make it
 # - investigate Patch8: vserver; non-vserver enabled kernels don't have the find_task_by_real_pid function (like kernel-desktop)
 #
@@ -16,7 +18,7 @@
 #
 # main package
 #
-# lirc_parallel is not trhead safe, so not on this list
+# lirc_parallel is not thread safe, so not on this list
 %define		drivers		"lirc_it87 lirc_serial lirc_atiusb lirc_mceusb lirc_sir lirc_bt829 lirc_i2c lirc_mceusb2 lirc_streamzap lirc_cmdir lirc_igorplugusb lirc_dev lirc_imon lirc_sasem lirc_gpio"
 %define		no_install_post_strip 1
 Summary:	Linux Infrared Remote Control daemons
@@ -68,6 +70,20 @@ of many (but not all) commonly used remote controls.
 LIRC to program pozwalający na dekodowanie nadchodzących oraz
 wysyłanie sygnałów w podczerwieni za pomocą wielu (ale nie wszystkich)
 popularnych urządzeń do zdalnego sterowania.
+
+%package remotes
+Summary:	Lirc remotes database
+Summary(pl.UTF-8):	Baza pilotów obsługiwanych przez lirc
+Group:		Documentation
+Requires:	%{name} = %{version}-%{_rel}
+
+%description remotes
+This package contains configuration files for many remotes supported
+by lirc.
+
+%description remotes -l pl.UTF-8
+Ten pakiet zawiera pliki konfiguracyjne dla wielu pilotów
+obsługiwanych przez lirc.
 
 %package X11
 Summary:	Linux Infrared Remote Control - X11 utilities
@@ -225,9 +241,9 @@ Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
-Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-dev
+Conflicts:	dev < 2.8.0-3
 
 %description -n kernel%{_alt_kernel}-char-lirc-dev
 This package contains the kernel modules necessary to operate some
@@ -253,9 +269,9 @@ Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
-Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-gpio
+Conflicts:	dev < 2.8.0-3
 
 %description -n kernel%{_alt_kernel}-char-lirc-gpio
 This package contains the kernel modules necessary to operate some
@@ -281,9 +297,9 @@ Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
-Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-i2c
+Conflicts:	dev < 2.8.0-3
 
 %description -n kernel%{_alt_kernel}-char-lirc-i2c
 This package contains the kernel modules necessary to operate some
@@ -309,9 +325,9 @@ Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
-Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-igorplugusb
+Conflicts:	dev < 2.8.0-3
 
 %description -n kernel%{_alt_kernel}-char-lirc-igorplugusb
 This package contains the kernel modules necessary to operate some
@@ -337,9 +353,9 @@ Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
-Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-imon
+Conflicts:	dev < 2.8.0-3
 
 %description -n kernel%{_alt_kernel}-char-lirc-imon
 This package contains the kernel modules necessary to operate some
@@ -444,9 +460,9 @@ Requires(postun):	%releq_kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
 %{?with_dist_kernel:Requires:	setserial}
-Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-serial
+Conflicts:	dev < 2.8.0-3
 
 %description -n kernel%{_alt_kernel}-char-lirc-serial
 This package contains the kernel modules necessary to operate some
@@ -472,9 +488,9 @@ Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
-Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-streamzap
+Conflicts:	dev < 2.8.0-3
 
 %description -n kernel%{_alt_kernel}-char-lirc-streamzap
 This package contains the kernel modules necessary to operate some
@@ -489,35 +505,6 @@ pilotów na podczerwień (w tym tych dostarczanych z kartami TV).
 
 Moduł lirc_streamzap.
 
-## Unused now, as all kernels are smp by default
-#%package -n kernel%{_alt_kernel}-char-lirc-parallel
-#Summary:	Kernel modules for Linux Infrared Remote Control
-#Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
-#Release:	%{_rel}@%{_kernel_ver_str}
-#Group:		Base/Kernel
-#%if %{with dist_kernel}
-#%requires_releq_kernel
-#Requires(postun):	%releq_kernel
-#%endif
-#Requires(post,postun):	/sbin/depmod
-#Requires:	%{name} = %{version}-%{_rel}
-#Conflicts:	dev < 2.8.0-3
-#Obsoletes:	lirc-modules
-#Obsoletes:	lirc-modules-parallel
-#
-#%description -n kernel%{_alt_kernel}-char-lirc-parallel
-#This package contains the kernel modules necessary to operate some
-#infrared remote control devices (such as the ones bundled with TV
-#cards).
-#
-#lirc-parallel module for devices connected to parallel port.
-#
-#%description -n kernel%{_alt_kernel}-char-lirc-parallel -l pl.UTF-8
-#Ten pakiet zawiera moduły jądra niezbędne do obsługi niektórych
-#pilotów na podczerwień (w tym tych dostarczanych z kartami TV).
-#
-#Moduł lirc_parallel dla urządzeń podłączanych do portu równoległego.
-
 %package -n kernel%{_alt_kernel}-char-lirc-sir
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
@@ -529,9 +516,9 @@ Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
-Conflicts:	dev < 2.8.0-3
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-sir
+Conflicts:	dev < 2.8.0-3
 
 %description -n kernel%{_alt_kernel}-char-lirc-sir
 This package contains the kernel modules necessary to operate some
@@ -546,19 +533,34 @@ pilotów na podczerwień (w tym tych dostarczanych z kartami TV).
 
 Moduł lirc_sir.
 
-%package	remotes
-Summary:	Lirc remotes database
-Summary(pl.UTF-8):	Baza pilotów obsługiwanych przez lirc
-Group:		Documentation
+## XXX: Unused now, as all kernels are smp by default
+%package -n kernel%{_alt_kernel}-char-lirc-parallel
+Summary:	Kernel modules for Linux Infrared Remote Control
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Release:	%{_rel}@%{_kernel_ver_str}
+Group:		Base/Kernel
+%if %{with dist_kernel}
+%requires_releq_kernel
+Requires(postun):	%releq_kernel
+%endif
+Requires(post,postun):	/sbin/depmod
 Requires:	%{name} = %{version}-%{_rel}
+Obsoletes:	lirc-modules
+Obsoletes:	lirc-modules-parallel
+Conflicts:	dev < 2.8.0-3
 
-%description remotes
-This package contains configuration files for many remotes supported
-by lirc.
+%description -n kernel%{_alt_kernel}-char-lirc-parallel
+This package contains the kernel modules necessary to operate some
+infrared remote control devices (such as the ones bundled with TV
+cards).
 
-%description remotes -l pl.UTF-8
-Ten pakiet zawiera pliki konfiguracyjne dla wielu pilotów
-obsługiwanych przez lirc.
+lirc-parallel module for devices connected to parallel port.
+
+%description -n kernel%{_alt_kernel}-char-lirc-parallel -l pl.UTF-8
+Ten pakiet zawiera moduły jądra niezbędne do obsługi niektórych
+pilotów na podczerwień (w tym tych dostarczanych z kartami TV).
+
+Moduł lirc_parallel dla urządzeń podłączanych do portu równoległego.
 
 %prep
 %setup -q -a 1
@@ -633,7 +635,7 @@ ln -sf %{_kernelsrcdir}/Module.symvers-dist o/Module.symvers
 
 for drv in $drivers; do
 	cd $drv
-	if [ "$drv" == "lirc_parallel" ] && [ "dist" == "dist" ]; then
+	if [ "$drv" == "lirc_parallel" ] && grep -q ^CONFIG_SMP o/.config ]; then
 		echo "lirc_parallel is not smp safe"
 	else
 		ln -sf ../o
@@ -851,15 +853,15 @@ fi
 %postun	-n kernel%{_alt_kernel}-char-lirc-streamzap
 %depmod %{_kernel_ver}
 
-#%post	-n kernel%{_alt_kernel}-char-lirc-parallel
-#%depmod %{_kernel_ver}
-#if [ "$1" = "1" ]; then
-#	echo "Don't forget to add an 'alias lirc lirc_parallel' line"
-#	echo "to your /etc/modules.conf."
-#fi
-#
-#%postun	-n kernel%{_alt_kernel}-char-lirc-parallel
-#%depmod %{_kernel_ver}
+%post	-n kernel%{_alt_kernel}-char-lirc-parallel
+%depmod %{_kernel_ver}
+if [ "$1" = "1" ]; then
+	echo "Don't forget to add an 'alias lirc lirc_parallel' line"
+	echo "to your /etc/modules.conf."
+fi
+
+%postun	-n kernel%{_alt_kernel}-char-lirc-parallel
+%depmod %{_kernel_ver}
 
 %post	-n kernel%{_alt_kernel}-char-lirc-sir
 %depmod %{_kernel_ver}
@@ -983,11 +985,11 @@ fi
 %files -n kernel%{_alt_kernel}-char-lirc-sir
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/*/lirc_sir*
-%endif
 
-# currently not SMP-safe
-#%if 0
-#%files -n kernel%{_alt_kernel}-char-lirc-parallel
-#%defattr(644,root,root,755)
-#/lib/modules/%{_kernel_ver}/*/lirc_parallel*
-#%endif
+# XXX currently not SMP-safe
+%if 0
+%files -n kernel%{_alt_kernel}-char-lirc-parallel
+%defattr(644,root,root,755)
+/lib/modules/%{_kernel_ver}/*/lirc_parallel*
+%endif
+%endif
