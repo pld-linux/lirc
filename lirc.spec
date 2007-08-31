@@ -604,7 +604,9 @@ echo '#' > drivers/Makefile.am
 	--with-driver=userspace \
 	--with-igor
 
+%if %{with userspace}
 %{__make}
+%endif
 
 %if %{with kernel}
 cd drivers
