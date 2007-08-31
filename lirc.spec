@@ -58,6 +58,7 @@ BuildRequires:	kernel%{_alt_kernel}-source
 %{?with_kernel:BuildRequires:	%{kgcc_package}}
 BuildRequires:	rpmbuild(macros) >= 1.379
 %{?with_svga:BuildRequires:	svgalib-devel}
+%{?with_x:BuildRequires:	xorg-lib-libX11-devel}
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -627,7 +628,7 @@ ln -sf %{_kernelsrcdir}/Module.symvers-dist o/Module.symvers
 	touch o/include/config/MARKER
 	ln -sf %{_kernelsrcdir}/scripts o/
 %else
-	%{__make} -j1 -C %{_kernelsrcdir} O=$PWD/o prepare scripts
+	linux32 %{__make} -j1 -C %{_kernelsrcdir} O=$PWD/o prepare scripts
 %endif
 
 for drv in $drivers; do
