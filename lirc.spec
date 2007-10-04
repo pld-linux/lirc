@@ -628,7 +628,7 @@ ln -sf %{_kernelsrcdir}/Module.symvers-dist o/Module.symvers
 	touch o/include/config/MARKER
 	ln -sf %{_kernelsrcdir}/scripts o/
 %else
-	linux32 %{__make} -j1 -C %{_kernelsrcdir} O=$PWD/o prepare scripts
+	%{__make} -j1 -C %{_kernelsrcdir} O=$PWD/o prepare scripts
 %endif
 
 for drv in $drivers; do
