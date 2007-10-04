@@ -3,6 +3,7 @@
 # - restore lirc_parallel driver
 # - try to make it use builder_kernel_modules and install_kernel_modules; I couldn't make it
 # - investigate Patch8: vserver; non-vserver enabled kernels don't have the find_task_by_real_pid function (like kernel-desktop)
+# - build is running kernel arch dependent, try to get rid of this
 #
 # Conditional build:
 %bcond_without	dist_kernel	# without sources of distribution kernel
