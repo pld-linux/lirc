@@ -570,7 +570,7 @@ pilotów na podczerwień (w tym tych dostarczanych z kartami TV).
 Moduł lirc_parallel dla urządzeń podłączanych do portu równoległego.
 
 %prep
-%setup -q -a 1
+%setup -q -n %{pname}-%{version} -a 1
 %patch0 -p1
 %patch1 -p1
 #%patch2 -p1
