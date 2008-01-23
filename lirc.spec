@@ -15,6 +15,13 @@
 %undefine	with_dist_kernel
 %endif
 
+%if "%{_alt_kernel}" != "%{nil}"
+%undefine	with_userspace
+%endif
+
+%define		pname	lirc
+%define		rel	1
+
 #
 # main package
 #
@@ -23,29 +30,28 @@
 %define		no_install_post_strip 1
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl.UTF-8):	Serwery do zdalnego sterowania Linuksem za pomocą podczerwieni
-Name:		lirc
+Name:		%{pname}%{_alt_kernel}
 Version:	0.8.2
-%define	_rel	1
-Release:	%{_rel}
+Release:	%{rel}
 License:	GPL
 Group:		Daemons
-Source0:	http://dl.sourceforge.net/lirc/%{name}-%{version}.tar.bz2
+Source0:	http://dl.sourceforge.net/lirc/%{pname}-%{version}.tar.bz2
 # Source0-md5:	83e7060a6693b81075c178d7e3b215af
 Source1:	http://lirc.sourceforge.net/remotes.tar.bz2
 # Source1-md5:	373ebacae6d9abff25e804bee172d142
-Source2:	%{name}d.sysconfig
-Source3:	%{name}d.init
-Source4:	%{name}md.init
-Patch0:		%{name}-opt.patch
-Patch1:		%{name}-tmp.patch
-Patch2:		%{name}-bttv-headers.patch
-Patch3:		%{name}-no-svgalib.patch
-Patch4:		%{name}-alpha.patch
-Patch5:		%{name}-i2c-2.8.x.patch
-Patch6:		%{name}-sparc.patch
-Patch7:		%{name}-remotes.patch
-Patch8:		%{name}-vserver.patch
-Patch9:		%{name}-kernelcc.patch
+Source2:	%{pname}d.sysconfig
+Source3:	%{pname}d.init
+Source4:	%{pname}md.init
+Patch0:		%{pname}-opt.patch
+Patch1:		%{pname}-tmp.patch
+Patch2:		%{pname}-bttv-headers.patch
+Patch3:		%{pname}-no-svgalib.patch
+Patch4:		%{pname}-alpha.patch
+Patch5:		%{pname}-i2c-2.8.x.patch
+Patch6:		%{pname}-sparc.patch
+Patch7:		%{pname}-remotes.patch
+Patch8:		%{pname}-vserver.patch
+Patch9:		%{pname}-kernelcc.patch
 URL:		http://www.lirc.org/
 #%{?with_x:BuildRequires:	xorg-lib-libX11-devel}
 BuildRequires:	autoconf
@@ -60,7 +66,7 @@ BuildRequires:	rpmbuild(macros) >= 1.379
 %{?with_svga:BuildRequires:	svgalib-devel}
 %{?with_x:BuildRequires:	xorg-lib-libX11-devel}
 Requires(post,preun):	/sbin/chkconfig
-Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{pname}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -76,7 +82,7 @@ popularnych urządzeń do zdalnego sterowania.
 Summary:	Lirc remotes database
 Summary(pl.UTF-8):	Baza pilotów obsługiwanych przez lirc
 Group:		Documentation
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{pname} = %{version}-%{rel}
 
 %description remotes
 This package contains configuration files for many remotes supported
@@ -90,7 +96,7 @@ obsługiwanych przez lirc.
 Summary:	Linux Infrared Remote Control - X11 utilities
 Summary(pl.UTF-8):	Zdalne sterowanie Linuksem za pomocą podczerwieni - narzędzia X11
 Group:		X11/Applications
-Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{pname}-libs = %{version}-%{release}
 
 %description X11
 Linux Infrared Remote Control - X11 utilities.
@@ -102,7 +108,7 @@ Zdalne sterowanie Linuksem za pomocą podczerwieni - narzędzia X11.
 Summary:	Linux Infrared Remote Control - svgalib utilities
 Summary(pl.UTF-8):	Zdalne sterowanie Linuksem za pomocą podczerwieni - narzędzia svgalib
 Group:		Applications
-Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{pname}-libs = %{version}-%{release}
 
 %description svga
 Linux Infrared Remote Control - svgalib-based utilities.
@@ -129,7 +135,7 @@ Ten pakiet zawiera biblioteki niezbędne do działania klientów LIRC.
 Summary:	Header files for LIRC development
 Summary(pl.UTF-8):	Pliki nagłówkowe do tworzenia programów z obsługą LIRC
 Group:		Development/Libraries
-Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{pname}-libs = %{version}-%{release}
 
 %description devel
 This package provides the files necessary to develop LIRC-based
@@ -143,7 +149,7 @@ LIRC.
 Summary:	Static library for LIRC development
 Summary(pl.UTF-8):	Biblioteka statyczna LIRC
 Group:		Development/Libraries
-Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{pname}-devel = %{version}-%{release}
 
 %description static
 The files necessary for development of statically-linked lirc-based
@@ -156,14 +162,14 @@ na LIRC.
 %package -n kernel%{_alt_kernel}-char-lirc-atiusb
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
-Release:	%{_rel}@%{_kernel_ver_str}
+Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %if %{with dist_kernel}
 %requires_releq_kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{pname} = %{version}-%{rel}
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel%{_alt_kernel}-char-lirc-atiusb
@@ -182,14 +188,14 @@ Moduł lirc_atiusb.
 %package -n kernel%{_alt_kernel}-char-lirc-bt829
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
-Release:	%{_rel}@%{_kernel_ver_str}
+Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %if %{with dist_kernel}
 %requires_releq_kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{pname} = %{version}-%{rel}
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel%{_alt_kernel}-char-lirc-bt829
@@ -208,14 +214,14 @@ Moduł lirc_bt829.
 %package -n kernel%{_alt_kernel}-char-lirc-cmdir
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
-Release:	%{_rel}@%{_kernel_ver_str}
+Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %if %{with dist_kernel}
 %requires_releq_kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{pname} = %{version}-%{rel}
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel%{_alt_kernel}-char-lirc-cmdir
@@ -234,14 +240,14 @@ Moduł lirc_cmdir.
 %package -n kernel%{_alt_kernel}-char-lirc-dev
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
-Release:	%{_rel}@%{_kernel_ver_str}
+Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %if %{with dist_kernel}
 %requires_releq_kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{pname} = %{version}-%{rel}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-dev
 Conflicts:	dev < 2.8.0-3
@@ -262,14 +268,14 @@ Moduł lirc_dev.
 %package -n kernel%{_alt_kernel}-char-lirc-gpio
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
-Release:	%{_rel}@%{_kernel_ver_str}
+Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %if %{with dist_kernel}
 %requires_releq_kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{pname} = %{version}-%{rel}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-gpio
 Conflicts:	dev < 2.8.0-3
@@ -290,14 +296,14 @@ Moduł lirc_gpio.
 %package -n kernel%{_alt_kernel}-char-lirc-i2c
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
-Release:	%{_rel}@%{_kernel_ver_str}
+Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %if %{with dist_kernel}
 %requires_releq_kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{pname} = %{version}-%{rel}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-i2c
 Conflicts:	dev < 2.8.0-3
@@ -318,14 +324,14 @@ Moduł lirc_i2c.
 %package -n kernel%{_alt_kernel}-char-lirc-igorplugusb
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
-Release:	%{_rel}@%{_kernel_ver_str}
+Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %if %{with dist_kernel}
 %requires_releq_kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{pname} = %{version}-%{rel}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-igorplugusb
 Conflicts:	dev < 2.8.0-3
@@ -346,14 +352,14 @@ Moduł lirc_igorplugusb.
 %package -n kernel%{_alt_kernel}-char-lirc-imon
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
-Release:	%{_rel}@%{_kernel_ver_str}
+Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %if %{with dist_kernel}
 %requires_releq_kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{pname} = %{version}-%{rel}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-imon
 Conflicts:	dev < 2.8.0-3
@@ -374,14 +380,14 @@ Moduł lirc_imon.
 %package -n kernel%{_alt_kernel}-char-lirc-it87
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
-Release:	%{_rel}@%{_kernel_ver_str}
+Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %if %{with dist_kernel}
 %requires_releq_kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{pname} = %{version}-%{rel}
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel%{_alt_kernel}-char-lirc-it87
@@ -400,14 +406,14 @@ Moduł lirc_it87.
 %package -n kernel%{_alt_kernel}-char-lirc-mceusb
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
-Release:	%{_rel}@%{_kernel_ver_str}
+Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %if %{with dist_kernel}
 %requires_releq_kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{pname} = %{version}-%{rel}
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel%{_alt_kernel}-char-lirc-mceusb
@@ -426,14 +432,14 @@ Moduł lirc_mceusb.
 %package -n kernel%{_alt_kernel}-char-lirc-sasem
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
-Release:	%{_rel}@%{_kernel_ver_str}
+Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %if %{with dist_kernel}
 %requires_releq_kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{pname} = %{version}-%{rel}
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel%{_alt_kernel}-char-lirc-sasem
@@ -452,14 +458,14 @@ Moduł lirc_sasem.
 %package -n kernel%{_alt_kernel}-char-lirc-serial
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
-Release:	%{_rel}@%{_kernel_ver_str}
+Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %if %{with dist_kernel}
 %requires_releq_kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{pname} = %{version}-%{rel}
 %{?with_dist_kernel:Requires:	setserial}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-serial
@@ -481,14 +487,14 @@ Moduł lirc_serial dla urządzeń podłączanych do portu szeregowego.
 %package -n kernel%{_alt_kernel}-char-lirc-streamzap
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
-Release:	%{_rel}@%{_kernel_ver_str}
+Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %if %{with dist_kernel}
 %requires_releq_kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{pname} = %{version}-%{rel}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-streamzap
 Conflicts:	dev < 2.8.0-3
@@ -509,14 +515,14 @@ Moduł lirc_streamzap.
 %package -n kernel%{_alt_kernel}-char-lirc-sir
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
-Release:	%{_rel}@%{_kernel_ver_str}
+Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %if %{with dist_kernel}
 %requires_releq_kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{pname} = %{version}-%{rel}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-sir
 Conflicts:	dev < 2.8.0-3
@@ -538,14 +544,14 @@ Moduł lirc_sir.
 %package -n kernel%{_alt_kernel}-char-lirc-parallel
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
-Release:	%{_rel}@%{_kernel_ver_str}
+Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %if %{with dist_kernel}
 %requires_releq_kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{name} = %{version}-%{_rel}
+Requires:	%{pname} = %{version}-%{rel}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-parallel
 Conflicts:	dev < 2.8.0-3
@@ -564,7 +570,7 @@ pilotów na podczerwień (w tym tych dostarczanych z kartami TV).
 Moduł lirc_parallel dla urządzeń podłączanych do portu równoległego.
 
 %prep
-%setup -q -a 1
+%setup -q -n %{pname}-%{version} -a 1
 %patch0 -p1
 %patch1 -p1
 #%patch2 -p1
@@ -676,7 +682,7 @@ done
 cat>$RPM_BUILD_ROOT%{_sysconfdir}/lircd.conf<<END
 #
 # This is a placeholder for your configuration file.
-# See %{_docdir}/%{name}-%{version}/remotes for some examples.
+# See %{_docdir}/%{pname}-%{version}/remotes for some examples.
 #
 END
 cp -f $RPM_BUILD_ROOT%{_sysconfdir}/lirc{,m}d.conf
