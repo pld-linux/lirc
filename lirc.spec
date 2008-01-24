@@ -7,6 +7,7 @@
 # Conditional build:
 %bcond_without	dist_kernel	# without sources of distribution kernel
 %bcond_without	kernel		# don't build kernel modules, only library+programs
+%bcond_without	vserver		# without vserver specific patch
 %bcond_without	userspace	# build only packages with kernel modules
 %bcond_without	svga		# without svgalib-based utility
 %bcond_without	x		# without X11-based utilitied
@@ -20,7 +21,7 @@
 %endif
 
 %define		pname	lirc
-%define		rel	1
+%define		rel	2
 
 #
 # main package
@@ -585,7 +586,9 @@ fi
 %endif
 %patch6 -p1
 %patch7 -p1
+%if %{with vserver}
 %patch8 -p1
+%endif
 %patch9 -p1
 
 %build
@@ -650,6 +653,7 @@ for drv in $drivers; do
 
 		%{__make} \
 			M=$PWD O=$PWD/o \
+			KBUILD_MODPOST_WARN=1 \
 			%{?with_verbose:V=1}
 			mv $drv{,-dist}.ko
 	fi
