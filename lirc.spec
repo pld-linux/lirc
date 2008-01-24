@@ -21,13 +21,20 @@
 %endif
 
 %define		pname	lirc
-%define		rel	2
+%define		rel	3
+
 
 #
 # main package
 #
 # lirc_parallel is not thread safe, so not on this list
+# lirc_gpio fails to build under kernel >= 2.6.23
+#
+%if "%{_kernel_ver}" >= "2.6.23"
+%define		drivers		"lirc_it87 lirc_serial lirc_atiusb lirc_mceusb lirc_sir lirc_bt829 lirc_i2c lirc_mceusb2 lirc_streamzap lirc_cmdir lirc_igorplugusb lirc_dev lirc_imon lirc_sasem"
+%else
 %define		drivers		"lirc_it87 lirc_serial lirc_atiusb lirc_mceusb lirc_sir lirc_bt829 lirc_i2c lirc_mceusb2 lirc_streamzap lirc_cmdir lirc_igorplugusb lirc_dev lirc_imon lirc_sasem lirc_gpio"
+%endif
 %define		no_install_post_strip 1
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl.UTF-8):	Serwery do zdalnego sterowania Linuksem za pomocą podczerwieni
@@ -53,6 +60,7 @@ Patch6:		%{pname}-sparc.patch
 Patch7:		%{pname}-remotes.patch
 Patch8:		%{pname}-vserver.patch
 Patch9:		%{pname}-kernelcc.patch
+Patch10:	%{pname}-2.6.23.patch
 URL:		http://www.lirc.org/
 #%{?with_x:BuildRequires:	xorg-lib-libX11-devel}
 BuildRequires:	autoconf
@@ -590,6 +598,9 @@ fi
 %patch8 -p1
 %endif
 %patch9 -p1
+%if "%{_kernel_ver}" >= "2.6.23"
+%patch10 -p1
+%endif
 
 %build
 echo '#' > drivers/Makefile.am
@@ -954,9 +965,11 @@ fi
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/*/lirc_dev*
 
+%if "%{_kernel_ver}" < "2.6.23"
 %files -n kernel%{_alt_kernel}-char-lirc-gpio
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/*/lirc_gpio*
+%endif
 
 %files -n kernel%{_alt_kernel}-char-lirc-i2c
 %defattr(644,root,root,755)
