@@ -21,7 +21,7 @@
 %endif
 
 %define		pname	lirc
-%define		rel	3
+%define		rel	4
 
 
 #
@@ -60,6 +60,7 @@ Patch7:		%{pname}-remotes.patch
 Patch8:		%{pname}-vserver.patch
 Patch9:		%{pname}-kernelcc.patch
 Patch10:	%{pname}-2.6.23.patch
+Patch11:	%{pname}-2.6.24.patch
 URL:		http://www.lirc.org/
 #%{?with_x:BuildRequires:	xorg-lib-libX11-devel}
 BuildRequires:	autoconf
@@ -600,6 +601,9 @@ fi
 %if "%{_kernel_ver}" >= "2.6.23"
 %patch10 -p1
 %endif
+%if "%{_kernel_ver}" >= "2.6.24"
+%patch11 -p1
+%endif
 
 %build
 echo '#' > drivers/Makefile.am
@@ -640,7 +644,6 @@ fi
 install -d o/include/{linux,config}
 ln -sf %{_kernelsrcdir}/config-dist o/.config
 ln -sf %{_kernelsrcdir}/include/linux/autoconf-dist.h o/include/linux/autoconf.h
-[ ! -L o/include/asm ] && ln -sf %{_kernelsrcdir}/include/asm-%{_target_base_arch} o/include/asm
 ln -sf %{_kernelsrcdir}/Module.symvers-dist o/Module.symvers
 
 %if %{without dist_kernel}
