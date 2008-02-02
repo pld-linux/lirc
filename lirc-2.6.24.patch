@@ -1,6 +1,6 @@
-diff -urN lirc-0.8.2.orig/drivers/lirc_dev/lirc_dev.c lirc-0.8.2/drivers/lirc_dev/lirc_dev.c
---- lirc-0.8.2.orig/drivers/lirc_dev/lirc_dev.c	2008-01-30 18:41:11.000000000 +0100
-+++ lirc-0.8.2/drivers/lirc_dev/lirc_dev.c	2008-01-30 18:45:35.860566048 +0100
+diff -ur lirc-0.8.2.orig/drivers/lirc_dev/lirc_dev.c lirc-0.8.2/drivers/lirc_dev/lirc_dev.c
+--- lirc-0.8.2.orig/drivers/lirc_dev/lirc_dev.c	2008-02-02 09:34:56.000000000 +0100
++++ lirc-0.8.2/drivers/lirc_dev/lirc_dev.c	2008-02-02 09:45:57.438144611 +0100
 @@ -45,6 +45,7 @@
  #include <linux/fs.h>
  #include <linux/poll.h>
@@ -9,102 +9,132 @@ diff -urN lirc-0.8.2.orig/drivers/lirc_dev/lirc_dev.c lirc-0.8.2/drivers/lirc_de
  #include <asm/uaccess.h>
  #include <asm/semaphore.h>
  #include <asm/errno.h>
-@@ -85,8 +86,8 @@
+@@ -85,8 +86,13 @@
  	struct lirc_buffer *buf;
  
  	int tpid;
--	struct semaphore *t_notify;
--	struct semaphore *t_notify2;
++#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,24)
+ 	struct semaphore *t_notify;
+ 	struct semaphore *t_notify2;
++#else
 +	struct completion *t_notify;
 +	struct completion *t_notify2;
++#endif
  	int shutdown;
  	long jiffies_to_wait;
  
-@@ -194,7 +195,7 @@
+@@ -194,7 +200,11 @@
  	daemonize("lirc_dev");
  	
  	if (ir->t_notify != NULL) {
--		up(ir->t_notify);
++#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,24)
+ 		up(ir->t_notify);
++#else
 +		complete(ir->t_notify);
++#endif
  	}
  	
  	dprintk(LOGHEAD "poll thread started\n", ir->p.name, ir->p.minor);
-@@ -221,12 +222,12 @@
+@@ -221,12 +231,20 @@
  	} while (!ir->shutdown);
  	
  	if (ir->t_notify2 != NULL) {
--		down(ir->t_notify2);
++#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,24)
+ 		down(ir->t_notify2);
++#else
 +		wait_for_completion(ir->t_notify2);
++#endif
  	}
  
  	ir->tpid = -1;
  	if (ir->t_notify != NULL) {
--		up(ir->t_notify);
++#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,24)
+ 		up(ir->t_notify);
++#else
 +		complete(ir->t_notify);
++#endif
  	}
  	
  	dprintk(LOGHEAD "poll thread ended\n", ir->p.name, ir->p.minor);
-@@ -246,7 +247,7 @@
+@@ -246,7 +264,11 @@
  #ifdef LIRC_HAVE_DEVFS_24
  	char name[16];
  #endif
--	DECLARE_MUTEX_LOCKED(tn);
++#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,24)
+ 	DECLARE_MUTEX_LOCKED(tn);
++#else
 +	DECLARE_COMPLETION(tn);
++#endif
  
  	if (!p) {
  		printk("lirc_dev: lirc_register_plugin: "
-@@ -397,7 +398,7 @@
+@@ -397,7 +419,11 @@
  			err = -ECHILD;
  			goto out_sysfs;
  		}
--		down(&tn);
++#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,24)
+ 		down(&tn);
++#else
 +		wait_for_completion(&tn);
++#endif
  		ir->t_notify = NULL;
  	}
  	ir->attached = 1;
-@@ -435,8 +436,8 @@
+@@ -435,8 +461,13 @@
  int lirc_unregister_plugin(int minor)
  {
  	struct irctl *ir;
--	DECLARE_MUTEX_LOCKED(tn);
--	DECLARE_MUTEX_LOCKED(tn2);
++#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,24)
+ 	DECLARE_MUTEX_LOCKED(tn);
+ 	DECLARE_MUTEX_LOCKED(tn2);
++#else
 +	DECLARE_COMPLETION(tn);
 +	DECLARE_COMPLETION(tn2);
++#endif
  
  	if (minor < 0 || minor >= MAX_IRCTL_DEVICES) {
  		printk("lirc_dev: lirc_unregister_plugin: "
-@@ -472,8 +473,8 @@
+@@ -472,8 +503,13 @@
  		/* 2.2.x does not export wake_up_process() */
  		wake_up_interruptible(ir->p.get_queue(ir->p.data));
  #endif
--		up(&tn2);
--		down(&tn);
++#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,24)
+ 		up(&tn2);
+ 		down(&tn);
++#else
 +		complete(&tn2);
 +		wait_for_completion(&tn);
++#endif
  		ir->t_notify = NULL;
  		ir->t_notify2 = NULL;
  	}
-diff -urN lirc-0.8.2.orig/drivers/lirc_serial/lirc_serial.c lirc-0.8.2/drivers/lirc_serial/lirc_serial.c
---- lirc-0.8.2.orig/drivers/lirc_serial/lirc_serial.c	2008-01-30 18:41:11.000000000 +0100
-+++ lirc-0.8.2/drivers/lirc_serial/lirc_serial.c	2008-01-30 18:43:51.671989132 +0100
-@@ -1002,7 +1002,7 @@
+diff -ur lirc-0.8.2.orig/drivers/lirc_serial/lirc_serial.c lirc-0.8.2/drivers/lirc_serial/lirc_serial.c
+--- lirc-0.8.2.orig/drivers/lirc_serial/lirc_serial.c	2008-02-02 09:34:56.000000000 +0100
++++ lirc-0.8.2/drivers/lirc_serial/lirc_serial.c	2008-02-02 09:37:59.207149791 +0100
+@@ -1002,7 +1002,11 @@
  	do_gettimeofday(&lasttv);
  
  	result=request_irq(irq,irq_handler,
--			   SA_INTERRUPT | (share_irq ? SA_SHIRQ:0),
++#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,24)
+ 			   SA_INTERRUPT | (share_irq ? SA_SHIRQ:0),
++#else
 +			   IRQF_DISABLED | (share_irq ? IRQF_SHARED:0),
++#endif
  			   LIRC_DRIVER_NAME,(void *)&hardware);
  	
  	switch(result)
-diff -urN lirc-0.8.2.orig/drivers/lirc_sir/lirc_sir.c lirc-0.8.2/drivers/lirc_sir/lirc_sir.c
---- lirc-0.8.2.orig/drivers/lirc_sir/lirc_sir.c	2008-01-30 18:41:11.000000000 +0100
-+++ lirc-0.8.2/drivers/lirc_sir/lirc_sir.c	2008-01-30 18:42:54.259100415 +0100
-@@ -1056,7 +1056,7 @@
+diff -ur lirc-0.8.2.orig/drivers/lirc_sir/lirc_sir.c lirc-0.8.2/drivers/lirc_sir/lirc_sir.c
+--- lirc-0.8.2.orig/drivers/lirc_sir/lirc_sir.c	2008-02-02 09:34:56.000000000 +0100
++++ lirc-0.8.2/drivers/lirc_sir/lirc_sir.c	2008-02-02 09:38:51.726498074 +0100
+@@ -1056,7 +1056,11 @@
  		return -EBUSY;
  	}
  #endif
--	retval = request_irq(irq, sir_interrupt, SA_INTERRUPT,
++#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,24)
+ 	retval = request_irq(irq, sir_interrupt, SA_INTERRUPT,
++#else
 +	retval = request_irq(irq, sir_interrupt, IRQF_DISABLED,
++#endif
  			     LIRC_DRIVER_NAME, NULL);
  	if (retval < 0) {
  #               ifndef LIRC_ON_SA1100
