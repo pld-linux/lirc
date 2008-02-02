@@ -598,12 +598,8 @@ fi
 %patch8 -p1
 %endif
 %patch9 -p1
-%if "%{_kernel_ver}" >= "2.6.23"
 %patch10 -p1
-%endif
-%if "%{_kernel_ver}" >= "2.6.24"
 %patch11 -p1
-%endif
 
 %build
 echo '#' > drivers/Makefile.am
