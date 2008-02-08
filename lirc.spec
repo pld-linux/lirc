@@ -21,7 +21,7 @@
 %endif
 
 %define		pname	lirc
-%define		rel	5
+%define		rel	6
 
 
 #
