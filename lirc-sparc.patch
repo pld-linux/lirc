@@ -1,10 +1,9 @@
-diff -urN lirc-0.7.0.orig/drivers/lirc_parallel/lirc_parallel.c lirc-0.7.0/drivers/lirc_parallel/lirc_parallel.c
---- lirc-0.7.0.orig/drivers/lirc_parallel/lirc_parallel.c	2004-11-07 13:31:18.000000000 +0000
-+++ lirc-0.7.0/drivers/lirc_parallel/lirc_parallel.c	2004-11-09 22:41:47.630409160 +0000
-@@ -61,6 +61,14 @@
- #include <asm/io.h>
- #include <asm/signal.h>
- #include <asm/irq.h>
+--- lirc-0.8.3/drivers/lirc_parallel/lirc_parallel.c.orig	2008-05-05 19:17:41.000000000 +0200
++++ lirc-0.8.3/drivers/lirc_parallel/lirc_parallel.c	2008-05-05 19:17:28.000000000 +0200
+@@ -71,6 +71,14 @@
+ #include <linux/io.h>
+ #include <linux/signal.h>
+ #include <linux/irq.h>
 +
 +#if defined(__sparc__) && defined(enable_irq)
 +#  undef enable_irq
@@ -13,6 +12,6 @@ diff -urN lirc-0.7.0.orig/drivers/lirc_parallel/lirc_parallel.c lirc-0.7.0/drive
 +#  undef disable_irq
 +#endif
 +
- #if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 4, 0)
- #include <asm/div64.h>
+ #include <linux/uaccess.h>
  #endif
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 4, 0)
