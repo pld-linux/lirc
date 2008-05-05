@@ -19,8 +19,7 @@
 %endif
 
 %define		pname	lirc
-%define		rel	0.1
-
+%define		rel	1
 
 #
 # main package
@@ -29,9 +28,9 @@
 # lirc_gpio fails to build under kernel >= 2.6.23
 #
 %if "%{_kernel_ver}" >= "2.6.23"
-%define		drivers		"lirc_it87 lirc_serial lirc_atiusb lirc_mceusb lirc_sir lirc_bt829 lirc_i2c lirc_mceusb2 lirc_streamzap lirc_cmdir lirc_igorplugusb lirc_dev lirc_imon lirc_sasem"
+%define		drivers		"lirc_it87 lirc_serial lirc_atiusb lirc_mceusb lirc_sir lirc_bt829 lirc_i2c lirc_mceusb2 lirc_streamzap lirc_cmdir lirc_igorplugusb lirc_dev lirc_imon lirc_sasem lirc_ttusbir"
 %else
-%define		drivers		"lirc_it87 lirc_serial lirc_atiusb lirc_mceusb lirc_sir lirc_bt829 lirc_i2c lirc_mceusb2 lirc_streamzap lirc_cmdir lirc_igorplugusb lirc_dev lirc_imon lirc_sasem lirc_gpio"
+%define		drivers		"lirc_it87 lirc_serial lirc_atiusb lirc_mceusb lirc_sir lirc_bt829 lirc_i2c lirc_mceusb2 lirc_streamzap lirc_cmdir lirc_igorplugusb lirc_dev lirc_imon lirc_sasem lirc_ttusbir lirc_gpio"
 %endif
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl.UTF-8):	Serwery do zdalnego sterowania Linuksem za pomocą podczerwieni
@@ -77,8 +76,8 @@ of many (but not all) commonly used remote controls.
 
 %description -l pl.UTF-8
 LIRC to program pozwalający na dekodowanie nadchodzących oraz
-wysyłanie sygnałów w podczerwieni za pomocą wielu (ale nie wszystkich)
-popularnych urządzeń do zdalnego sterowania.
+wysyłanie sygnałów w podczerwieni za pomocą wielu (ale nie
+wszystkich) popularnych urządzeń do zdalnego sterowania.
 
 %package remotes
 Summary:	Lirc remotes database
@@ -144,8 +143,8 @@ This package provides the files necessary to develop LIRC-based
 programs.
 
 %description devel -l pl.UTF-8
-Ten pakiet zawiera pliki niezbędne do tworzenia programów opartych na
-LIRC.
+Ten pakiet zawiera pliki niezbędne do tworzenia programów opartych
+na LIRC.
 
 %package static
 Summary:	Static library for LIRC development
@@ -158,8 +157,8 @@ The files necessary for development of statically-linked lirc-based
 programs.
 
 %description static -l pl.UTF-8
-Pliki potrzebne do tworzenia łączonych statycznie programów opartych
-na LIRC.
+Pliki potrzebne do tworzenia łączonych statycznie programów
+opartych na LIRC.
 
 %package -n kernel%{_alt_kernel}-char-lirc-atiusb
 Summary:	Kernel modules for Linux Infrared Remote Control
@@ -542,6 +541,33 @@ pilotów na podczerwień (w tym tych dostarczanych z kartami TV).
 
 Moduł lirc_sir.
 
+%package -n kernel%{_alt_kernel}-char-lirc-ttusbir
+Summary:	Kernel modules for Linux Infrared Remote Control
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Release:	%{rel}@%{_kernel_ver_str}
+Group:		Base/Kernel
+%if %{with dist_kernel}
+%requires_releq_kernel
+Requires(postun):	%releq_kernel
+%endif
+Requires(post,postun):	/sbin/depmod
+Requires:	%{pname} = %{version}-%{rel}
+Obsoletes:	lirc-modules
+Obsoletes:	lirc-modules-ttusbir
+Conflicts:	dev < 2.8.0-3
+
+%description -n kernel%{_alt_kernel}-char-lirc-ttusbir
+This package contains the kernel modules necessary to operate
+TechnoTrend USB IR Receiver.
+
+lirc_ttusbir module.
+
+%description -n kernel%{_alt_kernel}-char-lirc-ttusbir -l pl.UTF-8
+Ten pakiet zawiera moduł kernela niezbędny do obsługi urządzenia
+TechnoTrend USB IR Receiver.
+
+Moduł lirc_ttusbir.
+
 ## XXX: Unused now, as all kernels are smp by default
 %package -n kernel%{_alt_kernel}-char-lirc-parallel
 Summary:	Kernel modules for Linux Infrared Remote Control
@@ -569,7 +595,8 @@ lirc-parallel module for devices connected to parallel port.
 Ten pakiet zawiera moduły jądra niezbędne do obsługi niektórych
 pilotów na podczerwień (w tym tych dostarczanych z kartami TV).
 
-Moduł lirc_parallel dla urządzeń podłączanych do portu równoległego.
+Moduł lirc_parallel dla urządzeń podłączanych do portu
+równoległego.
 
 %prep
 %setup -q -n %{pname}-%{version} -a 1
@@ -872,6 +899,16 @@ fi
 %postun	-n kernel%{_alt_kernel}-char-lirc-sir
 %depmod %{_kernel_ver}
 
+%post	-n kernel%{_alt_kernel}-char-lirc-ttusbir
+%depmod %{_kernel_ver}
+if [ "$1" = "1" ]; then
+	echo "Don't forget to add an 'alias lirc lirc_ttusbir' line"
+	echo "to your /etc/modules.conf."
+fi
+
+%postun	-n kernel%{_alt_kernel}-char-lirc-ttusbir
+%depmod %{_kernel_ver}
+
 
 %if %{with userspace}
 %files
@@ -986,6 +1023,10 @@ fi
 %files -n kernel%{_alt_kernel}-char-lirc-sir
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/*/lirc_sir*
+
+%files -n kernel%{_alt_kernel}-char-lirc-ttusbir
+%defattr(644,root,root,755)
+/lib/modules/%{_kernel_ver}/*/lirc_ttusbir*
 
 # XXX currently not SMP-safe
 %if 0
