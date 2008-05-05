@@ -1,13 +1,11 @@
 # TODO
 # - restore lirc_parallel driver
 # - try to make it use builder_kernel_modules and install_kernel_modules; I couldn't make it
-# - investigate Patch8: vserver; non-vserver enabled kernels don't have the find_task_by_real_pid function (like kernel-desktop)
 # - build is running kernel arch dependent, try to get rid of this
 #
 # Conditional build:
 %bcond_without	dist_kernel	# without sources of distribution kernel
 %bcond_without	kernel		# don't build kernel modules, only library+programs
-%bcond_without	vserver		# without vserver specific patch
 %bcond_without	userspace	# build only packages with kernel modules
 %bcond_without	svga		# without svgalib-based utility
 %bcond_without	x		# without X11-based utilitied
@@ -51,13 +49,11 @@ Source3:	%{pname}d.init
 Source4:	%{pname}md.init
 Patch0:		%{pname}-opt.patch
 Patch1:		%{pname}-tmp.patch
-Patch3:		%{pname}-no-svgalib.patch
-Patch4:		%{pname}-alpha.patch
-Patch5:		%{pname}-i2c-2.8.x.patch
-Patch6:		%{pname}-sparc.patch
-Patch7:		%{pname}-remotes.patch
-Patch8:		%{pname}-vserver.patch
-Patch9:		%{pname}-kernelcc.patch
+Patch2:		%{pname}-no-svgalib.patch
+Patch3:		%{pname}-alpha.patch
+Patch4:		%{pname}-sparc.patch
+Patch5:		%{pname}-remotes.patch
+Patch6:		%{pname}-kernelcc.patch
 URL:		http://www.lirc.org/
 #%{?with_x:BuildRequires:	xorg-lib-libX11-devel}
 BuildRequires:	autoconf
@@ -580,20 +576,12 @@ Moduł lirc_parallel dla urządzeń podłączanych do portu równoległego.
 %patch0 -p1
 %patch1 -p1
 %if !%{with svga}
+%patch2 -p1
+%endif
 %patch3 -p1
-%endif
 %patch4 -p1
-%if %{with kernel}
-if grep -qs 'I2C_VERSION.*"2\.8\.' %{_kernelsrcdir}/include/linux/i2c.h ; then
-%patch5 -p0
-fi
-%endif
-#%patch6 -p1
-%patch7 -p1
-#%if %{with vserver}
-#%patch8 -p1
-#%endif
-%patch9 -p1
+%patch5 -p1
+%patch6 -p1
 
 %build
 echo '#' > drivers/Makefile.am
