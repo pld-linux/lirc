@@ -21,7 +21,7 @@
 %endif
 
 %define		pname	lirc
-%define		rel	9
+%define		rel	0.1
 
 
 #
@@ -38,20 +38,19 @@
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl.UTF-8):	Serwery do zdalnego sterowania Linuksem za pomocą podczerwieni
 Name:		%{pname}%{_alt_kernel}
-Version:	0.8.2
+Version:	0.8.3
 Release:	%{rel}
 License:	GPL
 Group:		Daemons
 Source0:	http://dl.sourceforge.net/lirc/%{pname}-%{version}.tar.bz2
-# Source0-md5:	83e7060a6693b81075c178d7e3b215af
+# Source0-md5:	8e78eeded7b31e5ad02e328970437c0f
 Source1:	http://lirc.sourceforge.net/remotes.tar.bz2
-# Source1-md5:	373ebacae6d9abff25e804bee172d142
+# Source1-md5:	a386a0ebfd2e3a2b90ca79403fa02e1a
 Source2:	%{pname}d.sysconfig
 Source3:	%{pname}d.init
 Source4:	%{pname}md.init
 Patch0:		%{pname}-opt.patch
 Patch1:		%{pname}-tmp.patch
-Patch2:		%{pname}-bttv-headers.patch
 Patch3:		%{pname}-no-svgalib.patch
 Patch4:		%{pname}-alpha.patch
 Patch5:		%{pname}-i2c-2.8.x.patch
@@ -59,8 +58,6 @@ Patch6:		%{pname}-sparc.patch
 Patch7:		%{pname}-remotes.patch
 Patch8:		%{pname}-vserver.patch
 Patch9:		%{pname}-kernelcc.patch
-Patch10:	%{pname}-2.6.23.patch
-Patch11:	%{pname}-2.6.24.patch
 URL:		http://www.lirc.org/
 #%{?with_x:BuildRequires:	xorg-lib-libX11-devel}
 BuildRequires:	autoconf
@@ -582,7 +579,6 @@ Moduł lirc_parallel dla urządzeń podłączanych do portu równoległego.
 %setup -q -n %{pname}-%{version} -a 1
 %patch0 -p1
 %patch1 -p1
-#%patch2 -p1
 %if !%{with svga}
 %patch3 -p1
 %endif
@@ -592,14 +588,12 @@ if grep -qs 'I2C_VERSION.*"2\.8\.' %{_kernelsrcdir}/include/linux/i2c.h ; then
 %patch5 -p0
 fi
 %endif
-%patch6 -p1
+#%patch6 -p1
 %patch7 -p1
-%if %{with vserver}
-%patch8 -p1
-%endif
+#%if %{with vserver}
+#%patch8 -p1
+#%endif
 %patch9 -p1
-%patch10 -p1
-%patch11 -p1
 
 %build
 echo '#' > drivers/Makefile.am
