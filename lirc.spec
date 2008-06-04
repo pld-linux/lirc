@@ -951,18 +951,19 @@ fi
 
 %files libs
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/lib*.so.*.*.*
+%attr(755,root,root) %{_libdir}/liblirc_client.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/liblirc_client.so.0
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/*.so
-%{_libdir}/*.la
+%attr(755,root,root) %{_libdir}/liblirc_client.so
+%{_libdir}/liblirc_client.la
 %{_includedir}/lirc
-%{_aclocaldir}/*.m4
+%{_aclocaldir}/lirc.m4
 
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/lib*.a
+%{_libdir}/liblirc_client.a
 %endif
 
 %if %{with kernel}
