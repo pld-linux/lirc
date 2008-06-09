@@ -19,7 +19,7 @@
 %endif
 
 %define		pname	lirc
-%define		rel	3
+%define		rel	4
 
 #
 # main package
@@ -60,7 +60,7 @@ BuildRequires:	automake
 BuildRequires:	libtool
 %if %{with kernel}
 BuildRequires:	kernel%{_alt_kernel}-module-build
-BuildRequires:	kernel%{_alt_kernel}-source
+BuildRequires:	kernel%{_alt_kernel}-headers
 %endif
 %{?with_kernel:BuildRequires:	%{kgcc_package}}
 BuildRequires:	rpmbuild(macros) >= 1.379
