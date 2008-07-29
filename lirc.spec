@@ -19,7 +19,7 @@
 %endif
 
 %define		pname	lirc
-%define		rel	12
+%define		rel	13
 
 #
 # main package
@@ -53,6 +53,7 @@ Patch3:		%{pname}-alpha.patch
 Patch4:		%{pname}-sparc.patch
 Patch5:		%{pname}-remotes.patch
 Patch6:		%{pname}-kernelcc.patch
+Patch7:		%{pname}-2.6.26.patch
 URL:		http://www.lirc.org/
 #%{?with_x:BuildRequires:	xorg-lib-libX11-devel}
 BuildRequires:	autoconf
@@ -609,6 +610,7 @@ równoległego.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 
 %build
 echo '#' > drivers/Makefile.am
