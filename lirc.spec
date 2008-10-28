@@ -37,7 +37,7 @@ Summary(pl.UTF-8):	Serwery do zdalnego sterowania Linuksem za pomocą podczerwie
 Name:		%{pname}%{_alt_kernel}
 Version:	0.8.4
 Release:	%{rel}
-License:	GPL
+License:	GPL v2+
 Group:		Daemons
 Source0:	http://dl.sourceforge.net/lirc/%{pname}-%{version}.tar.bz2
 # Source0-md5:	8f3ba7eb57529992f3991d6981a3feb6
@@ -918,13 +918,19 @@ fi
 %attr(755,root,root) %{_bindir}/ir[!x]*
 %attr(755,root,root) %{_bindir}/mode2
 %attr(755,root,root) %{_bindir}/lircrcd
-%attr(755,root,root) %{_sbindir}/*
-%attr(754,root,root) /etc/rc.d/init.d/*
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/*
-%config(noreplace) %{_sysconfdir}/*.conf
-%{_mandir}/man1/ir[!x]*
-%{_mandir}/man1/[!isx]*
-%{_mandir}/man8/*
+%attr(755,root,root) %{_bindir}/pronto2lirc
+%attr(755,root,root) %{_sbindir}/lircd
+%attr(755,root,root) %{_sbindir}/lircmd
+%attr(754,root,root) /etc/rc.d/init.d/lircd
+%attr(754,root,root) /etc/rc.d/init.d/lircmd
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/lircd
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/lircd.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/lircmd.conf
+%{_mandir}/man1/ir[!x]*.1*
+%{_mandir}/man1/lircrcd.1*
+%{_mandir}/man1/mode2.1*
+%{_mandir}/man8/lircd.8*
+%{_mandir}/man8/lircmd.8*
 %ghost %attr(600,root,root) /var/log/lircd
 
 %files remotes
