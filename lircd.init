@@ -51,6 +51,23 @@ stop() {
 	fi
 }
 
+restart() {
+	test -f /var/lock/subsys/lircmd && RESTART_LIRCMD=yes
+	test -n "$RESTART_LIRCMD" && /sbin/service lircmd stop
+	stop
+	start
+	test -n "$RESTART_LIRCMD" && /sbin/service lircmd start
+}
+
+condrestart() {
+	if [ -f /var/lock/subsys/lircd ]; then
+		restart
+	else
+		msg_not_running "Linux Infrared Remote Control daemon"
+		RETVAL=$1
+	fi
+}
+
 RETVAL=0
 # See how we were called.
 case "$1" in
@@ -60,16 +77,11 @@ case "$1" in
   stop)
   	stop
 	;;
-  status)
-	status lircd
-	exit $?
-	;;
   restart)
-	test -f /var/lock/subsys/lircmd && RESTART_LIRCMD=yes
-	test -n "$RESTART_LIRCMD" && /sbin/service lircmd stop
-	stop
-	start
-	test -n "$RESTART_LIRCMD" && /sbin/service lircmd start
+	restart
+	;;
+  try-restart)
+	condrestart 0
 	;;
   reload|force-reload)
 	if [ -f /var/lock/subsys/lircd ]; then
@@ -81,8 +93,12 @@ case "$1" in
 		exit 7
 	fi
 	;;
+  status)
+	status lircd
+	exit $?
+	;;
   *)
-	msg_usage "$0 {start|stop|restart|reload|force-reload|status}"
+	msg_usage "$0 {start|stop|restart|try-restart|reload|force-reload|status}"
 	exit 3
 esac
 

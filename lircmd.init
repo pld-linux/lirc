@@ -14,11 +14,7 @@
 # Source function library
 . /etc/rc.d/init.d/functions
 
-RETVAL=0
-# See how we were called.
-case "$1" in
-  start)
-	# Check if the service is already running?
+start() {
 	if [ ! -f /var/lock/subsys/lircmd ]; then
 		msg_starting "Linux Infrared Remote Control mouse daemon"
 		daemon lircmd
@@ -27,9 +23,9 @@ case "$1" in
 	else
 		msg_already_running "Linux Infrared Remote Control mouse daemon"
 	fi
-	;;
-  stop)
-	# Stop daemons.
+}
+
+stop() {
 	if [ -f /var/lock/subsys/lircmd ]; then
 		msg_stopping "Linux Infrared Remote Control mouse daemon"
 		killproc lircmd
@@ -37,15 +33,33 @@ case "$1" in
 	else
 		msg_not_running "Linux Infrared Remote Control mouse daemon"
 	fi
+}
+
+condrestart() {
+	if [ -f /var/lock/subsys/lircmd ]; then
+		stop
+		start
+	else
+		msg_not_running "Linux Infrared Remote Control mouse daemon"
+		RETVAL=$1
+	fi
+}
+
+RETVAL=0
+# See how we were called.
+case "$1" in
+  start)
+	start
 	;;
-  status)
-	status lircmd
-	exit $?
+  stop)
+	stop
 	;;
   restart)
-	$0 stop
-	$0 start
-	exit $?
+	stop
+	start
+	;;
+  try-restart)
+	condrestart 0
 	;;
   reload|force-reload)
 	if [ -f /var/lock/subsys/lircmd ]; then
@@ -57,8 +71,12 @@ case "$1" in
 		exit 7
 	fi
 	;;
+  status)
+	status lircmd
+	exit $?
+	;;
   *)
-	msg_usage "$0 {start|stop|restart|reload|force-reload|status}"
+	msg_usage "$0 {start|stop|restart|try-restart|reload|force-reload|status}"
 	exit 3
 	;;
 esac
