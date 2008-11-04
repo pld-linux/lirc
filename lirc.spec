@@ -19,7 +19,7 @@
 %endif
 
 %define		pname	lirc
-%define		rel	2
+%define		rel	3
 
 #
 # main package
@@ -646,7 +646,7 @@ if [ ! -r "%{_kernelsrcdir}/config-dist" ]; then
 	exit 1
 fi
 
-install -d o/include/{linux,config}
+install -d o/include/{linux,config} o/arch/powerpc/lib
 ln -sf %{_kernelsrcdir}/config-dist o/.config
 ln -sf %{_kernelsrcdir}/include/linux/autoconf-dist.h o/include/linux/autoconf.h
 ln -sf %{_kernelsrcdir}/Module.symvers-dist o/Module.symvers
