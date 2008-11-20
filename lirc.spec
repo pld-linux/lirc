@@ -63,6 +63,7 @@ BuildRequires:	kernel%{_alt_kernel}-module-build
 BuildRequires:	kernel%{_alt_kernel}-headers
 %endif
 %{?with_kernel:BuildRequires:	%{kgcc_package}}
+BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.379
 %{?with_svga:BuildRequires:	svgalib-devel}
 %{?with_x:BuildRequires:	xorg-lib-libX11-devel}
