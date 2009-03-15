@@ -670,7 +670,7 @@ for drv in $drivers; do
 			M=$PWD O=$PWD/o \
 			%{?with_verbose:V=1}
 
-		%{__make} \
+		%{__make} -j1 \
 			M=$PWD O=$PWD/o \
 			KBUILD_MODPOST_WARN=1 \
 			%{?with_verbose:V=1}
