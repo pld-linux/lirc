@@ -15,10 +15,11 @@ diff -urN lirc-0.7.1pre1.orig/drivers/lirc_atiusb/lirc_atiusb.c lirc-0.7.1pre1/d
 diff -urN lirc-0.7.1pre1.orig/drivers/lirc_bt829/lirc_bt829.c lirc-0.7.1pre1/drivers/lirc_bt829/lirc_bt829.c
 --- lirc-0.7.1pre1.orig/drivers/lirc_bt829/lirc_bt829.c	2004-08-07 12:06:07.000000000 +0200
 +++ lirc-0.7.1pre1/drivers/lirc_bt829/lirc_bt829.c	2005-01-25 10:27:53.770445096 +0100
-@@ -23,6 +23,10 @@
+@@ -22,6 +22,11 @@
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(2, 4, 0)
  #error "This driver needs kernel version 2.4.0 or higher"
  #endif
- 
++ 
 +#ifdef __alpha__
 +#include <asm/current.h>
 +#endif
