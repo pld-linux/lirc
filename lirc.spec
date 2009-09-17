@@ -19,7 +19,7 @@
 %endif
 
 %define		pname	lirc
-%define		rel	4
+%define		rel	1
 
 #
 # main package
@@ -28,19 +28,19 @@
 # lirc_gpio fails to build under kernel >= 2.6.23
 #
 %if "%{_kernel_ver}" >= "2.6.23"
-%define		drivers		"lirc_atiusb lirc_bt829 lirc_dev lirc_i2c lirc_igorplugusb lirc_imon lirc_it87 lirc_ite8709 lirc_mceusb lirc_mceusb2 lirc_sasem lirc_serial lirc_sir lirc_streamzap lirc_ttusbir lirc_wpc8769l"
+%define		drivers		"lirc_atiusb lirc_bt829 lirc_dev lirc_ene0100 lirc_i2c lirc_igorplugusb lirc_imon lirc_it87 lirc_ite8709 lirc_mceusb lirc_sasem lirc_serial lirc_sir lirc_streamzap lirc_ttusbir lirc_wpc8769l"
 %else
-%define		drivers		"lirc_atiusb lirc_bt829 lirc_dev lirc_gpio lirc_i2c lirc_igorplugusb lirc_imon lirc_it87 lirc_ite8709 lirc_mceusb lirc_mceusb2 lirc_sasem lirc_serial lirc_sir lirc_streamzap lirc_ttusbir lirc_wpc8769l"
+%define		drivers		"lirc_atiusb lirc_bt829 lirc_dev lirc_ene0100 lirc_gpio lirc_i2c lirc_igorplugusb lirc_imon lirc_it87 lirc_ite8709 lirc_mceusb lirc_sasem lirc_serial lirc_sir lirc_streamzap lirc_ttusbir lirc_wpc8769l"
 %endif
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl.UTF-8):	Serwery do zdalnego sterowania Linuksem za pomocą podczerwieni
 Name:		%{pname}%{_alt_kernel}
-Version:	0.8.5
+Version:	0.8.6
 Release:	%{rel}
 License:	GPL v2+
 Group:		Daemons
 Source0:	http://dl.sourceforge.net/lirc/%{pname}-%{version}.tar.bz2
-# Source0-md5:	5a274e4eaff8156b17903c22ea01f506
+# Source0-md5:	4ca24da6f5e7c2dcea74878c27a4a3f7
 Source1:	http://lirc.sourceforge.net/remotes.tar.bz2
 # Source1-md5:	67334ab1986bbf0b54c84bd35dec6ea0
 Source2:	%{pname}d.sysconfig
@@ -241,6 +241,33 @@ Ten pakiet zawiera moduły jądra niezbędne do obsługi niektórych
 pilotów na podczerwień (w tym tych dostarczanych z kartami TV).
 
 Moduł lirc_dev.
+
+%package -n kernel%{_alt_kernel}-char-lirc-ene0100
+Summary:	Kernel modules for Linux Infrared Remote Control
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Release:	%{rel}@%{_kernel_ver_str}
+Group:		Base/Kernel
+%if %{with dist_kernel}
+%requires_releq_kernel
+Requires(postun):	%releq_kernel
+%endif
+Requires(post,postun):	/sbin/depmod
+Requires:	%{pname} = %{version}-%{rel}
+Obsoletes:	lirc-modules
+Conflicts:	dev < 2.8.0-3
+
+%description -n kernel%{_alt_kernel}-char-lirc-ene0100
+This package contains the kernel modules necessary to operate some
+infrared remote control ene0100ices (such as the ones bundled with TV
+cards).
+
+lirc_ene0100 module.
+
+%description -n kernel%{_alt_kernel}-char-lirc-ene0100 -l pl.UTF-8
+Ten pakiet zawiera moduły jądra niezbędne do obsługi niektórych
+pilotów na podczerwień (w tym tych dostarczanych z kartami TV).
+
+Moduł lirc_ene0100.
 
 %package -n kernel%{_alt_kernel}-char-lirc-gpio
 Summary:	Kernel modules for Linux Infrared Remote Control
@@ -806,6 +833,12 @@ fi
 %postun	-n kernel%{_alt_kernel}-char-lirc-dev
 %depmod %{_kernel_ver}
 
+%post	-n kernel%{_alt_kernel}-char-lirc-ene0100
+%depmod %{_kernel_ver}
+
+%postun	-n kernel%{_alt_kernel}-char-lirc-ene0100
+%depmod %{_kernel_ver}
+
 %post	-n kernel%{_alt_kernel}-char-lirc-gpio
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
@@ -1020,6 +1053,10 @@ fi
 %files -n kernel%{_alt_kernel}-char-lirc-dev
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/*/lirc_dev*
+
+%files -n kernel%{_alt_kernel}-char-lirc-ene0100
+%defattr(644,root,root,755)
+/lib/modules/%{_kernel_ver}/*/lirc_ene0100*
 
 %if "%{_kernel_ver}" < "2.6.23"
 %files -n kernel%{_alt_kernel}-char-lirc-gpio
