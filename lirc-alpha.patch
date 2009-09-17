@@ -1,7 +1,7 @@
-diff -urN lirc-0.7.1pre1.orig/drivers/lirc_atiusb/lirc_atiusb.c lirc-0.7.1pre1/drivers/lirc_atiusb/lirc_atiusb.c
---- lirc-0.7.1pre1.orig/drivers/lirc_atiusb/lirc_atiusb.c	2004-12-31 13:58:16.000000000 +0100
-+++ lirc-0.7.1pre1/drivers/lirc_atiusb/lirc_atiusb.c	2005-01-25 10:27:53.768445400 +0100
-@@ -39,6 +39,10 @@
+diff -ur lirc-0.8.6.orig/drivers/lirc_atiusb/lirc_atiusb.c lirc-0.8.6/drivers/lirc_atiusb/lirc_atiusb.c
+--- lirc-0.8.6.orig/drivers/lirc_atiusb/lirc_atiusb.c	2009-03-11 01:21:46.000000000 +0100
++++ lirc-0.8.6/drivers/lirc_atiusb/lirc_atiusb.c	2009-09-17 21:09:14.562695089 +0200
+@@ -43,6 +43,10 @@
  #error "*******************************************************"
  #endif
  
@@ -12,14 +12,14 @@ diff -urN lirc-0.7.1pre1.orig/drivers/lirc_atiusb/lirc_atiusb.c lirc-0.7.1pre1/d
  #include <linux/autoconf.h>
  
  #include <linux/kernel.h>
-diff -urN lirc-0.7.1pre1.orig/drivers/lirc_bt829/lirc_bt829.c lirc-0.7.1pre1/drivers/lirc_bt829/lirc_bt829.c
---- lirc-0.7.1pre1.orig/drivers/lirc_bt829/lirc_bt829.c	2004-08-07 12:06:07.000000000 +0200
-+++ lirc-0.7.1pre1/drivers/lirc_bt829/lirc_bt829.c	2005-01-25 10:27:53.770445096 +0100
+diff -ur lirc-0.8.6.orig/drivers/lirc_bt829/lirc_bt829.c lirc-0.8.6/drivers/lirc_bt829/lirc_bt829.c
+--- lirc-0.8.6.orig/drivers/lirc_bt829/lirc_bt829.c	2009-03-09 19:54:17.000000000 +0100
++++ lirc-0.8.6/drivers/lirc_bt829/lirc_bt829.c	2009-09-17 21:09:42.836592766 +0200
 @@ -22,6 +22,11 @@
  #if LINUX_VERSION_CODE < KERNEL_VERSION(2, 4, 0)
  #error "This driver needs kernel version 2.4.0 or higher"
  #endif
-+ 
++
 +#ifdef __alpha__
 +#include <asm/current.h>
 +#endif
@@ -27,9 +27,9 @@ diff -urN lirc-0.7.1pre1.orig/drivers/lirc_bt829/lirc_bt829.c lirc-0.7.1pre1/dri
  #include <linux/autoconf.h>
  #include <linux/kernel.h>
  #include <linux/module.h>
-diff -urN lirc-0.7.1pre1.orig/drivers/lirc_dev/lirc_dev.c lirc-0.7.1pre1/drivers/lirc_dev/lirc_dev.c
---- lirc-0.7.1pre1.orig/drivers/lirc_dev/lirc_dev.c	2004-09-05 18:48:48.000000000 +0200
-+++ lirc-0.7.1pre1/drivers/lirc_dev/lirc_dev.c	2005-01-25 10:27:53.771444944 +0100
+diff -ur lirc-0.8.6.orig/drivers/lirc_dev/lirc_dev.c lirc-0.8.6/drivers/lirc_dev/lirc_dev.c
+--- lirc-0.8.6.orig/drivers/lirc_dev/lirc_dev.c	2009-08-31 18:57:55.000000000 +0200
++++ lirc-0.8.6/drivers/lirc_dev/lirc_dev.c	2009-09-17 21:09:51.616593303 +0200
 @@ -32,6 +32,10 @@
  #error "**********************************************************"
  #endif
@@ -41,9 +41,23 @@ diff -urN lirc-0.7.1pre1.orig/drivers/lirc_dev/lirc_dev.c lirc-0.7.1pre1/drivers
  #include <linux/autoconf.h>
  #include <linux/module.h>
  #include <linux/kernel.h>
-diff -urN lirc-0.7.1pre1.orig/drivers/lirc_gpio/lirc_gpio.c lirc-0.7.1pre1/drivers/lirc_gpio/lirc_gpio.c
---- lirc-0.7.1pre1.orig/drivers/lirc_gpio/lirc_gpio.c	2004-08-07 12:06:08.000000000 +0200
-+++ lirc-0.7.1pre1/drivers/lirc_gpio/lirc_gpio.c	2005-01-25 10:27:53.772444792 +0100
+diff -ur lirc-0.8.6.orig/drivers/lirc_ene0100/lirc_ene0100.c lirc-0.8.6/drivers/lirc_ene0100/lirc_ene0100.c
+--- lirc-0.8.6.orig/drivers/lirc_ene0100/lirc_ene0100.c	2009-08-25 14:35:45.000000000 +0200
++++ lirc-0.8.6/drivers/lirc_ene0100/lirc_ene0100.c	2009-09-17 21:10:04.786592177 +0200
+@@ -19,6 +19,10 @@
+  * USA
+  */
+ 
++#ifdef __alpha__
++#include <asm/current.h>
++#endif
++
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/pnp.h>
+diff -ur lirc-0.8.6.orig/drivers/lirc_gpio/lirc_gpio.c lirc-0.8.6/drivers/lirc_gpio/lirc_gpio.c
+--- lirc-0.8.6.orig/drivers/lirc_gpio/lirc_gpio.c	2009-02-14 20:35:52.000000000 +0100
++++ lirc-0.8.6/drivers/lirc_gpio/lirc_gpio.c	2009-09-17 21:21:31.770471413 +0200
 @@ -36,6 +36,10 @@
  #error "*******************************************************"
  #endif
@@ -55,10 +69,10 @@ diff -urN lirc-0.7.1pre1.orig/drivers/lirc_gpio/lirc_gpio.c lirc-0.7.1pre1/drive
  #include <linux/version.h>
  #include <linux/module.h>
  #include <linux/kmod.h>
-diff -urN lirc-0.7.1pre1.orig/drivers/lirc_i2c/lirc_i2c.c lirc-0.7.1pre1/drivers/lirc_i2c/lirc_i2c.c
---- lirc-0.7.1pre1.orig/drivers/lirc_i2c/lirc_i2c.c	2005-01-14 17:07:12.000000000 +0100
-+++ lirc-0.7.1pre1/drivers/lirc_i2c/lirc_i2c.c	2005-01-25 10:31:17.166524192 +0100
-@@ -37,6 +37,10 @@
+diff -ur lirc-0.8.6.orig/drivers/lirc_i2c/lirc_i2c.c lirc-0.8.6/drivers/lirc_i2c/lirc_i2c.c
+--- lirc-0.8.6.orig/drivers/lirc_i2c/lirc_i2c.c	2009-08-30 18:59:53.000000000 +0200
++++ lirc-0.8.6/drivers/lirc_i2c/lirc_i2c.c	2009-09-17 21:21:41.805887554 +0200
+@@ -48,6 +48,10 @@
  #include <config.h>
  #endif
  
@@ -69,9 +83,9 @@ diff -urN lirc-0.7.1pre1.orig/drivers/lirc_i2c/lirc_i2c.c lirc-0.7.1pre1/drivers
  #include <linux/version.h>
  #include <linux/module.h>
  #include <linux/kmod.h>
-diff -urN lirc-0.7.1pre1.orig/drivers/lirc_igorplugusb/lirc_igorplugusb.c lirc-0.7.1pre1/drivers/lirc_igorplugusb/lirc_igorplugusb.c
---- lirc-0.7.1pre1.orig/drivers/lirc_igorplugusb/lirc_igorplugusb.c	2004-08-07 11:52:46.000000000 +0200
-+++ lirc-0.7.1pre1/drivers/lirc_igorplugusb/lirc_igorplugusb.c	2005-01-25 10:27:53.777444032 +0100
+diff -ur lirc-0.8.6.orig/drivers/lirc_igorplugusb/lirc_igorplugusb.c lirc-0.8.6/drivers/lirc_igorplugusb/lirc_igorplugusb.c
+--- lirc-0.8.6.orig/drivers/lirc_igorplugusb/lirc_igorplugusb.c	2009-08-02 11:54:10.000000000 +0200
++++ lirc-0.8.6/drivers/lirc_igorplugusb/lirc_igorplugusb.c	2009-09-17 21:21:47.329219402 +0200
 @@ -47,6 +47,10 @@
  #error "*******************************************************"
  #endif
@@ -83,66 +97,95 @@ diff -urN lirc-0.7.1pre1.orig/drivers/lirc_igorplugusb/lirc_igorplugusb.c lirc-0
  #include <linux/autoconf.h>
  #include <linux/module.h>
  #include <linux/kernel.h>
-diff -urN lirc-0.7.1pre1.orig/drivers/lirc_it87/lirc_it87.c lirc-0.7.1pre1/drivers/lirc_it87/lirc_it87.c
---- lirc-0.7.1pre1.orig/drivers/lirc_it87/lirc_it87.c	2004-12-30 22:47:19.000000000 +0100
-+++ lirc-0.7.1pre1/drivers/lirc_it87/lirc_it87.c	2005-01-25 10:27:53.779443728 +0100
-@@ -31,6 +31,10 @@
+diff -ur lirc-0.8.6.orig/drivers/lirc_imon/lirc_imon.c lirc-0.8.6/drivers/lirc_imon/lirc_imon.c
+--- lirc-0.8.6.orig/drivers/lirc_imon/lirc_imon.c	2009-09-11 06:56:18.000000000 +0200
++++ lirc-0.8.6/drivers/lirc_imon/lirc_imon.c	2009-09-17 21:21:56.959218418 +0200
+@@ -30,6 +30,10 @@
+ #error "*** Sorry, this driver requires a 2.6 kernel"
+ #endif
+ 
++#ifdef __alpha__
++#include <asm/current.h>
++#endif
++
+ #include <linux/autoconf.h>
+ 
+ #include <linux/errno.h>
+diff -ur lirc-0.8.6.orig/drivers/lirc_it87/lirc_it87.c lirc-0.8.6/drivers/lirc_it87/lirc_it87.c
+--- lirc-0.8.6.orig/drivers/lirc_it87/lirc_it87.c	2009-06-01 14:21:31.000000000 +0200
++++ lirc-0.8.6/drivers/lirc_it87/lirc_it87.c	2009-09-17 21:22:05.122560364 +0200
+@@ -34,6 +34,10 @@
+ #include <config.h>
+ #endif
+ 
++#ifdef __alpha__
++#include <asm/current.h>
++#endif
++
  #include <linux/version.h>
  #include <linux/module.h>
+ #include <linux/autoconf.h>
+diff -ur lirc-0.8.6.orig/drivers/lirc_ite8709/lirc_ite8709.c lirc-0.8.6/drivers/lirc_ite8709/lirc_ite8709.c
+--- lirc-0.8.6.orig/drivers/lirc_ite8709/lirc_ite8709.c	2009-03-15 10:34:00.000000000 +0100
++++ lirc-0.8.6/drivers/lirc_ite8709/lirc_ite8709.c	2009-09-17 21:22:18.272344002 +0200
+@@ -19,6 +19,10 @@
+  * USA
+  */
  
 +#ifdef __alpha__
 +#include <asm/current.h>
 +#endif
 +
- #ifdef HAVE_CONFIG_H
- # include <config.h>
+ #include <linux/version.h>
+ #include <linux/module.h>
+ #include <linux/pnp.h>
+diff -ur lirc-0.8.6.orig/drivers/lirc_mceusb/lirc_mceusb.c lirc-0.8.6/drivers/lirc_mceusb/lirc_mceusb.c
+--- lirc-0.8.6.orig/drivers/lirc_mceusb/lirc_mceusb.c	2009-09-02 16:04:02.000000000 +0200
++++ lirc-0.8.6/drivers/lirc_mceusb/lirc_mceusb.c	2009-09-17 21:22:37.589423067 +0200
+@@ -52,6 +52,11 @@
+ #error "Sorry, this driver needs kernel version 2.6.5 or higher"
+ #error "*******************************************************"
  #endif
-diff -urN lirc-0.7.1pre1.orig/drivers/lirc_mceusb/lirc_mceusb.c lirc-0.7.1pre1/drivers/lirc_mceusb/lirc_mceusb.c
---- lirc-0.7.1pre1.orig/drivers/lirc_mceusb/lirc_mceusb.c	2004-09-05 18:48:49.000000000 +0200
-+++ lirc-0.7.1pre1/drivers/lirc_mceusb/lirc_mceusb.c	2005-01-25 10:27:53.780443576 +0100
-@@ -108,6 +108,10 @@
- #include <linux/signal.h>
- #endif
- 
-+#ifdef __alpha__
-+#include <asm/current.h>
-+#endif
 +
- #ifdef CONFIG_USB_DEBUG
- 	static int debug = 1;
- #else
-diff -urN lirc-0.7.1pre1.orig/drivers/lirc_parallel/lirc_parallel.c lirc-0.7.1pre1/drivers/lirc_parallel/lirc_parallel.c
---- lirc-0.7.1pre1.orig/drivers/lirc_parallel/lirc_parallel.c	2005-01-22 11:42:39.000000000 +0100
-+++ lirc-0.7.1pre1/drivers/lirc_parallel/lirc_parallel.c	2005-01-25 10:27:53.782443272 +0100
-@@ -40,6 +40,10 @@
- #error "**********************************************************"
- #endif
- 
 +#ifdef __alpha__
 +#include <asm/current.h>
 +#endif
 +
  #include <linux/autoconf.h>
- 
- #ifdef CONFIG_SMP
-diff -urN lirc-0.7.1pre1.orig/drivers/lirc_sasem/lirc_sasem.c lirc-0.7.1pre1/drivers/lirc_sasem/lirc_sasem.c
---- lirc-0.7.1pre1.orig/drivers/lirc_sasem/lirc_sasem.c	2004-11-07 14:35:45.000000000 +0100
-+++ lirc-0.7.1pre1/drivers/lirc_sasem/lirc_sasem.c	2005-01-25 10:27:53.783443120 +0100
-@@ -60,6 +60,10 @@
- 
- #include <linux/autoconf.h>
- 
-+#ifdef __alpha__
-+#include <asm/current.h>
-+#endif
-+
- #include <linux/errno.h>
- #include <linux/init.h>
  #include <linux/kernel.h>
-diff -urN lirc-0.7.1pre1.orig/drivers/lirc_serial/lirc_serial.c lirc-0.7.1pre1/drivers/lirc_serial/lirc_serial.c
---- lirc-0.7.1pre1.orig/drivers/lirc_serial/lirc_serial.c	2004-12-31 22:21:39.000000000 +0100
-+++ lirc-0.7.1pre1/drivers/lirc_serial/lirc_serial.c	2005-01-25 10:32:26.256020992 +0100
-@@ -61,6 +61,10 @@
+ #include <linux/errno.h>
+diff -ur lirc-0.8.6.orig/drivers/lirc_parallel/lirc_parallel.c lirc-0.8.6/drivers/lirc_parallel/lirc_parallel.c
+--- lirc-0.8.6.orig/drivers/lirc_parallel/lirc_parallel.c	2009-03-08 20:22:28.000000000 +0100
++++ lirc-0.8.6/drivers/lirc_parallel/lirc_parallel.c	2009-09-17 21:22:57.867128559 +0200
+@@ -39,6 +39,10 @@
+ #error "--- Sorry, this driver is not SMP safe. ---"
+ #endif
+ 
++#ifdef __alpha__
++#include <asm/current.h>
++#endif
++
+ #include <linux/module.h>
+ #include <linux/sched.h>
+ #include <linux/errno.h>
+diff -ur lirc-0.8.6.orig/drivers/lirc_sasem/lirc_sasem.c lirc-0.8.6/drivers/lirc_sasem/lirc_sasem.c
+--- lirc-0.8.6.orig/drivers/lirc_sasem/lirc_sasem.c	2009-02-28 11:27:10.000000000 +0100
++++ lirc-0.8.6/drivers/lirc_sasem/lirc_sasem.c	2009-09-17 21:23:07.509837418 +0200
+@@ -41,6 +41,10 @@
+ #error "*** Sorry, this driver requires kernel version 2.4.22 or higher"
+ #endif
+ 
++#ifdef __alpha__
++#include <asm/current.h>
++#endif
++
+ #include <linux/autoconf.h>
+ 
+ #include <linux/errno.h>
+diff -ur lirc-0.8.6.orig/drivers/lirc_serial/lirc_serial.c lirc-0.8.6/drivers/lirc_serial/lirc_serial.c
+--- lirc-0.8.6.orig/drivers/lirc_serial/lirc_serial.c	2009-03-15 10:34:00.000000000 +0100
++++ lirc-0.8.6/drivers/lirc_serial/lirc_serial.c	2009-09-17 21:23:15.856919328 +0200
+@@ -60,6 +60,10 @@
  #error "**********************************************************"
  #endif
  
@@ -153,18 +196,60 @@ diff -urN lirc-0.7.1pre1.orig/drivers/lirc_serial/lirc_serial.c lirc-0.7.1pre1/d
  #include <linux/autoconf.h>
  
  #if defined(CONFIG_SERIAL) || defined(CONFIG_SERIAL_8250)
-diff -urN lirc-0.7.1pre1.orig/drivers/lirc_sir/lirc_sir.c lirc-0.7.1pre1/drivers/lirc_sir/lirc_sir.c
---- lirc-0.7.1pre1.orig/drivers/lirc_sir/lirc_sir.c	2004-12-30 22:38:16.000000000 +0100
-+++ lirc-0.7.1pre1/drivers/lirc_sir/lirc_sir.c	2005-01-25 10:27:53.787442512 +0100
-@@ -40,6 +40,11 @@
- #error " Sorry, this driver needs kernel version 2.2.18 or higher "
- #error "**********************************************************"
+diff -ur lirc-0.8.6.orig/drivers/lirc_sir/lirc_sir.c lirc-0.8.6/drivers/lirc_sir/lirc_sir.c
+--- lirc-0.8.6.orig/drivers/lirc_sir/lirc_sir.c	2009-07-10 00:24:23.000000000 +0200
++++ lirc-0.8.6/drivers/lirc_sir/lirc_sir.c	2009-09-17 21:23:28.303167585 +0200
+@@ -45,6 +45,10 @@
+ # include <config.h>
+ #endif
+ 
++#ifdef __alpha__
++#include <asm/current.h>
++#endif
++
+ #include <linux/autoconf.h>
+ #if !defined(CONFIG_SERIAL_MODULE)
+ #if !defined(LIRC_ON_SA1100)
+diff -ur lirc-0.8.6.orig/drivers/lirc_streamzap/lirc_streamzap.c lirc-0.8.6/drivers/lirc_streamzap/lirc_streamzap.c
+--- lirc-0.8.6.orig/drivers/lirc_streamzap/lirc_streamzap.c	2009-03-15 10:34:00.000000000 +0100
++++ lirc-0.8.6/drivers/lirc_streamzap/lirc_streamzap.c	2009-09-17 21:23:43.966707389 +0200
+@@ -35,6 +35,11 @@
+ #error "Sorry, this driver needs kernel version 2.4.0 or higher"
+ #error "*******************************************************"
  #endif
 +
 +#ifdef __alpha__
 +#include <asm/current.h>
 +#endif
 +
- #include <linux/module.h>
+ #include <linux/autoconf.h>
+ #include <linux/kernel.h>
+ #include <linux/errno.h>
+diff -ur lirc-0.8.6.orig/drivers/lirc_ttusbir/lirc_ttusbir.c lirc-0.8.6/drivers/lirc_ttusbir/lirc_ttusbir.c
+--- lirc-0.8.6.orig/drivers/lirc_ttusbir/lirc_ttusbir.c	2009-03-15 10:34:01.000000000 +0100
++++ lirc-0.8.6/drivers/lirc_ttusbir/lirc_ttusbir.c	2009-09-17 21:23:52.910040726 +0200
+@@ -30,6 +30,10 @@
+  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  */
  
- #ifdef HAVE_CONFIG_H
++#ifdef __alpha__
++#include <asm/current.h>
++#endif
++
+ #include <linux/version.h>
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+diff -ur lirc-0.8.6.orig/drivers/lirc_wpc8769l/lirc_wpc8769l.c lirc-0.8.6/drivers/lirc_wpc8769l/lirc_wpc8769l.c
+--- lirc-0.8.6.orig/drivers/lirc_wpc8769l/lirc_wpc8769l.c	2009-03-15 10:34:01.000000000 +0100
++++ lirc-0.8.6/drivers/lirc_wpc8769l/lirc_wpc8769l.c	2009-09-17 21:24:01.846706770 +0200
+@@ -37,6 +37,10 @@
+ #error "**********************************************************"
+ #endif
+ 
++#ifdef __alpha__
++#include <asm/current.h>
++#endif
++
+ #include <linux/autoconf.h>
+ 
+ #include <linux/module.h>
