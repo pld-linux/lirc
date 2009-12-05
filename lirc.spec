@@ -19,7 +19,7 @@
 %endif
 
 %define		pname	lirc
-%define		rel	7
+%define		rel	8
 
 #
 # main package
@@ -738,8 +738,8 @@ cd ..
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_bindir},%{_aclocaldir},/dev,/var/log} \
-	$RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig}
+install -d $RPM_BUILD_ROOT{%{_bindir},%{_aclocaldir},/dev,/var/{log,run/lirc}} \
+	$RPM_BUILD_ROOT/etc/{lirc,rc.d/init.d,sysconfig}
 
 %if %{with kernel}
 drivers=%{drivers}
@@ -755,13 +755,13 @@ done
 	DESTDIR=$RPM_BUILD_ROOT \
 	sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir}
 
-cat>$RPM_BUILD_ROOT%{_sysconfdir}/lircd.conf<<END
+cat>$RPM_BUILD_ROOT%{_sysconfdir}/lirc/lircd.conf<<END
 #
 # This is a placeholder for your configuration file.
 # See %{_docdir}/%{pname}-%{version}/remotes for some examples.
 #
 END
-cp -f $RPM_BUILD_ROOT%{_sysconfdir}/lirc{,m}d.conf
+cp -f $RPM_BUILD_ROOT%{_sysconfdir}/lirc/lirc{,m}d.conf
 install contrib/*.m4 $RPM_BUILD_ROOT%{_aclocaldir}
 :> $RPM_BUILD_ROOT/var/log/lircd
 
@@ -805,6 +805,14 @@ if [ "$1" = "0" ]; then
 		/etc/rc.d/init.d/lircmd stop >&2
 	fi
 	/sbin/chkconfig --del lircmd
+fi
+
+%triggerpostun -- %{name} < 0.8.6-8
+if [ -f %{_sysconfdir}/lircd.conf.rpmsave ]; then
+	mv -f %{_sysconfdir}/lircd.conf.rpmsave %{_sysconfdir}/lirc/lircd.conf
+fi
+if [ -f %{_sysconfdir}/lircmd.conf.rpmsave ]; then
+	mv -f %{_sysconfdir}/lircmd.conf.rpmsave %{_sysconfdir}/lirc/lircmd.conf
 fi
 
 %post	-n kernel%{_alt_kernel}-char-lirc-atiusb
@@ -993,14 +1001,16 @@ fi
 %attr(754,root,root) /etc/rc.d/init.d/lircd
 %attr(754,root,root) /etc/rc.d/init.d/lircmd
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/lircd
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/lircd.conf
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/lircmd.conf
+%dir %{_sysconfdir}/lirc
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/lirc/lircd.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/lirc/lircmd.conf
 %{_mandir}/man1/ir[!x]*.1*
 %{_mandir}/man1/lircrcd.1*
 %{_mandir}/man1/mode2.1*
 %{_mandir}/man8/lircd.8*
 %{_mandir}/man8/lircmd.8*
 %ghost %attr(600,root,root) /var/log/lircd
+%dir /var/run/lirc
 
 %files remotes
 %defattr(644,root,root,755)
