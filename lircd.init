@@ -8,8 +8,8 @@
 #		remote controls.
 #
 # processname:	lircd
-# pidfile:	/var/run/lircd.pid
-# config:	/etc/lircd.conf
+# pidfile:	/var/run/lirc/lircd.pid
+# config:	/etc/lirc/lircd.conf
 # config:	/etc/sysconfig/lircd
 
 # Source function library

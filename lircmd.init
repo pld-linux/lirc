@@ -8,8 +8,8 @@
 #		remote controls.
 #
 # processname:	lircmd
-# pidfile:	/var/run/lircmd.pid
-# config:	/etc/lircmd.conf
+# pidfile:	/var/run/lirc/lircmd.pid
+# config:	/etc/lirc/lircmd.conf
 
 # Source function library
 . /etc/rc.d/init.d/functions
