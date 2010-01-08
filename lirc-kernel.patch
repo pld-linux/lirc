@@ -1,0 +1,12 @@
+--- lirc-0.8.6/drivers/lirc_i2c/lirc_i2c.c~	2010-01-08 20:42:48.381099500 +0100
++++ lirc-0.8.6/drivers/lirc_i2c/lirc_i2c.c	2010-01-08 20:46:54.584408342 +0100
+@@ -403,8 +403,8 @@
+ 		.name	= "i2c ir driver",
+ 	},
+ #endif
+-	.id		= I2C_DRIVERID_EXP3, /* FIXME */
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 31)
++	.id             = I2C_DRIVERID_EXP3, /* FIXME */
+ 	.attach_adapter	= ir_probe,
+ 	.detach_client	= ir_remove,
+ #else
