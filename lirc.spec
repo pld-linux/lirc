@@ -1011,7 +1011,7 @@ fi
 %{_mandir}/man1/mode2.1*
 %{_mandir}/man8/lircd.8*
 %{_mandir}/man8/lircmd.8*
-%ghost %attr(600,root,root) /var/log/lircd
+%attr(600,root,root) %ghost /var/log/lircd
 %dir /var/run/lirc
 
 %files remotes
