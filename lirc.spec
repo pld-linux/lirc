@@ -702,9 +702,14 @@ if [ ! -r "%{_kernelsrcdir}/config-dist" ]; then
 	exit 1
 fi
 
-install -d o/include/{linux,config} o/arch/powerpc/lib
+install -d o/include/{linux,generated,config} o/arch/powerpc/lib
 ln -sf %{_kernelsrcdir}/config-dist o/.config
-ln -sf %{_kernelsrcdir}/include/linux/autoconf-dist.h o/include/linux/autoconf.h
+if [ -f %{_kernelsrcdir}/include/generated/autoconf-dist.h ]; then
+	ln -sf %{_kernelsrcdir}/include/generated/autoconf-dist.h o/include/generated/autoconf.h
+	ln -s ../generated/autoconf.h o/include/linux/autoconf.h
+else
+	ln -sf %{_kernelsrcdir}/include/linux/autoconf-dist.h o/include/linux/autoconf.h
+fi
 ln -sf %{_kernelsrcdir}/Module.symvers-dist o/Module.symvers
 
 %if %{without dist_kernel}
