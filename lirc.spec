@@ -690,7 +690,7 @@ echo '#' > drivers/Makefile.am
 	--with-igor
 
 %if %{with userspace}
-%{__make}
+%{__make} -j1
 %endif
 
 %if %{with kernel}
@@ -758,7 +758,7 @@ done
 %endif
 
 %if %{with userspace}
-%{__make} install \
+%{__make} -j1 install \
 	DESTDIR=$RPM_BUILD_ROOT \
 	sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir}
 
