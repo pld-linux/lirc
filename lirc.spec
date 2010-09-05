@@ -999,7 +999,12 @@ fi
 %defattr(644,root,root,755)
 %doc ANNOUNCE AUTHORS NEWS README TODO ChangeLog
 %doc contrib/lircrc doc/{html,images,lirc.css}
-%attr(755,root,root) %{_bindir}/ir[!x]*
+%attr(755,root,root) %{_bindir}/ircat
+%attr(755,root,root) %{_bindir}/irexec
+%attr(755,root,root) %{_bindir}/irpty
+%attr(755,root,root) %{_bindir}/irrecord
+%attr(755,root,root) %{_bindir}/irsend
+%attr(755,root,root) %{_bindir}/irw
 %attr(755,root,root) %{_bindir}/mode2
 %attr(755,root,root) %{_bindir}/lircrcd
 %attr(755,root,root) %{_bindir}/pronto2lirc
@@ -1011,7 +1016,12 @@ fi
 %dir %{_sysconfdir}/lirc
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/lirc/lircd.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/lirc/lircmd.conf
-%{_mandir}/man1/ir[!x]*.1*
+%{_mandir}/man1/ircat.1*
+%{_mandir}/man1/irexec.1*
+%{_mandir}/man1/irpty.1*
+%{_mandir}/man1/irrecord.1*
+%{_mandir}/man1/irsend.1*
+%{_mandir}/man1/irw.1*
 %{_mandir}/man1/lircrcd.1*
 %{_mandir}/man1/mode2.1*
 %{_mandir}/man8/lircd.8*
