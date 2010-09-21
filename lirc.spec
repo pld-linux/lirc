@@ -57,7 +57,7 @@ URL:		http://www.lirc.org/
 #%{?with_x:BuildRequires:	xorg-lib-libX11-devel}
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	libftdi-devel
+BuildRequires:	libftdi-devel >= 0.12
 BuildRequires:	libtool
 %if %{with kernel}
 BuildRequires:	kernel%{_alt_kernel}-module-build
@@ -70,6 +70,7 @@ BuildRequires:	rpmbuild(macros) >= 1.379
 %{?with_x:BuildRequires:	xorg-lib-libX11-devel}
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{pname}-libs = %{version}-%{release}
+Requires:	libftdi >= 0.12
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
