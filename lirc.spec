@@ -19,7 +19,7 @@
 %endif
 
 %define		pname	lirc
-%define		rel	28
+%define		rel	1
 
 #
 # main package
@@ -35,14 +35,14 @@
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl.UTF-8):	Serwery do zdalnego sterowania Linuksem za pomocą podczerwieni
 Name:		%{pname}%{_alt_kernel}
-Version:	0.8.6
+Version:	0.8.7
 Release:	%{rel}
 License:	GPL v2+
 Group:		Daemons
 Source0:	http://dl.sourceforge.net/lirc/%{pname}-%{version}.tar.bz2
-# Source0-md5:	4ca24da6f5e7c2dcea74878c27a4a3f7
+# Source0-md5:	fb1dcddbc8ca3d03c7f3a2d40cf28b71
 Source1:	http://lirc.sourceforge.net/remotes.tar.bz2
-# Source1-md5:	67334ab1986bbf0b54c84bd35dec6ea0
+# Source1-md5:	238d1773d3c405acc02813674f5a55f8
 Source2:	%{pname}d.sysconfig
 Source3:	%{pname}d.init
 Source4:	%{pname}md.init
@@ -53,7 +53,6 @@ Patch3:		%{pname}-alpha.patch
 Patch4:		%{pname}-sparc.patch
 Patch5:		%{pname}-remotes.patch
 Patch6:		%{pname}-kernelcc.patch
-Patch7:		%{pname}-kernel.patch
 URL:		http://www.lirc.org/
 #%{?with_x:BuildRequires:	xorg-lib-libX11-devel}
 BuildRequires:	autoconf
@@ -664,7 +663,6 @@ równoległego.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%patch7 -p1
 
 %build
 echo '#' > drivers/Makefile.am
