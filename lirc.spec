@@ -2,6 +2,7 @@
 # - restore lirc_parallel driver
 # - try to make it use builder_kernel_modules and install_kernel_modules; I couldn't make it
 # - build is running kernel arch dependent, try to get rid of this
+# - libcaraca_client (http://caraca.sourceforge.net/) - no releases yet
 #
 # Conditional build:
 %bcond_without	dist_kernel	# without sources of distribution kernel
@@ -54,11 +55,14 @@ Patch4:		%{pname}-sparc.patch
 Patch5:		%{pname}-remotes.patch
 Patch6:		%{pname}-kernelcc.patch
 URL:		http://www.lirc.org/
-#%{?with_x:BuildRequires:	xorg-lib-libX11-devel}
-BuildRequires:	autoconf
+BuildRequires:	alsa-lib-devel
+BuildRequires:	autoconf >= 2.50
 BuildRequires:	automake
+BuildRequires:	iguanaIR-devel
 BuildRequires:	libftdi-devel >= 0.12
+BuildRequires:	libirman-devel >= 0.4.5
 BuildRequires:	libtool
+BuildRequires:	libusb-compat-devel >= 0.1.0
 %if %{with kernel}
 BuildRequires:	kernel%{_alt_kernel}-module-build
 BuildRequires:	kernel%{_alt_kernel}-headers
