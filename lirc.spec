@@ -8,7 +8,7 @@
 %bcond_without	dist_kernel	# without sources of distribution kernel
 %bcond_without	kernel		# don't build kernel modules, only library+programs
 %bcond_without	userspace	# build only packages with kernel modules
-%bcond_without	svga		# without svgalib-based utility
+%bcond_with	svga		# without svgalib-based utility
 %bcond_without	x		# without X11-based utilitied
 
 %if %{without kernel}
@@ -20,7 +20,7 @@
 %endif
 
 %define		pname	lirc
-%define		rel	10
+%define		rel	11
 
 #
 # main package
