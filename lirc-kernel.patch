@@ -1,0 +1,20 @@
+fix undeclared current_cpu_data in lirc-modules-source (LP: #726182)
+
+BeeHock Goh <beehock@gmail.com> Mon Mar 14 2011
+
+--- a/drivers/lirc_serial/lirc_serial.c	2010-09-04 18:38:49 +0000
++++ b/drivers/lirc_serial/lirc_serial.c	2011-03-14 15:35:02 +0000
+@@ -90,6 +90,12 @@
+ #include <linux/mm.h>
+ #include <linux/delay.h>
+ #include <linux/poll.h>
++
++#ifndef current_cpu_data
++/* Macro current_cpu_data no longer defined in processor.h in newer kernel */
++#define current_cpu_data __get_cpu_var(cpu_info)
++#endif
++
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 18)
+ #include <linux/platform_device.h>
+ #endif
+
