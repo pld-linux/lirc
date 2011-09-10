@@ -21,3 +21,13 @@
  
  #if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 31)
  	/* register device */
+--- lirc-0.9.0/drivers/lirc_gpio/lirc_gpio.c.orig	2011-03-25 23:28:18.000000000 +0100
++++ lirc-0.9.0/drivers/lirc_gpio/lirc_gpio.c	2011-09-10 16:30:47.051485373 +0200
+@@ -38,7 +38,6 @@
+ #include <linux/errno.h>
+ 
+ #include "../drivers/media/video/bt8xx/bttv.h"
+-#include "../drivers/media/video/bt8xx/bttvp.h"
+ 
+ #include "drivers/kcompat.h"
+ #if LINUX_VERSION_CODE > KERNEL_VERSION(2, 6, 35)

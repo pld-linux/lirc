@@ -25,17 +25,16 @@
 #
 # main package
 #
-# lirc_parallel is not thread safe, so not on this list
 # lirc_gpio fails to build under kernel >= 2.6.23
 #
 %if "%{_kernel_ver}" >= "2.6.23"
 %if "%{_kernel_ver}" >= "3.0.0"
-%define		drivers		"lirc_atiusb lirc_bt829 lirc_dev lirc_i2c lirc_igorplugusb lirc_imon lirc_sasem lirc_serial lirc_sir lirc_ttusbir"
+%define		drivers		"lirc_atiusb lirc_bt829 lirc_dev lirc_i2c lirc_igorplugusb lirc_imon lirc_parallel lirc_sasem lirc_serial lirc_sir lirc_ttusbir"
 %else
-%define		drivers		"lirc_atiusb lirc_bt829 lirc_dev lirc_ene0100 lirc_i2c lirc_igorplugusb lirc_imon lirc_sasem lirc_serial lirc_sir lirc_ttusbir lirc_wpc8769l"
+%define		drivers		"lirc_atiusb lirc_bt829 lirc_dev lirc_i2c lirc_igorplugusb lirc_imon lirc_parallel lirc_sasem lirc_serial lirc_sir lirc_ttusbir lirc_wpc8769l"
 %endif
 %else
-%define		drivers		"lirc_atiusb lirc_bt829 lirc_dev lirc_ene0100 lirc_gpio lirc_i2c lirc_igorplugusb lirc_imon lirc_sasem lirc_serial lirc_sir lirc_ttusbir lirc_wpc8769l"
+%define		drivers		"lirc_atiusb lirc_bt829 lirc_dev lirc_gpio lirc_i2c lirc_igorplugusb lirc_imon lirc_parallel lirc_sasem lirc_serial lirc_sir lirc_ttusbir lirc_wpc8769l"
 %endif
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl.UTF-8):	Serwery do zdalnego sterowania Linuksem za pomocą podczerwieni
@@ -44,7 +43,7 @@ Version:	0.9.0
 Release:	%{rel}
 License:	GPL v2+
 Group:		Daemons
-Source0:	http://dl.sourceforge.net/lirc/%{pname}-%{version}.tar.bz2
+Source0:	http://downloads.sourceforge.net/lirc/%{pname}-%{version}.tar.bz2
 # Source0-md5:	b232aef26f23fe33ea8305d276637086
 Source1:	http://lirc.sourceforge.net/remotes.tar.bz2
 # Source1-md5:	238d1773d3c405acc02813674f5a55f8
@@ -525,7 +524,6 @@ TechnoTrend USB IR Receiver.
 
 Moduł lirc_wpc87691.
 
-## XXX: Unused now, as all kernels are smp by default
 %package -n kernel%{_alt_kernel}-char-lirc-parallel
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
@@ -622,22 +620,18 @@ ln -sf %{_kernelsrcdir}/Module.symvers-dist o/Module.symvers
 
 for drv in $drivers; do
 	cd $drv
-	if [ "$drv" == "lirc_parallel" ] && grep -q ^CONFIG_SMP o/.config ]; then
-		echo "lirc_parallel is not smp safe"
-	else
-		ln -sf ../o
-		%{__make} clean \
-			RCS_FIND_IGNORE="-name '*.ko' -o" \
-			M=$PWD O=$PWD/o \
-			%{?with_verbose:V=1}
+	ln -sf ../o
+	%{__make} clean \
+		RCS_FIND_IGNORE="-name '*.ko' -o" \
+		M=$PWD O=$PWD/o \
+		%{?with_verbose:V=1}
 
-		%{__make} -j1 \
-			M=$PWD O=$PWD/o \
-			CONSTIFY_PLUGIN="" \
-			KBUILD_MODPOST_WARN=1 \
-			%{?with_verbose:V=1}
-			mv $drv{,-dist}.ko
-	fi
+	%{__make} -j1 \
+		M=$PWD O=$PWD/o \
+		CONSTIFY_PLUGIN="" \
+		KBUILD_MODPOST_WARN=1 \
+		%{?with_verbose:V=1}
+	mv $drv{,-dist}.ko
 	cd ..
 done
 
@@ -933,66 +927,63 @@ fi
 %if %{with kernel}
 %files -n kernel%{_alt_kernel}-char-lirc-atiusb
 %defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/*/lirc_atiusb*
+/lib/modules/%{_kernel_ver}/misc/lirc_atiusb.ko*
 
 %files -n kernel%{_alt_kernel}-char-lirc-bt829
 %defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/*/lirc_bt829*
+/lib/modules/%{_kernel_ver}/misc/lirc_bt829.ko*
 
 %files -n kernel%{_alt_kernel}-char-lirc-dev
 %defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/*/lirc_dev*
+/lib/modules/%{_kernel_ver}/misc/lirc_dev.ko*
 
 %if "%{_kernel_ver}" < "3.0.0"
 %files -n kernel%{_alt_kernel}-char-lirc-ene0100
 %defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/*/lirc_ene0100*
+/lib/modules/%{_kernel_ver}/misc/lirc_ene0100.ko*
 %endif
 
 %if "%{_kernel_ver}" < "2.6.23"
 %files -n kernel%{_alt_kernel}-char-lirc-gpio
 %defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/*/lirc_gpio*
+/lib/modules/%{_kernel_ver}/misc/lirc_gpio.ko*
 %endif
 
 %files -n kernel%{_alt_kernel}-char-lirc-i2c
 %defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/*/lirc_i2c*
+/lib/modules/%{_kernel_ver}/misc/lirc_i2c.ko*
 
 %files -n kernel%{_alt_kernel}-char-lirc-igorplugusb
 %defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/*/lirc_igorplugusb*
+/lib/modules/%{_kernel_ver}/misc/lirc_igorplugusb.ko*
 
 %files -n kernel%{_alt_kernel}-char-lirc-imon
 %defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/*/lirc_imon*
+/lib/modules/%{_kernel_ver}/misc/lirc_imon.ko*
 
 %files -n kernel%{_alt_kernel}-char-lirc-sasem
 %defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/*/lirc_sasem*
+/lib/modules/%{_kernel_ver}/misc/lirc_sasem.ko*
 
 %files -n kernel%{_alt_kernel}-char-lirc-serial
 %defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/*/lirc_serial*
+/lib/modules/%{_kernel_ver}/misc/lirc_serial.ko*
 
 %files -n kernel%{_alt_kernel}-char-lirc-sir
 %defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/*/lirc_sir*
+/lib/modules/%{_kernel_ver}/misc/lirc_sir.ko*
 
 %files -n kernel%{_alt_kernel}-char-lirc-ttusbir
 %defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/*/lirc_ttusbir*
+/lib/modules/%{_kernel_ver}/misc/lirc_ttusbir.ko*
 
 %if "%{_kernel_ver}" < "3.0.0"
 %files -n kernel%{_alt_kernel}-char-lirc-wpc87691
 %defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/*/lirc_wpc8769l*
+/lib/modules/%{_kernel_ver}/misc/lirc_wpc8769l.ko*
 %endif
 
-# XXX currently not SMP-safe
-%if 0
 %files -n kernel%{_alt_kernel}-char-lirc-parallel
 %defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/*/lirc_parallel*
-%endif
+/lib/modules/%{_kernel_ver}/misc/lirc_parallel.ko*
 %endif
