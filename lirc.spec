@@ -20,7 +20,7 @@
 %endif
 
 %define		pname	lirc
-%define		rel	42
+%define		rel	1
 
 #
 # main package
@@ -29,19 +29,23 @@
 # lirc_gpio fails to build under kernel >= 2.6.23
 #
 %if "%{_kernel_ver}" >= "2.6.23"
-%define		drivers		"lirc_atiusb lirc_bt829 lirc_dev lirc_ene0100 lirc_i2c lirc_igorplugusb lirc_imon lirc_it87 lirc_ite8709 lirc_mceusb lirc_sasem lirc_serial lirc_sir lirc_streamzap lirc_ttusbir lirc_wpc8769l"
+%if "%{_kernel_ver}" >= "3.0.0"
+%define		drivers		"lirc_atiusb lirc_bt829 lirc_dev lirc_i2c lirc_igorplugusb lirc_imon lirc_sasem lirc_serial lirc_sir lirc_ttusbir"
 %else
-%define		drivers		"lirc_atiusb lirc_bt829 lirc_dev lirc_ene0100 lirc_gpio lirc_i2c lirc_igorplugusb lirc_imon lirc_it87 lirc_ite8709 lirc_mceusb lirc_sasem lirc_serial lirc_sir lirc_streamzap lirc_ttusbir lirc_wpc8769l"
+%define		drivers		"lirc_atiusb lirc_bt829 lirc_dev lirc_ene0100 lirc_i2c lirc_igorplugusb lirc_imon lirc_sasem lirc_serial lirc_sir lirc_ttusbir lirc_wpc8769l"
+%endif
+%else
+%define		drivers		"lirc_atiusb lirc_bt829 lirc_dev lirc_ene0100 lirc_gpio lirc_i2c lirc_igorplugusb lirc_imon lirc_sasem lirc_serial lirc_sir lirc_ttusbir lirc_wpc8769l"
 %endif
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl.UTF-8):	Serwery do zdalnego sterowania Linuksem za pomocą podczerwieni
 Name:		%{pname}%{_alt_kernel}
-Version:	0.8.7
+Version:	0.9.0
 Release:	%{rel}
 License:	GPL v2+
 Group:		Daemons
 Source0:	http://dl.sourceforge.net/lirc/%{pname}-%{version}.tar.bz2
-# Source0-md5:	fb1dcddbc8ca3d03c7f3a2d40cf28b71
+# Source0-md5:	b232aef26f23fe33ea8305d276637086
 Source1:	http://lirc.sourceforge.net/remotes.tar.bz2
 # Source1-md5:	238d1773d3c405acc02813674f5a55f8
 Source2:	%{pname}d.sysconfig
@@ -50,11 +54,10 @@ Source4:	%{pname}md.init
 Patch0:		%{pname}-opt.patch
 Patch1:		%{pname}-tmp.patch
 Patch2:		%{pname}-no-svgalib.patch
-Patch3:		%{pname}-alpha.patch
+Patch3:		%{pname}-kernel.patch
 Patch4:		%{pname}-sparc.patch
 Patch5:		%{pname}-remotes.patch
 Patch6:		%{pname}-kernelcc.patch
-Patch7:		%{pname}-kernel.patch
 URL:		http://www.lirc.org/
 BuildRequires:	alsa-lib-devel
 BuildRequires:	autoconf >= 2.50
@@ -387,84 +390,6 @@ pilotów na podczerwień (w tym tych dostarczanych z kartami TV).
 
 Moduł lirc_imon.
 
-%package -n kernel%{_alt_kernel}-char-lirc-it87
-Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
-Release:	%{rel}@%{_kernel_ver_str}
-Group:		Base/Kernel
-%if %{with dist_kernel}
-%requires_releq_kernel
-Requires(postun):	%releq_kernel
-%endif
-Requires(post,postun):	/sbin/depmod
-Requires:	%{pname} = %{version}-%{rel}
-Conflicts:	dev < 2.8.0-3
-
-%description -n kernel%{_alt_kernel}-char-lirc-it87
-This package contains the kernel modules necessary to operate some
-infrared remote control devices (such as the ones bundled with TV
-cards).
-
-lirc_it87 module.
-
-%description -n kernel%{_alt_kernel}-char-lirc-it87 -l pl.UTF-8
-Ten pakiet zawiera moduły jądra niezbędne do obsługi niektórych
-pilotów na podczerwień (w tym tych dostarczanych z kartami TV).
-
-Moduł lirc_it87.
-
-%package -n kernel%{_alt_kernel}-char-lirc-ite8709
-Summary:        Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):      Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
-Release:        %{rel}@%{_kernel_ver_str}
-Group:          Base/Kernel
-%if %{with dist_kernel}
-%requires_releq_kernel
-Requires(postun):       %releq_kernel
-%endif
-Requires(post,postun):  /sbin/depmod
-Requires:       %{pname} = %{version}-%{rel}
-Conflicts:      dev < 2.8.0-3
-
-%description -n kernel%{_alt_kernel}-char-lirc-ite8709
-This package contains the kernel modules necessary to operate some
-infrared remote control devices (such as the ones bundled with TV
-cards).
-
-lirc_ite8709 module.
-
-%description -n kernel%{_alt_kernel}-char-lirc-ite8709 -l pl.UTF-8
-Ten pakiet zawiera moduły jądra niezbędne do obsługi niektórych
-pilotów na podczerwień (w tym tych dostarczanych z kartami TV).
-
-Moduł lirc_ite8709.
-
-%package -n kernel%{_alt_kernel}-char-lirc-mceusb
-Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
-Release:	%{rel}@%{_kernel_ver_str}
-Group:		Base/Kernel
-%if %{with dist_kernel}
-%requires_releq_kernel
-Requires(postun):	%releq_kernel
-%endif
-Requires(post,postun):	/sbin/depmod
-Requires:	%{pname} = %{version}-%{rel}
-Conflicts:	dev < 2.8.0-3
-
-%description -n kernel%{_alt_kernel}-char-lirc-mceusb
-This package contains the kernel modules necessary to operate some
-infrared remote control devices (such as the ones bundled with TV
-cards).
-
-lirc_mceusb module.
-
-%description -n kernel%{_alt_kernel}-char-lirc-mceusb -l pl.UTF-8
-Ten pakiet zawiera moduły jądra niezbędne do obsługi niektórych
-pilotów na podczerwień (w tym tych dostarczanych z kartami TV).
-
-Moduł lirc_mceusb.
-
 %package -n kernel%{_alt_kernel}-char-lirc-sasem
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
@@ -519,34 +444,6 @@ Ten pakiet zawiera moduły jądra niezbędne do obsługi niektórych
 pilotów na podczerwień (w tym tych dostarczanych z kartami TV).
 
 Moduł lirc_serial dla urządzeń podłączanych do portu szeregowego.
-
-%package -n kernel%{_alt_kernel}-char-lirc-streamzap
-Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
-Release:	%{rel}@%{_kernel_ver_str}
-Group:		Base/Kernel
-%if %{with dist_kernel}
-%requires_releq_kernel
-Requires(postun):	%releq_kernel
-%endif
-Requires(post,postun):	/sbin/depmod
-Requires:	%{pname} = %{version}-%{rel}
-Obsoletes:	lirc-modules
-Obsoletes:	lirc-modules-streamzap
-Conflicts:	dev < 2.8.0-3
-
-%description -n kernel%{_alt_kernel}-char-lirc-streamzap
-This package contains the kernel modules necessary to operate some
-infrared remote control devices (such as the ones bundled with TV
-cards).
-
-lirc_streamzap module.
-
-%description -n kernel%{_alt_kernel}-char-lirc-streamzap -l pl.UTF-8
-Ten pakiet zawiera moduły jądra niezbędne do obsługi niektórych
-pilotów na podczerwień (w tym tych dostarczanych z kartami TV).
-
-Moduł lirc_streamzap.
 
 %package -n kernel%{_alt_kernel}-char-lirc-sir
 Summary:	Kernel modules for Linux Infrared Remote Control
@@ -669,7 +566,6 @@ równoległego.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%patch7 -p1
 
 %build
 echo '#' > drivers/Makefile.am
@@ -737,6 +633,7 @@ for drv in $drivers; do
 
 		%{__make} -j1 \
 			M=$PWD O=$PWD/o \
+			CONSTIFY_PLUGIN="" \
 			KBUILD_MODPOST_WARN=1 \
 			%{?with_verbose:V=1}
 			mv $drv{,-dist}.ko
@@ -899,36 +796,6 @@ fi
 %postun	-n kernel%{_alt_kernel}-char-lirc-imon
 %depmod %{_kernel_ver}
 
-%post	-n kernel%{_alt_kernel}-char-lirc-it87
-%depmod %{_kernel_ver}
-if [ "$1" = "1" ]; then
-	echo "Don't forget to add an 'alias lirc lirc_it87' line"
-	echo "to your /etc/modules.conf."
-fi
-
-%postun	-n kernel%{_alt_kernel}-char-lirc-it87
-%depmod %{_kernel_ver}
-
-%post   -n kernel%{_alt_kernel}-char-lirc-ite8709
-%depmod %{_kernel_ver}
-if [ "$1" = "1" ]; then
-	echo "Don't forget to add an 'alias lirc lirc_ite8709' line"
-	echo "to your /etc/modules.conf."
-fi
-
-%postun -n kernel%{_alt_kernel}-char-lirc-ite8709
-%depmod %{_kernel_ver}
-
-%post	-n kernel%{_alt_kernel}-char-lirc-mceusb
-%depmod %{_kernel_ver}
-if [ "$1" = "1" ]; then
-	echo "Don't forget to add an 'alias lirc lirc_mceusb' line"
-	echo "to your /etc/modules.conf."
-fi
-
-%postun	-n kernel%{_alt_kernel}-char-lirc-mceusb
-%depmod %{_kernel_ver}
-
 %post	-n kernel%{_alt_kernel}-char-lirc-sasem
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
@@ -947,16 +814,6 @@ if [ "$1" = "1" ]; then
 fi
 
 %postun	-n kernel%{_alt_kernel}-char-lirc-serial
-%depmod %{_kernel_ver}
-
-%post	-n kernel%{_alt_kernel}-char-lirc-streamzap
-%depmod %{_kernel_ver}
-if [ "$1" = "1" ]; then
-	echo "Don't forget to add an 'alias lirc lirc_streamzap' line"
-	echo "to your /etc/modules.conf."
-fi
-
-%postun	-n kernel%{_alt_kernel}-char-lirc-streamzap
 %depmod %{_kernel_ver}
 
 %post	-n kernel%{_alt_kernel}-char-lirc-parallel
@@ -1086,9 +943,11 @@ fi
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/*/lirc_dev*
 
+%if "%{_kernel_ver}" < "3.0.0"
 %files -n kernel%{_alt_kernel}-char-lirc-ene0100
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/*/lirc_ene0100*
+%endif
 
 %if "%{_kernel_ver}" < "2.6.23"
 %files -n kernel%{_alt_kernel}-char-lirc-gpio
@@ -1108,18 +967,6 @@ fi
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/*/lirc_imon*
 
-%files -n kernel%{_alt_kernel}-char-lirc-it87
-%defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/*/lirc_it87*
-
-%files -n kernel%{_alt_kernel}-char-lirc-ite8709
-%defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/*/lirc_ite8709*
-
-%files -n kernel%{_alt_kernel}-char-lirc-mceusb
-%defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/*/lirc_mceusb*
-
 %files -n kernel%{_alt_kernel}-char-lirc-sasem
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/*/lirc_sasem*
@@ -1127,10 +974,6 @@ fi
 %files -n kernel%{_alt_kernel}-char-lirc-serial
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/*/lirc_serial*
-
-%files -n kernel%{_alt_kernel}-char-lirc-streamzap
-%defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/*/lirc_streamzap*
 
 %files -n kernel%{_alt_kernel}-char-lirc-sir
 %defattr(644,root,root,755)
@@ -1140,9 +983,11 @@ fi
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/*/lirc_ttusbir*
 
+%if "%{_kernel_ver}" < "3.0.0"
 %files -n kernel%{_alt_kernel}-char-lirc-wpc87691
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/*/lirc_wpc8769l*
+%endif
 
 # XXX currently not SMP-safe
 %if 0
