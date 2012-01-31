@@ -50,6 +50,7 @@ Source1:	http://lirc.sourceforge.net/remotes.tar.bz2
 Source2:	%{pname}d.sysconfig
 Source3:	%{pname}d.init
 Source4:	%{pname}md.init
+Source5:	%{pname}.tmpfiles
 Patch0:		%{pname}-opt.patch
 Patch1:		%{pname}-tmp.patch
 Patch2:		%{pname}-no-svgalib.patch
@@ -642,7 +643,8 @@ cd ..
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_aclocaldir},/dev,/var/{log,run/lirc}} \
-	$RPM_BUILD_ROOT/etc/{lirc,rc.d/init.d,sysconfig}
+	$RPM_BUILD_ROOT/etc/{lirc,rc.d/init.d,sysconfig} \
+	$RPM_BUILD_ROOT/usr/lib/tmpfiles.d
 
 %if %{with kernel}
 drivers=%{drivers}
@@ -671,6 +673,7 @@ install contrib/*.m4 $RPM_BUILD_ROOT%{_aclocaldir}
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/lircd
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/lircd
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/rc.d/init.d/lircmd
+install %{SOURCE5} $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/%{name}.conf
 %endif
 
 %clean
@@ -884,6 +887,7 @@ fi
 %{_mandir}/man8/lircmd.8*
 %attr(600,root,root) %ghost /var/log/lircd
 %dir /var/run/lirc
+/usr/lib/tmpfiles.d/%{name}.conf
 
 %files remotes
 %defattr(644,root,root,755)
