@@ -20,7 +20,7 @@
 %endif
 
 %define		pname	lirc
-%define		rel	24
+%define		rel	25
 
 #
 # main package
@@ -598,26 +598,20 @@ cd drivers
 
 drivers=%{drivers}
 rm -rf o
-if [ ! -r "%{_kernelsrcdir}/config-dist" ]; then
-	exit 1
-fi
-
-install -d o/include/{linux,generated,config} o/arch/powerpc/lib
-ln -sf %{_kernelsrcdir}/config-dist o/.config
-if [ -f %{_kernelsrcdir}/include/generated/autoconf-dist.h ]; then
-	ln -sf %{_kernelsrcdir}/include/generated/autoconf-dist.h o/include/generated/autoconf.h
-	ln -s ../generated/autoconf.h o/include/linux/autoconf.h
-else
-	ln -sf %{_kernelsrcdir}/include/linux/autoconf-dist.h o/include/linux/autoconf.h
-fi
-ln -sf %{_kernelsrcdir}/Module.symvers-dist o/Module.symvers
-
-%if %{without dist_kernel}
-	touch o/include/config/MARKER
-	ln -sf %{_kernelsrcdir}/scripts o/
-%else
+if [ -r "%{_kernelsrcdir}/config-dist" ]; then
+	install -d o/include/{linux,generated,config} o/arch/powerpc/lib
+	ln -sf %{_kernelsrcdir}/config-dist o/.config
+	if [ -f %{_kernelsrcdir}/include/generated/autoconf-dist.h ]; then
+		ln -sf %{_kernelsrcdir}/include/generated/autoconf-dist.h o/include/generated/autoconf.h
+		ln -s ../generated/autoconf.h o/include/linux/autoconf.h
+	else
+		ln -sf %{_kernelsrcdir}/include/linux/autoconf-dist.h o/include/linux/autoconf.h
+	fi
+	ln -sf %{_kernelsrcdir}/Module.symvers-dist o/Module.symvers
 	%{__make} -j1 -C %{_kernelsrcdir} O=$PWD/o prepare scripts
-%endif
+else
+	ln -s %{_kernelsrcdir} o
+fi
 
 for drv in $drivers; do
 	cd $drv
@@ -632,7 +626,7 @@ for drv in $drivers; do
 		CONSTIFY_PLUGIN="" \
 		KBUILD_MODPOST_WARN=1 \
 		%{?with_verbose:V=1}
-	mv $drv{,-dist}.ko
+	[ -r "%{_kernelsrcdir}/config-dist" ] && mv $drv{,-dist}.ko
 	cd ..
 done
 
@@ -650,8 +644,12 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_aclocaldir},/dev,/var/{log,run/lirc}} \
 drivers=%{drivers}
 install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
 for drv in $drivers; do
-	install drivers/$drv/$drv-%{?with_dist_kernel:dist}%{!?with_dist_kernel:nondist}.ko \
-	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc/$drv.ko
+	if [ -r "%{_kernelsrcdir}/config-dist" ]; then
+		install drivers/$drv/$drv-%{?with_dist_kernel:dist}%{!?with_dist_kernel:nondist}.ko \
+			$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc/$drv.ko
+	else
+		install drivers/$drv/$drv.ko $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc/$drv.ko
+	fi
 done
 %endif
 
