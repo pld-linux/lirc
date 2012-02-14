@@ -20,7 +20,7 @@
 %endif
 
 %define		pname	lirc
-%define		rel	26
+%define		rel	27
 
 #
 # main package
@@ -80,6 +80,10 @@ Requires(post,preun):	/sbin/chkconfig
 Requires:	%{pname}-libs = %{version}-%{release}
 Requires:	libftdi >= 0.12
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%if %{without userspace}
+%define		no_spec_install_post_check_tmpfiles	1
+%endif
 
 %description
 LIRC is a package that allows you to decode and send infra-red signals
