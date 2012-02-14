@@ -20,7 +20,7 @@
 %endif
 
 %define		pname	lirc
-%define		rel	24.1
+%define		rel	25
 
 #
 # main package
@@ -597,36 +597,19 @@ echo '#' > drivers/Makefile.am
 cd drivers
 
 drivers=%{drivers}
-rm -rf o
-if [ -r "%{_kernelsrcdir}/config-dist" ]; then
-	install -d o/include/{linux,generated,config} o/arch/powerpc/lib
-	ln -sf %{_kernelsrcdir}/config-dist o/.config
-	if [ -f %{_kernelsrcdir}/include/generated/autoconf-dist.h ]; then
-		ln -sf %{_kernelsrcdir}/include/generated/autoconf-dist.h o/include/generated/autoconf.h
-		ln -s ../generated/autoconf.h o/include/linux/autoconf.h
-	else
-		ln -sf %{_kernelsrcdir}/include/linux/autoconf-dist.h o/include/linux/autoconf.h
-	fi
-	ln -sf %{_kernelsrcdir}/Module.symvers-dist o/Module.symvers
-	%{__make} -j1 -C %{_kernelsrcdir} O=$PWD/o prepare scripts
-else
-	ln -s %{_kernelsrcdir} o
-fi
 
 for drv in $drivers; do
 	cd $drv
-	ln -sf ../o
 	%{__make} clean \
+		LIRC_DEVDIR=`pwd` \
 		RCS_FIND_IGNORE="-name '*.ko' -o" \
-		M=$PWD O=$PWD/o \
 		%{?with_verbose:V=1}
 
 	%{__make} -j1 \
-		M=$PWD O=$PWD/o \
+		LIRC_DEVDIR=`pwd` \
 		CONSTIFY_PLUGIN="" \
 		KBUILD_MODPOST_WARN=1 \
 		%{?with_verbose:V=1}
-	[ -r "%{_kernelsrcdir}/config-dist" ] && mv $drv{,-dist}.ko
 	cd ..
 done
 
@@ -644,12 +627,7 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_aclocaldir},/dev,/var/{log,run/lirc}} \
 drivers=%{drivers}
 install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
 for drv in $drivers; do
-	if [ -r "%{_kernelsrcdir}/config-dist" ]; then
-		install drivers/$drv/$drv-%{?with_dist_kernel:dist}%{!?with_dist_kernel:nondist}.ko \
-			$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc/$drv.ko
-	else
-		install drivers/$drv/$drv.ko $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc/$drv.ko
-	fi
+	install drivers/$drv/$drv.ko $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc/$drv.ko
 done
 %endif
 
