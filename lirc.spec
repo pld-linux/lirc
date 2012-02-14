@@ -20,7 +20,7 @@
 %endif
 
 %define		pname	lirc
-%define		rel	28
+%define		rel	29
 
 #
 # main package
@@ -623,9 +623,6 @@ cd ..
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_bindir},%{_aclocaldir},/dev,/var/{log,run/lirc}} \
-	$RPM_BUILD_ROOT/etc/{lirc,rc.d/init.d,sysconfig} \
-	$RPM_BUILD_ROOT/usr/lib/tmpfiles.d
 
 %if %{with kernel}
 drivers=%{drivers}
@@ -636,6 +633,10 @@ done
 %endif
 
 %if %{with userspace}
+install -d $RPM_BUILD_ROOT{%{_bindir},%{_aclocaldir},/dev,/var/{log,run/lirc}} \
+	$RPM_BUILD_ROOT/etc/{lirc,rc.d/init.d,sysconfig} \
+	$RPM_BUILD_ROOT/usr/lib/tmpfiles.d
+
 %{__make} -j1 install \
 	DESTDIR=$RPM_BUILD_ROOT \
 	sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir}
