@@ -81,6 +81,10 @@ Requires:	%{pname}-libs = %{version}-%{release}
 Requires:	libftdi >= 0.12
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
+%if %{without userspace}
+%define		no_spec_install_post_check_tmpfiles	1
+%endif
+
 %description
 LIRC is a package that allows you to decode and send infra-red signals
 of many (but not all) commonly used remote controls.
@@ -642,9 +646,6 @@ cd ..
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_bindir},%{_aclocaldir},/dev,/var/{log,run/lirc}} \
-	$RPM_BUILD_ROOT/etc/{lirc,rc.d/init.d,sysconfig} \
-	$RPM_BUILD_ROOT/usr/lib/tmpfiles.d
 
 %if %{with kernel}
 drivers=%{drivers}
@@ -656,6 +657,10 @@ done
 %endif
 
 %if %{with userspace}
+install -d $RPM_BUILD_ROOT{%{_bindir},%{_aclocaldir},/dev,/var/{log,run/lirc}} \
+	$RPM_BUILD_ROOT/etc/{lirc,rc.d/init.d,sysconfig} \
+	$RPM_BUILD_ROOT/usr/lib/tmpfiles.d
+
 %{__make} -j1 install \
 	DESTDIR=$RPM_BUILD_ROOT \
 	sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir}
