@@ -255,33 +255,6 @@ pilotów na podczerwień (w tym tych dostarczanych z kartami TV).
 
 Moduł lirc_dev.
 
-%package -n kernel%{_alt_kernel}-char-lirc-ene0100
-Summary:	Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
-Release:	%{rel}@%{_kernel_ver_str}
-Group:		Base/Kernel
-%if %{with dist_kernel}
-%requires_releq_kernel
-Requires(postun):	%releq_kernel
-%endif
-Requires(post,postun):	/sbin/depmod
-Requires:	%{pname} = %{version}-%{rel}
-Obsoletes:	lirc-modules
-Conflicts:	dev < 2.8.0-3
-
-%description -n kernel%{_alt_kernel}-char-lirc-ene0100
-This package contains the kernel modules necessary to operate some
-infrared remote control ene0100ices (such as the ones bundled with TV
-cards).
-
-lirc_ene0100 module.
-
-%description -n kernel%{_alt_kernel}-char-lirc-ene0100 -l pl.UTF-8
-Ten pakiet zawiera moduły jądra niezbędne do obsługi niektórych
-pilotów na podczerwień (w tym tych dostarczanych z kartami TV).
-
-Moduł lirc_ene0100.
-
 %package -n kernel%{_alt_kernel}-char-lirc-gpio
 Summary:	Kernel modules for Linux Infrared Remote Control
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
@@ -752,12 +725,6 @@ fi
 %postun	-n kernel%{_alt_kernel}-char-lirc-dev
 %depmod %{_kernel_ver}
 
-%post	-n kernel%{_alt_kernel}-char-lirc-ene0100
-%depmod %{_kernel_ver}
-
-%postun	-n kernel%{_alt_kernel}-char-lirc-ene0100
-%depmod %{_kernel_ver}
-
 %post	-n kernel%{_alt_kernel}-char-lirc-gpio
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
@@ -945,12 +912,6 @@ fi
 %files -n kernel%{_alt_kernel}-char-lirc-dev
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/misc/lirc_dev.ko*
-
-%if "%{_kernel_ver}" < "3.0.0"
-%files -n kernel%{_alt_kernel}-char-lirc-ene0100
-%defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/misc/lirc_ene0100.ko*
-%endif
 
 %if "%{_kernel_ver}" < "2.6.23"
 %files -n kernel%{_alt_kernel}-char-lirc-gpio
