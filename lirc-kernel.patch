@@ -33,6 +33,14 @@
  #if LINUX_VERSION_CODE > KERNEL_VERSION(2, 6, 35)
 --- lirc-0.9.0/drivers/lirc_serial/lirc_serial.c~	2011-03-25 23:28:18.000000000 +0100
 +++ lirc-0.9.0/drivers/lirc_serial/lirc_serial.c	2012-07-01 14:29:13.757144222 +0200
+@@ -48,6 +48,7 @@
+  * Steve Davies <steve@daviesfam.org>  July 2001
+  */
+ 
++#include <linux/version.h>
+ #include <linux/module.h>
+ #include <linux/errno.h>
+ #include <linux/signal.h>
 @@ -66,7 +66,9 @@
  #include <linux/poll.h>
  #include <linux/platform_device.h>
