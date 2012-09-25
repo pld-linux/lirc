@@ -20,7 +20,7 @@
 %endif
 
 %define		pname	lirc
-%define		rel	51
+%define		rel	52
 
 #
 # main package
@@ -58,6 +58,7 @@ Patch3:		%{pname}-kernel.patch
 Patch4:		%{pname}-sparc.patch
 Patch5:		%{pname}-remotes.patch
 Patch6:		%{pname}-kernelcc.patch
+Patch7:		format-security.patch
 URL:		http://www.lirc.org/
 BuildRequires:	alsa-lib-devel
 BuildRequires:	autoconf >= 2.50
@@ -569,6 +570,7 @@ równoległego.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 
 %build
 echo '#' > drivers/Makefile.am
