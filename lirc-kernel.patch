@@ -63,3 +63,45 @@
  #include <linux/io.h>
  #include <asm/irq.h>
  #include <linux/fcntl.h>
+--- lirc-0.9.0/drivers/lirc_imon/lirc_imon.c~	2011-03-25 23:28:18.000000000 +0100
++++ lirc-0.9.0/drivers/lirc_imon/lirc_imon.c	2012-09-25 22:50:43.426536543 +0200
+@@ -61,6 +61,11 @@
+ 
+ #define BIT_DURATION	250	/* each bit received is 250us */
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 5, 0)
++#define err(format, arg...)					\
++	printk(KERN_ERR KBUILD_MODNAME ": " format "\n", ##arg)
++#endif
++
+ /*** P R O T O T Y P E S ***/
+ 
+ /* USB Callback prototypes */
+--- lirc-0.9.0/drivers/lirc_sasem/lirc_sasem.c~	2011-03-25 23:28:18.000000000 +0100
++++ lirc-0.9.0/drivers/lirc_sasem/lirc_sasem.c	2012-09-25 22:51:20.226535245 +0200
+@@ -73,6 +73,11 @@
+ 
+ #define IOCTL_LCD_CONTRAST 1
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 5, 0)
++#define err(format, arg...)					\
++	printk(KERN_ERR KBUILD_MODNAME ": " format "\n", ##arg)
++#endif
++
+ /*** P R O T O T Y P E S ***/
+ 
+ /* USB Callback prototypes */
+--- lirc-0.9.0/drivers/lirc_ttusbir/lirc_ttusbir.c~	2011-03-25 23:28:18.000000000 +0100
++++ lirc-0.9.0/drivers/lirc_ttusbir/lirc_ttusbir.c	2012-09-25 22:51:38.126534613 +0200
+@@ -58,6 +58,11 @@
+ #define DPRINTK(_x_, a...)
+ #endif
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 5, 0)
++#define err(format, arg...)					\
++	printk(KERN_ERR KBUILD_MODNAME ": " format "\n", ##arg)
++#endif
++
+ /* function declarations */
+ static int probe(struct usb_interface *intf, const struct usb_device_id *id);
+ static void disconnect(struct usb_interface *intf);
