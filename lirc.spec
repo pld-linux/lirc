@@ -69,8 +69,8 @@ BuildRequires:	libirman-devel >= 0.4.5
 BuildRequires:	libtool
 BuildRequires:	libusb-compat-devel >= 0.1.0
 %if %{with kernel}
-BuildRequires:	kernel%{_alt_kernel}-module-build
 BuildRequires:	kernel%{_alt_kernel}-headers
+BuildRequires:	kernel%{_alt_kernel}-module-build
 %endif
 %{?with_kernel:BuildRequires:	%{kgcc_package}}
 BuildRequires:	rpm-pythonprov
@@ -78,8 +78,10 @@ BuildRequires:	rpmbuild(macros) >= 1.379
 %{?with_svga:BuildRequires:	svgalib-devel}
 %{?with_x:BuildRequires:	xorg-lib-libX11-devel}
 Requires(post,preun):	/sbin/chkconfig
+BuildRequires:	rpmbuild(macros) >= 1.268
 Requires:	%{pname}-libs = %{version}-%{release}
 Requires:	libftdi >= 0.12
+Requires:	rc-scripts
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %if %{without userspace}
@@ -92,8 +94,8 @@ of many (but not all) commonly used remote controls.
 
 %description -l pl.UTF-8
 LIRC to program pozwalający na dekodowanie nadchodzących oraz
-wysyłanie sygnałów w podczerwieni za pomocą wielu (ale nie
-wszystkich) popularnych urządzeń do zdalnego sterowania.
+wysyłanie sygnałów w podczerwieni za pomocą wielu (ale nie wszystkich)
+popularnych urządzeń do zdalnego sterowania.
 
 %package remotes
 Summary:	Lirc remotes database
@@ -159,8 +161,8 @@ This package provides the files necessary to develop LIRC-based
 programs.
 
 %description devel -l pl.UTF-8
-Ten pakiet zawiera pliki niezbędne do tworzenia programów opartych
-na LIRC.
+Ten pakiet zawiera pliki niezbędne do tworzenia programów opartych na
+LIRC.
 
 %package static
 Summary:	Static library for LIRC development
@@ -173,8 +175,8 @@ The files necessary for development of statically-linked lirc-based
 programs.
 
 %description static -l pl.UTF-8
-Pliki potrzebne do tworzenia łączonych statycznie programów
-opartych na LIRC.
+Pliki potrzebne do tworzenia łączonych statycznie programów opartych
+na LIRC.
 
 %package -n kernel%{_alt_kernel}-char-lirc-atiusb
 Summary:	Kernel modules for Linux Infrared Remote Control
@@ -506,17 +508,17 @@ TechnoTrend USB IR Receiver.
 Moduł lirc_ttusbir.
 
 %package -n kernel%{_alt_kernel}-char-lirc-wpc87691
-Summary:        Kernel modules for Linux Infrared Remote Control
-Summary(pl.UTF-8):      Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
-Release:        %{rel}@%{_kernel_ver_str}
-Group:          Base/Kernel
+Summary:	Kernel modules for Linux Infrared Remote Control
+Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni
+Release:	%{rel}@%{_kernel_ver_str}
+Group:		Base/Kernel
 %if %{with dist_kernel}
 %requires_releq_kernel
-Requires(postun):       %releq_kernel
+Requires(postun):	%releq_kernel
 %endif
-Requires(post,postun):  /sbin/depmod
-Requires:       %{pname} = %{version}-%{rel}
-Conflicts:      dev < 2.8.0-3
+Requires(post,postun):	/sbin/depmod
+Requires:	%{pname} = %{version}-%{rel}
+Conflicts:	dev < 2.8.0-3
 
 %description -n kernel%{_alt_kernel}-char-lirc-wpc87691
 This package contains the kernel modules necessary to operate
@@ -556,8 +558,7 @@ lirc-parallel module for devices connected to parallel port.
 Ten pakiet zawiera moduły jądra niezbędne do obsługi niektórych
 pilotów na podczerwień (w tym tych dostarczanych z kartami TV).
 
-Moduł lirc_parallel dla urządzeń podłączanych do portu
-równoległego.
+Moduł lirc_parallel dla urządzeń podłączanych do portu równoległego.
 
 %prep
 %setup -q -n %{pname}-%{version} -a 1
@@ -636,8 +637,8 @@ done
 
 %if %{with userspace}
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_aclocaldir},/dev,/var/{log,run/lirc}} \
-	$RPM_BUILD_ROOT/etc/{lirc,rc.d/init.d,sysconfig} \
-	$RPM_BUILD_ROOT/usr/lib/tmpfiles.d
+	$RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,lirc} \
+	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
 %{__make} -j1 install \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -656,7 +657,7 @@ install contrib/*.m4 $RPM_BUILD_ROOT%{_aclocaldir}
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/lircd
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/lircd
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/rc.d/init.d/lircmd
-install %{SOURCE5} $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/%{name}.conf
+install %{SOURCE5} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 %endif
 
 %clean
@@ -667,17 +668,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/chkconfig --add lircd
-if [ -f /var/lock/subsys/lircd ]; then
-	/etc/rc.d/init.d/lircd restart >&2
-else
-	echo "Run \"/etc/rc.d/init.d/lircd start\" to start lircd." >&2
-fi
 /sbin/chkconfig --add lircmd
-if [ -f /var/lock/subsys/lircmd ]; then
-	/etc/rc.d/init.d/lircmd restart >&2
-else
-	echo "Run \"/etc/rc.d/init.d/lircmd start\" to start lircmd." >&2
-fi
+%service lircd restart
+%service lircmd restart
+
 echo "If you are using a kernel-module-based driver, don't forget to"
 echo "install the kernel%{_alt_kernel}-char-lirc-<your_driver> or"
 echo "kernel%{_alt_kernel}-smp-char-lirc-<your_driver> package."
@@ -870,7 +864,7 @@ fi
 %{_mandir}/man8/lircmd.8*
 %attr(600,root,root) %ghost /var/log/lircd
 %dir /var/run/lirc
-/usr/lib/tmpfiles.d/%{name}.conf
+%{systemdtmpfilesdir}/%{name}.conf
 
 %files remotes
 %defattr(644,root,root,755)
