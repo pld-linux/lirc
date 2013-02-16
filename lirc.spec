@@ -678,15 +678,9 @@ echo "kernel%{_alt_kernel}-smp-char-lirc-<your_driver> package."
 
 %preun
 if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/lircd ]; then
-		/etc/rc.d/init.d/lircd stop >&2
-	fi
+	%service lircd stop
+	%service lircmd stop
 	/sbin/chkconfig --del lircd
-fi
-if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/lircmd ]; then
-		/etc/rc.d/init.d/lircmd stop >&2
-	fi
 	/sbin/chkconfig --del lircmd
 fi
 
