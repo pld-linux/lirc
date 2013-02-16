@@ -21,7 +21,7 @@ start() {
 	fi
 
 	msg_starting "Linux Infrared Remote Control mouse daemon"
-	daemon lircmd
+	daemon /usr/sbin/lircmd
 	RETVAL=$?
 	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/lircmd
 }
