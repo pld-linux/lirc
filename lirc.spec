@@ -673,8 +673,7 @@ rm -rf $RPM_BUILD_ROOT
 %service lircmd restart
 
 echo "If you are using a kernel-module-based driver, don't forget to"
-echo "install the kernel%{_alt_kernel}-char-lirc-<your_driver> or"
-echo "kernel%{_alt_kernel}-smp-char-lirc-<your_driver> package."
+echo "install the kernel%{_alt_kernel}-char-lirc-<your_driver> package."
 
 %preun
 if [ "$1" = "0" ]; then
