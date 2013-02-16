@@ -631,7 +631,7 @@ rm -rf $RPM_BUILD_ROOT
 drivers=%{drivers}
 install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
 for drv in $drivers; do
-	install drivers/$drv/$drv.ko $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc/$drv.ko
+	install -p drivers/$drv/$drv.ko $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc/$drv.ko
 done
 %endif
 
@@ -651,13 +651,13 @@ cat>$RPM_BUILD_ROOT%{_sysconfdir}/lirc/lircd.conf<<END
 #
 END
 cp -f $RPM_BUILD_ROOT%{_sysconfdir}/lirc/lirc{,m}d.conf
-install contrib/*.m4 $RPM_BUILD_ROOT%{_aclocaldir}
+cp -p contrib/*.m4 $RPM_BUILD_ROOT%{_aclocaldir}
 :> $RPM_BUILD_ROOT/var/log/lircd
 
-install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/lircd
-install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/lircd
-install %{SOURCE4} $RPM_BUILD_ROOT/etc/rc.d/init.d/lircmd
-install %{SOURCE5} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
+cp -p %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/lircd
+install -p %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/lircd
+install -p %{SOURCE4} $RPM_BUILD_ROOT/etc/rc.d/init.d/lircmd
+cp -p %{SOURCE5} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 %endif
 
 %clean
