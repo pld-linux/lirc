@@ -3,6 +3,7 @@
 # - try to make it use builder_kernel_modules and install_kernel_modules; I couldn't make it
 # - build is running kernel arch dependent, try to get rid of this
 # - libcaraca_client (http://caraca.sourceforge.net/) - no releases yet
+# - create modprobe alias files instead of reminding in post scriptlets
 #
 # Conditional build:
 %bcond_without	dist_kernel	# without sources of distribution kernel
@@ -694,8 +695,7 @@ fi
 %post	-n kernel%{_alt_kernel}-char-lirc-atiusb
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
-	echo "Don't forget to add an 'alias lirc lirc_atiusb' line"
-	echo "to your /etc/modules.conf."
+	echo "Don't forget to add an 'alias lirc lirc_atiusb' to modprobe config"
 fi
 
 %postun	-n kernel%{_alt_kernel}-char-lirc-atiusb
@@ -704,8 +704,7 @@ fi
 %post	-n kernel%{_alt_kernel}-char-lirc-bt829
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
-	echo "Don't forget to add an 'alias lirc lirc_bt829' line"
-	echo "to your /etc/modules.conf."
+	echo "Don't forget to add an 'alias lirc lirc_bt829' to modprobe config"
 fi
 
 %postun	-n kernel%{_alt_kernel}-char-lirc-bt829
@@ -726,8 +725,7 @@ fi
 %post	-n kernel%{_alt_kernel}-char-lirc-gpio
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
-	echo "Don't forget to add an 'alias lirc lirc_gpio' line"
-	echo "to your /etc/modules.conf."
+	echo "Don't forget to add an 'alias lirc lirc_gpio' to modprobe config"
 fi
 
 %postun	-n kernel%{_alt_kernel}-char-lirc-gpio
@@ -736,8 +734,7 @@ fi
 %post	-n kernel%{_alt_kernel}-char-lirc-i2c
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
-	echo "Don't forget to add an 'alias lirc lirc_i2c' line"
-	echo "to your /etc/modules.conf."
+	echo "Don't forget to add an 'alias lirc lirc_i2c' to modprobe config"
 fi
 
 %postun	-n kernel%{_alt_kernel}-char-lirc-i2c
@@ -746,8 +743,7 @@ fi
 %post	-n kernel%{_alt_kernel}-char-lirc-igorplugusb
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
-	echo "Don't forget to add an 'alias lirc lirc_igorplugusb' line"
-	echo "to your /etc/modules.conf."
+	echo "Don't forget to add an 'alias lirc lirc_igorplugusb' to modprobe config"
 fi
 
 %postun	-n kernel%{_alt_kernel}-char-lirc-igorplugusb
@@ -756,8 +752,7 @@ fi
 %post	-n kernel%{_alt_kernel}-char-lirc-imon
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
-	echo "Don't forget to add an 'alias lirc lirc_imon' line"
-	echo "to your /etc/modules.conf."
+	echo "Don't forget to add an 'alias lirc lirc_imon' to modprobe config"
 fi
 
 %postun	-n kernel%{_alt_kernel}-char-lirc-imon
@@ -766,8 +761,7 @@ fi
 %post	-n kernel%{_alt_kernel}-char-lirc-sasem
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
-	echo "Don't forget to add an 'alias lirc lirc_sasem' line"
-	echo "to your /etc/modules.conf."
+	echo "Don't forget to add an 'alias lirc lirc_sasem' to modprobe config"
 fi
 
 %postun	-n kernel%{_alt_kernel}-char-lirc-sasem
@@ -776,8 +770,7 @@ fi
 %post	-n kernel%{_alt_kernel}-char-lirc-serial
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
-	echo "Don't forget to add an 'alias lirc lirc_serial' line"
-	echo "to your /etc/modules.conf."
+	echo "Don't forget to add an 'alias lirc lirc_serial' to modprobe config"
 fi
 
 %postun	-n kernel%{_alt_kernel}-char-lirc-serial
@@ -786,8 +779,7 @@ fi
 %post	-n kernel%{_alt_kernel}-char-lirc-parallel
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
-	echo "Don't forget to add an 'alias lirc lirc_parallel' line"
-	echo "to your /etc/modules.conf."
+	echo "Don't forget to add an 'alias lirc lirc_parallel' modprobe config"
 fi
 
 %postun	-n kernel%{_alt_kernel}-char-lirc-parallel
@@ -796,8 +788,7 @@ fi
 %post	-n kernel%{_alt_kernel}-char-lirc-sir
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
-	echo "Don't forget to add an 'alias lirc lirc_sir' line"
-	echo "to your /etc/modules.conf."
+	echo "Don't forget to add an 'alias lirc lirc_sir' to modprobe config"
 fi
 
 %postun	-n kernel%{_alt_kernel}-char-lirc-sir
@@ -806,8 +797,7 @@ fi
 %post	-n kernel%{_alt_kernel}-char-lirc-ttusbir
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
-	echo "Don't forget to add an 'alias lirc lirc_ttusbir' line"
-	echo "to your /etc/modules.conf."
+	echo "Don't forget to add an 'alias lirc lirc_ttusbir' to modprobe config"
 fi
 
 %postun	-n kernel%{_alt_kernel}-char-lirc-ttusbir
@@ -816,8 +806,7 @@ fi
 %post   -n kernel%{_alt_kernel}-char-lirc-wpc87691
 %depmod %{_kernel_ver}
 if [ "$1" = "1" ]; then
-	echo "Don't forget to add an 'alias lirc lirc_wpc87691' line"
-	echo "to your /etc/modules.conf."
+	echo "Don't forget to add an 'alias lirc lirc_wpc87691' to modprobe config"
 fi
 
 %postun -n kernel%{_alt_kernel}-char-lirc-wpc87691
