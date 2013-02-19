@@ -189,7 +189,7 @@ Group:		Base/Kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{pname} = %{version}-%{rel}
+Requires:	%{pname} = %{version}
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel%{_alt_kernel}-char-lirc-atiusb
@@ -215,7 +215,7 @@ Group:		Base/Kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{pname} = %{version}-%{rel}
+Requires:	%{pname} = %{version}
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel%{_alt_kernel}-char-lirc-bt829
@@ -241,7 +241,7 @@ Group:		Base/Kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{pname} = %{version}-%{rel}
+Requires:	%{pname} = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-dev
 Conflicts:	dev < 2.8.0-3
@@ -269,7 +269,7 @@ Group:		Base/Kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{pname} = %{version}-%{rel}
+Requires:	%{pname} = %{version}
 Obsoletes:	lirc-modules
 Conflicts:	dev < 2.8.0-3
 
@@ -296,7 +296,7 @@ Group:		Base/Kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{pname} = %{version}-%{rel}
+Requires:	%{pname} = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-gpio
 Conflicts:	dev < 2.8.0-3
@@ -324,7 +324,7 @@ Group:		Base/Kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{pname} = %{version}-%{rel}
+Requires:	%{pname} = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-i2c
 Conflicts:	dev < 2.8.0-3
@@ -352,7 +352,7 @@ Group:		Base/Kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{pname} = %{version}-%{rel}
+Requires:	%{pname} = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-igorplugusb
 Conflicts:	dev < 2.8.0-3
@@ -380,7 +380,7 @@ Group:		Base/Kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{pname} = %{version}-%{rel}
+Requires:	%{pname} = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-imon
 Conflicts:	dev < 2.8.0-3
@@ -408,7 +408,7 @@ Group:		Base/Kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{pname} = %{version}-%{rel}
+Requires:	%{pname} = %{version}
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel%{_alt_kernel}-char-lirc-sasem
@@ -434,7 +434,7 @@ Group:		Base/Kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{pname} = %{version}-%{rel}
+Requires:	%{pname} = %{version}
 %{?with_dist_kernel:Requires:	setserial}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-serial
@@ -463,7 +463,7 @@ Group:		Base/Kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{pname} = %{version}-%{rel}
+Requires:	%{pname} = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-sir
 Conflicts:	dev < 2.8.0-3
@@ -491,7 +491,7 @@ Group:		Base/Kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{pname} = %{version}-%{rel}
+Requires:	%{pname} = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-ttusbir
 Conflicts:	dev < 2.8.0-3
@@ -518,7 +518,7 @@ Group:		Base/Kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{pname} = %{version}-%{rel}
+Requires:	%{pname} = %{version}
 Conflicts:	dev < 2.8.0-3
 
 %description -n kernel%{_alt_kernel}-char-lirc-wpc87691
@@ -543,7 +543,7 @@ Group:		Base/Kernel
 Requires(postun):	%releq_kernel
 %endif
 Requires(post,postun):	/sbin/depmod
-Requires:	%{pname} = %{version}-%{rel}
+Requires:	%{pname} = %{version}
 Obsoletes:	lirc-modules
 Obsoletes:	lirc-modules-parallel
 Conflicts:	dev < 2.8.0-3
