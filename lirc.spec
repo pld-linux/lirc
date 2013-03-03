@@ -21,7 +21,7 @@
 %endif
 
 %define		pname	lirc
-%define		rel	77
+%define		rel	78
 
 #
 # main package
@@ -60,6 +60,7 @@ Patch4:		%{pname}-sparc.patch
 Patch5:		%{pname}-remotes.patch
 Patch6:		%{pname}-kernelcc.patch
 Patch7:		format-security.patch
+Patch8:		%{pname}-am.patch
 URL:		http://www.lirc.org/
 BuildRequires:	alsa-lib-devel
 BuildRequires:	autoconf >= 2.50
@@ -573,6 +574,7 @@ Moduł lirc_parallel dla urządzeń podłączanych do portu równoległego.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
+%patch8 -p1
 
 %build
 echo '#' > drivers/Makefile.am
