@@ -21,7 +21,7 @@
 %endif
 
 %define		pname	lirc
-%define		rel	80
+%define		rel	81
 
 #
 # main package
@@ -634,7 +634,7 @@ rm -rf $RPM_BUILD_ROOT
 drivers=%{drivers}
 install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
 for drv in $drivers; do
-	install -p drivers/$drv/$drv.ko $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc/$drv.ko
+	%install_kernel_modules -m drivers/$drv/$drv -d misc
 done
 %endif
 
