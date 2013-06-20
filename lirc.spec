@@ -21,7 +21,7 @@
 %endif
 
 %define		pname	lirc
-%define		rel	90
+%define		rel	91
 
 #
 # main package
