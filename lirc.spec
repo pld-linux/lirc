@@ -53,8 +53,8 @@ exit 1
 #
 # lirc_gpio fails to build under kernel >= 2.6.23
 #
-%if "%{_kernel_ver}" >= "2.6.23"
-%if "%{_kernel_ver}" >= "3.0.0"
+%if %{_kernel_version_code} >= %{_kernel_version_magic 2 6 23}
+%if %{_kernel_version_code} >= %{_kernel_version_magic 3 0 0}
 %define		drivers		"lirc_atiusb lirc_bt829 lirc_dev lirc_i2c lirc_igorplugusb lirc_imon lirc_parallel lirc_sasem lirc_serial lirc_sir lirc_ttusbir"
 %else
 %define		drivers		"lirc_atiusb lirc_bt829 lirc_dev lirc_i2c lirc_igorplugusb lirc_imon lirc_parallel lirc_sasem lirc_serial lirc_sir lirc_ttusbir lirc_wpc8769l"
@@ -95,7 +95,7 @@ BuildRequires:	libftdi-devel >= 0.12
 BuildRequires:	libirman-devel >= 0.4.5
 BuildRequires:	libtool
 BuildRequires:	libusb-compat-devel >= 0.1.0
-BuildRequires:	rpmbuild(macros) >= 1.678
+BuildRequires:	rpmbuild(macros) >= 1.679
 %{?with_dist_kernel:%{expand:%kbrs}}
 BuildRequires:	rpm-pythonprov
 %{?with_svga:BuildRequires:	svgalib-devel}
@@ -597,13 +597,13 @@ Moduł lirc_parallel dla urządzeń podłączanych do portu równoległego.\
 %defattr(644,root,root,755)\
 /lib/modules/%{_kernel_ver}/misc/lirc_dev.ko*\
 \
-%if "%{_kernel_ver}" < "3.0.0"\
+%if %{_kernel_version_code} < %{_kernel_version_magic 3 0 0}\
 %files -n kernel%{_alt_kernel}-char-lirc-ene0100\
 %defattr(644,root,root,755)\
 /lib/modules/%{_kernel_ver}/misc/lirc_ene0100.ko*\
 %endif\
 \
-%if "%{_kernel_ver}" < "2.6.23"\
+%if %{_kernel_version_code} < %{_kernel_version_magic 2 6 23}\
 %files -n kernel%{_alt_kernel}-char-lirc-gpio\
 %defattr(644,root,root,755)\
 /lib/modules/%{_kernel_ver}/misc/lirc_gpio.ko*\
@@ -637,7 +637,7 @@ Moduł lirc_parallel dla urządzeń podłączanych do portu równoległego.\
 %defattr(644,root,root,755)\
 /lib/modules/%{_kernel_ver}/misc/lirc_ttusbir.ko*\
 \
-%if "%{_kernel_ver}" < "3.0.0"\
+%if %{_kernel_version_code} < %{_kernel_version_magic 3 0 0}\
 %files -n kernel%{_alt_kernel}-char-lirc-wpc87691\
 %defattr(644,root,root,755)\
 /lib/modules/%{_kernel_ver}/misc/lirc_wpc8769l.ko*\
