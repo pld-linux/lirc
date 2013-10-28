@@ -41,11 +41,12 @@ exit 1
 %define		_enable_debug_packages	0
 %endif
 
+%define		kbrs	%(echo %{_build_kernels} | tr , '\\n' | while read n ; do echo %%undefine alt_kernel ; [ -z "$n" ] || echo %%define alt_kernel $n ; echo "BuildRequires:kernel%%{_alt_kernel}-module-build >= 3:2.6.20.2" ; done)
 %define		kpkg	%(echo %{_build_kernels} | tr , '\\n' | while read n ; do echo %%undefine alt_kernel ; [ -z "$n" ] || echo %%define alt_kernel $n ; echo %%kernel_pkg ; echo %%kernel_pkg_scriptlets ; done)
 %define		bkpkg	%(echo %{_build_kernels} | tr , '\\n' | while read n ; do echo %%undefine alt_kernel ; [ -z "$n" ] || echo %%define alt_kernel $n ; echo %%build_kernel_pkg ; done)
 
 %define		pname	lirc
-%define		rel	103
+%define		rel	104
 
 #
 # main package
@@ -63,9 +64,9 @@ exit 1
 %endif
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl.UTF-8):	Serwery do zdalnego sterowania Linuksem za pomocą podczerwieni
-Name:		%{pname}%{_alt_kernel}
+Name:		%{pname}%{?_pld_builder:%{?with_kernel:-kernel}}%{_alt_kernel}
 Version:	0.9.0
-Release:	%{rel}%{?with_kernel:@%{_kernel_ver_str}}
+Release:	%{rel}%{?_pld_builder:%{?with_kernel:@%{_kernel_ver_str}}}
 License:	GPL v2+
 Group:		Daemons
 Source0:	http://downloads.sourceforge.net/lirc/%{pname}-%{version}.tar.bz2
@@ -95,7 +96,7 @@ BuildRequires:	libirman-devel >= 0.4.5
 BuildRequires:	libtool
 BuildRequires:	libusb-compat-devel >= 0.1.0
 BuildRequires:	rpmbuild(macros) >= 1.678
-%{?with_dist_kernel:BuildRequires:	kernel%{_alt_kernel}-module-build >= 3:2.6.20.2}
+%{?with_dist_kernel:%{expand:%kbrs}}
 BuildRequires:	rpm-pythonprov
 %{?with_svga:BuildRequires:	svgalib-devel}
 %{?with_x:BuildRequires:	xorg-lib-libX11-devel}
