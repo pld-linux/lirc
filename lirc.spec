@@ -53,6 +53,7 @@ exit 1
 #
 # lirc_gpio fails to build under kernel >= 2.6.23
 #
+%if %{with kernel}
 %if %{_kernel_version_code} >= %{_kernel_version_magic 2 6 23}
 %if %{_kernel_version_code} >= %{_kernel_version_magic 3 0 0}
 %define		drivers		"lirc_atiusb lirc_bt829 lirc_dev lirc_i2c lirc_igorplugusb lirc_imon lirc_parallel lirc_sasem lirc_serial lirc_sir lirc_ttusbir"
@@ -61,6 +62,7 @@ exit 1
 %endif
 %else
 %define		drivers		"lirc_atiusb lirc_bt829 lirc_dev lirc_gpio lirc_i2c lirc_igorplugusb lirc_imon lirc_parallel lirc_sasem lirc_serial lirc_sir lirc_ttusbir lirc_wpc8769l"
+%endif
 %endif
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl.UTF-8):	Serwery do zdalnego sterowania Linuksem za pomocą podczerwieni
