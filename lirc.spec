@@ -6,15 +6,10 @@
 # - create modprobe alias files instead of reminding in post scriptlets
 #
 # Conditional build:
-%bcond_without	dist_kernel	# without sources of distribution kernel
 %bcond_without	kernel		# don't build kernel modules, only library+programs
 %bcond_without	userspace	# build only packages with kernel modules
 %bcond_with	svga		# without svgalib-based utility
 %bcond_without	x		# without X11-based utilitied
-
-%if %{without kernel}
-%undefine	with_dist_kernel
-%endif
 
 # The goal here is to have main, userspace, package built once with
 # simple release number, and only rebuild kernel packages with kernel
@@ -98,7 +93,7 @@ BuildRequires:	libirman-devel >= 0.4.5
 BuildRequires:	libtool
 BuildRequires:	libusb-compat-devel >= 0.1.0
 BuildRequires:	rpmbuild(macros) >= 1.679
-%{?with_dist_kernel:%{expand:%kbrs}}
+%{?with_kernel:%{expand:%kbrs}}
 BuildRequires:	rpm-pythonprov
 %{?with_svga:BuildRequires:	svgalib-devel}
 %{?with_x:BuildRequires:	xorg-lib-libX11-devel}
@@ -209,10 +204,8 @@ Summary:	Kernel modules for Linux Infrared Remote Control\
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni\
 Release:	%{rel}@%{_kernel_ver_str}\
 Group:		Base/Kernel\
-%if %{with dist_kernel}\
 %requires_releq_kernel\
 Requires(postun):	%releq_kernel\
-%endif\
 Requires(post,postun):	/sbin/depmod\
 Requires:	%{pname} = %{version}\
 Conflicts:	dev < 2.8.0-3\
@@ -235,10 +228,8 @@ Summary:	Kernel modules for Linux Infrared Remote Control\
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni\
 Release:	%{rel}@%{_kernel_ver_str}\
 Group:		Base/Kernel\
-%if %{with dist_kernel}\
 %requires_releq_kernel\
 Requires(postun):	%releq_kernel\
-%endif\
 Requires(post,postun):	/sbin/depmod\
 Requires:	%{pname} = %{version}\
 Conflicts:	dev < 2.8.0-3\
@@ -261,10 +252,8 @@ Summary:	Kernel modules for Linux Infrared Remote Control\
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni\
 Release:	%{rel}@%{_kernel_ver_str}\
 Group:		Base/Kernel\
-%if %{with dist_kernel}\
 %requires_releq_kernel\
 Requires(postun):	%releq_kernel\
-%endif\
 Requires(post,postun):	/sbin/depmod\
 Requires:	%{pname} = %{version}\
 Obsoletes:	lirc-modules\
@@ -289,10 +278,8 @@ Summary:	Kernel modules for Linux Infrared Remote Control\
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni\
 Release:	%{rel}@%{_kernel_ver_str}\
 Group:		Base/Kernel\
-%if %{with dist_kernel}\
 %requires_releq_kernel\
 Requires(postun):	%releq_kernel\
-%endif\
 Requires(post,postun):	/sbin/depmod\
 Requires:	%{pname} = %{version}\
 Obsoletes:	lirc-modules\
@@ -316,10 +303,8 @@ Summary:	Kernel modules for Linux Infrared Remote Control\
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni\
 Release:	%{rel}@%{_kernel_ver_str}\
 Group:		Base/Kernel\
-%if %{with dist_kernel}\
 %requires_releq_kernel\
 Requires(postun):	%releq_kernel\
-%endif\
 Requires(post,postun):	/sbin/depmod\
 Requires:	%{pname} = %{version}\
 Obsoletes:	lirc-modules\
@@ -344,10 +329,8 @@ Summary:	Kernel modules for Linux Infrared Remote Control\
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni\
 Release:	%{rel}@%{_kernel_ver_str}\
 Group:		Base/Kernel\
-%if %{with dist_kernel}\
 %requires_releq_kernel\
 Requires(postun):	%releq_kernel\
-%endif\
 Requires(post,postun):	/sbin/depmod\
 Requires:	%{pname} = %{version}\
 Obsoletes:	lirc-modules\
@@ -372,10 +355,8 @@ Summary:	Kernel modules for Linux Infrared Remote Control\
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni\
 Release:	%{rel}@%{_kernel_ver_str}\
 Group:		Base/Kernel\
-%if %{with dist_kernel}\
 %requires_releq_kernel\
 Requires(postun):	%releq_kernel\
-%endif\
 Requires(post,postun):	/sbin/depmod\
 Requires:	%{pname} = %{version}\
 Obsoletes:	lirc-modules\
@@ -400,10 +381,8 @@ Summary:	Kernel modules for Linux Infrared Remote Control\
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni\
 Release:	%{rel}@%{_kernel_ver_str}\
 Group:		Base/Kernel\
-%if %{with dist_kernel}\
 %requires_releq_kernel\
 Requires(postun):	%releq_kernel\
-%endif\
 Requires(post,postun):	/sbin/depmod\
 Requires:	%{pname} = %{version}\
 Obsoletes:	lirc-modules\
@@ -428,10 +407,8 @@ Summary:	Kernel modules for Linux Infrared Remote Control\
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni\
 Release:	%{rel}@%{_kernel_ver_str}\
 Group:		Base/Kernel\
-%if %{with dist_kernel}\
 %requires_releq_kernel\
 Requires(postun):	%releq_kernel\
-%endif\
 Requires(post,postun):	/sbin/depmod\
 Requires:	%{pname} = %{version}\
 Conflicts:	dev < 2.8.0-3\
@@ -454,13 +431,11 @@ Summary:	Kernel modules for Linux Infrared Remote Control\
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni\
 Release:	%{rel}@%{_kernel_ver_str}\
 Group:		Base/Kernel\
-%if %{with dist_kernel}\
 %requires_releq_kernel\
 Requires(postun):	%releq_kernel\
-%endif\
 Requires(post,postun):	/sbin/depmod\
 Requires:	%{pname} = %{version}\
-%{?with_dist_kernel:Requires:	setserial}\
+Requires:	setserial\
 Obsoletes:	lirc-modules\
 Obsoletes:	lirc-modules-serial\
 Conflicts:	dev < 2.8.0-3\
@@ -483,10 +458,8 @@ Summary:	Kernel modules for Linux Infrared Remote Control\
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni\
 Release:	%{rel}@%{_kernel_ver_str}\
 Group:		Base/Kernel\
-%if %{with dist_kernel}\
 %requires_releq_kernel\
 Requires(postun):	%releq_kernel\
-%endif\
 Requires(post,postun):	/sbin/depmod\
 Requires:	%{pname} = %{version}\
 Obsoletes:	lirc-modules\
@@ -511,10 +484,8 @@ Summary:	Kernel modules for Linux Infrared Remote Control\
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni\
 Release:	%{rel}@%{_kernel_ver_str}\
 Group:		Base/Kernel\
-%if %{with dist_kernel}\
 %requires_releq_kernel\
 Requires(postun):	%releq_kernel\
-%endif\
 Requires(post,postun):	/sbin/depmod\
 Requires:	%{pname} = %{version}\
 Obsoletes:	lirc-modules\
@@ -538,10 +509,8 @@ Summary:	Kernel modules for Linux Infrared Remote Control\
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni\
 Release:	%{rel}@%{_kernel_ver_str}\
 Group:		Base/Kernel\
-%if %{with dist_kernel}\
 %requires_releq_kernel\
 Requires(postun):	%releq_kernel\
-%endif\
 Requires(post,postun):	/sbin/depmod\
 Requires:	%{pname} = %{version}\
 Conflicts:	dev < 2.8.0-3\
@@ -563,10 +532,8 @@ Summary:	Kernel modules for Linux Infrared Remote Control\
 Summary(pl.UTF-8):	Moduły jądra dla zdalnej obsługi Linuksa za pomocą podczerwieni\
 Release:	%{rel}@%{_kernel_ver_str}\
 Group:		Base/Kernel\
-%if %{with dist_kernel}\
 %requires_releq_kernel\
 Requires(postun):	%releq_kernel\
-%endif\
 Requires(post,postun):	/sbin/depmod\
 Requires:	%{pname} = %{version}\
 Obsoletes:	lirc-modules\
