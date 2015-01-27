@@ -20,29 +20,13 @@
 exit 1
 %endif
 
-%if "%{_alt_kernel}" != "%{nil}"
-%if 0%{?build_kernels:1}
-%{error:alt_kernel and build_kernels are mutually exclusive}
-exit 1
-%endif
-%undefine	with_userspace
-%global		_build_kernels		%{alt_kernel}
-%else
-%global		_build_kernels		%{?build_kernels:,%{?build_kernels}}
-%endif
-
 %if %{without userspace}
 # nothing to be placed to debuginfo package
 %define		_enable_debug_packages	0
 %endif
 
-%define		kbrs	%(echo %{_build_kernels} | tr , '\\n' | while read n ; do echo %%undefine alt_kernel ; [ -z "$n" ] || echo %%define alt_kernel $n ; echo "BuildRequires:kernel%%{_alt_kernel}-module-build >= 3:2.6.20.2" ; done)
-%define		kpkg	%(echo %{_build_kernels} | tr , '\\n' | while read n ; do echo %%undefine alt_kernel ; [ -z "$n" ] || echo %%define alt_kernel $n ; echo %%kernel_pkg ; echo %%kernel_pkg_scriptlets ; done)
-%define		bkpkg	%(echo %{_build_kernels} | tr , '\\n' | while read n ; do echo %%undefine alt_kernel ; [ -z "$n" ] || echo %%define alt_kernel $n ; echo %%build_kernel_pkg ; done)
-
 %define		pname	lirc
 %define		rel	104
-
 #
 # main package
 #
@@ -92,8 +76,8 @@ BuildRequires:	libftdi-devel >= 0.12
 BuildRequires:	libirman-devel >= 0.4.5
 BuildRequires:	libtool
 BuildRequires:	libusb-compat-devel >= 0.1.0
-BuildRequires:	rpmbuild(macros) >= 1.679
-%{?with_kernel:%{expand:%kbrs}}
+BuildRequires:	rpmbuild(macros) >= 1.701
+%{?with_kernel:%{expand:%buildrequires_kernel kernel%%{_alt_kernel}-module-build >= 3:2.6.20.2}}
 BuildRequires:	rpm-pythonprov
 %{?with_svga:BuildRequires:	svgalib-devel}
 %{?with_x:BuildRequires:	xorg-lib-libX11-devel}
@@ -769,7 +753,7 @@ for drv in $drivers; do\
 done\
 %{nil}
 
-%{?with_kernel:%{expand:%kpkg}}
+%{?with_kernel:%{expand:%create_kernel_packages}}
 
 %prep
 %setup -q -n %{pname}-%{version} -a 1
@@ -810,7 +794,7 @@ echo '#' > drivers/Makefile.am
 %{__make} -j1
 %endif
 
-%{?with_kernel:%{expand:%bkpkg}}
+%{?with_kernel:%{expand:%build_kernel_packages}}
 
 %install
 rm -rf $RPM_BUILD_ROOT
