@@ -1,22 +1,22 @@
---- lirc-0.8.6/config.h.in.orig	2009-09-13 10:52:17.000000000 +0200
-+++ lirc-0.8.6/config.h.in	2009-09-17 21:06:09.662437650 +0200
-@@ -348,7 +348,7 @@
+--- lirc-0.9.3/lib/lirc_config.h.orig	2015-09-02 21:43:49.000000000 +0200
++++ lirc-0.9.3/lib/lirc_config.h	2015-10-04 20:23:15.392722256 +0200
+@@ -45,7 +45,7 @@
+ #endif /* LIRC_HAVE_DEVFS */
  
- #define LIRC_IRTTY		DEVDIR "/" "ttyS0"
+ /** Complete lircd socket path. */
+-#define LIRCD                   VARRUNDIR "/" PACKAGE "/" DEV_LIRCD
++#define LIRCD                   "/tmp/.lircd"
+ /** Complete lircmd socket path. */
+ #define LIRCM                   VARRUNDIR "/" PACKAGE "/" DEV_LIRCM
  
--#define LIRCD			VARRUNDIR "/" PACKAGE "/" DEV_LIRCD
-+#define LIRCD			"/tmp/.lircd"
- #define LIRCM			VARRUNDIR "/" PACKAGE "/" DEV_LIRCM
+--- lirc-0.9.3/lib/lirc/lirc_config.h.orig	2015-09-03 13:19:20.000000000 +0200
++++ lirc-0.9.3/lib/lirc/lirc_config.h	2015-10-04 20:23:56.489387202 +0200
+@@ -45,7 +45,7 @@
+ #endif /* LIRC_HAVE_DEVFS */
  
- #define LIRCDCFGFILE		SYSCONFDIR "/" PACKAGE "/" CFG_LIRCD
---- lirc-0.8.6/configure.ac.orig	2009-09-17 21:04:55.172445270 +0200
-+++ lirc-0.8.6/configure.ac	2009-09-17 21:06:45.876392377 +0200
-@@ -1742,7 +1742,7 @@
+ /** Complete lircd socket path. */
+-#define LIRCD                   VARRUNDIR "/" PACKAGE "/" DEV_LIRCD
++#define LIRCD                   "/tmp/.lircd"
+ /** Complete lircmd socket path. */
+ #define LIRCM                   VARRUNDIR "/" PACKAGE "/" DEV_LIRCM
  
- #define LIRC_IRTTY		DEVDIR "/" "ttyS0"
- 
--#define LIRCD			VARRUNDIR "/" PACKAGE "/" DEV_LIRCD
-+#define LIRCD			"/tmp/.lircd"
- #define LIRCM			VARRUNDIR "/" PACKAGE "/" DEV_LIRCM
- 
- #define LIRCDCFGFILE		SYSCONFDIR "/" PACKAGE "/" CFG_LIRCD
