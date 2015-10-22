@@ -1,6 +1,6 @@
 # TODO
 # - libcaraca_client (http://caraca.sourceforge.net/) - no releases yet
-# - split lirc-remotes.spec, update remotes configs from lirc-remotes project
+# - separate lirc-remotes.spec, update remotes configs from lirc-remotes project
 #   (http://lirc-remotes.sourceforge.net/ incl. remotes-table.html)
 #
 # Conditional build:
@@ -10,12 +10,12 @@
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl.UTF-8):	Demony do zdalnego sterowania Linuksem za pomocą podczerwieni
 Name:		lirc
-Version:	0.9.3
+Version:	0.9.3a
 Release:	1
 License:	GPL v2+
 Group:		Daemons
 Source0:	http://downloads.sourceforge.net/lirc/%{name}-%{version}.tar.bz2
-# Source0-md5:	0a507613d06195a8daab9123190e16fe
+# Source0-md5:	f9ed5dd0684a52c7cd98672e71e81b05
 Source1:	http://lirc.sourceforge.net/remotes.tar.bz2
 # Source1-md5:	238d1773d3c405acc02813674f5a55f8
 Source2:	%{name}d.sysconfig
