@@ -11,7 +11,7 @@ Summary:	Linux Infrared Remote Control daemons
 Summary(pl.UTF-8):	Demony do zdalnego sterowania Linuksem za pomocą podczerwieni
 Name:		lirc
 Version:	0.9.3a
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Daemons
 Source0:	http://downloads.sourceforge.net/lirc/%{name}-%{version}.tar.bz2
@@ -157,6 +157,7 @@ Dokumentacja LIRC-a.
 
 %configure \
 	ac_cv_header_portaudio_h=no \
+	am_cv_python_pythondir=%{py3_sitescriptdir} \
 	%{?with_static_libs:--enable-static} \
 	%{?with_x:--with-x}
 
@@ -188,6 +189,8 @@ cp -p %{SOURCE5} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 %{__rm} -r $RPM_BUILD_ROOT%{_datadir}/lirc/{contrib,plugindocs}
 # packaged as %doc
 %{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/lirc/lircd.conf.d/README.conf.d
+# moved to man-pages >= 4.05
+%{__rm} $RPM_BUILD_ROOT%{_mandir}/man4/lirc.4
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -312,7 +315,6 @@ fi
 %{_mandir}/man1/lirc-lsplugins.1*
 %{_mandir}/man1/lirc-lsremotes.1*
 %{_mandir}/man1/mode2.1*
-%{_mandir}/man4/lirc.4*
 %{_mandir}/man5/lircd.conf.5*
 %{_mandir}/man8/lircd.8*
 %{_mandir}/man8/lircmd.8*
