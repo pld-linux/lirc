@@ -1,4 +1,5 @@
 # TODO
+# - regenerate plugindocs index when installing plugin with plugindocs
 # - separate lirc-remotes.spec, update remotes configs from lirc-remotes project
 #   (http://lirc-remotes.sourceforge.net/ incl. remotes-table.html)
 #
@@ -11,7 +12,7 @@ Summary:	Linux Infrared Remote Control daemons
 Summary(pl.UTF-8):	Demony do zdalnego sterowania Linuksem za pomocą podczerwieni
 Name:		lirc
 Version:	0.10.1
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Daemons
 Source0:	http://downloads.sourceforge.net/lirc/%{name}-%{version}.tar.bz2
@@ -196,6 +197,10 @@ cp -p %{SOURCE5} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 %{__rm} -r $RPM_BUILD_ROOT%{_datadir}/lirc/python-pkg
 # packaged as %doc
 %{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/lirc/lircd.conf.d/README.conf.d
+# useless
+%{__rm} $RPM_BUILD_ROOT%{_docdir}/lirc/VERSION
+# packaged as %doc in -X11 package
+%{__rm} $RPM_BUILD_ROOT%{_docdir}/lirc/irxevent.keys
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -227,7 +232,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog NEWS README README.conf.d contrib/lircrc doc/{html,lirc.org}
+%doc AUTHORS ChangeLog NEWS README README.conf.d contrib/lircrc
 %attr(755,root,root) %{_bindir}/ircat
 %attr(755,root,root) %{_bindir}/irexec
 %attr(755,root,root) %{_bindir}/irpipe
@@ -274,7 +279,6 @@ fi
 %attr(755,root,root) %{_libdir}/lirc/plugins/girs.so
 %attr(755,root,root) %{_libdir}/lirc/plugins/hiddev.so
 %attr(755,root,root) %{_libdir}/lirc/plugins/i2cuser.so
-#%attr(755,root,root) %{_libdir}/lirc/plugins/iguanaIR.so
 %attr(755,root,root) %{_libdir}/lirc/plugins/irlink.so
 %attr(755,root,root) %{_libdir}/lirc/plugins/irtoy.so
 %attr(755,root,root) %{_libdir}/lirc/plugins/livedrive_midi.so
@@ -293,7 +297,6 @@ fi
 %attr(755,root,root) %{_libdir}/lirc/plugins/uirt2.so
 %attr(755,root,root) %{_libdir}/lirc/plugins/uirt2_raw.so
 %attr(755,root,root) %{_libdir}/lirc/plugins/usbx.so
-#%attr(755,root,root) %{_libdir}/lirc/plugins/yard2.so
 %attr(755,root,root) %{_libdir}/lirc/plugins/zotac.so
 %attr(754,root,root) /etc/rc.d/init.d/lircd
 %attr(754,root,root) /etc/rc.d/init.d/lircmd
@@ -313,6 +316,8 @@ fi
 %dir %{_datadir}/lirc
 %{_datadir}/lirc/configs
 %{_datadir}/lirc/lirc.hwdb
+%dir %{_docdir}/lirc
+%dir %{_docdir}/lirc/plugindocs
 %{_mandir}/man1/ircat.1*
 %{_mandir}/man1/irexec.1*
 %{_mandir}/man1/irpipe.1*
@@ -410,10 +415,22 @@ fi
 
 %files doc
 %defattr(644,root,root,755)
-%{_docdir}/lirc
+%dir %{_docdir}/lirc
+%{_docdir}/lirc/html
+%{_docdir}/lirc/images
+%{_docdir}/lirc/lirc.org
+%dir %{_docdir}/lirc/plugindocs
+%{_docdir}/lirc/plugindocs/README
+%{_docdir}/lirc/plugindocs/Makefile
+%{_docdir}/lirc/plugindocs/lirc.css
+%attr(755,root,root) %{_docdir}/lirc/plugindocs/make-ext-driver-toc.sh
+%{_docdir}/lirc/plugindocs/*.tmpl
+%{_docdir}/lirc/plugindocs/*.xsl
+%{_docdir}/lirc/plugindocs/var
 # upstream decided to use /var because index can be regenerated after adding more plugins docs
 %dir /var/lib/lirc
 /var/lib/lirc/images
 %dir /var/lib/lirc/plugins
-/var/lib/lirc/plugins/index.html
+# can be regenerated
+%verify(not md5 mtime size) /var/lib/lirc/plugins/index.html
 /var/lib/lirc/plugins/lirc.css
