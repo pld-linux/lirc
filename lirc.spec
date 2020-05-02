@@ -149,6 +149,11 @@ Dokumentacja LIRC-a.
 %patch1 -p1
 %patch2 -p1
 
+grep -rl /usr/bin/env tools | xargs sed -i -e '1{
+	s,^#!.*bin/env .*python3,#!%{__python3},
+	s,^#!.*bin/env bash,#!%{__bash},
+}'
+
 %build
 %{__libtoolize}
 %{__aclocal}
