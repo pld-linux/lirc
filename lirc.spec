@@ -411,12 +411,14 @@ fi
 %{_pkgconfigdir}/lirc.pc
 %{_pkgconfigdir}/lirc-driver.pc
 
+%if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libirrecord.a
 %{_libdir}/liblirc.a
 %{_libdir}/liblirc_client.a
 %{_libdir}/liblirc_driver.a
+%endif
 
 %files doc
 %defattr(644,root,root,755)
