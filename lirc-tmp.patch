@@ -1,7 +1,7 @@
 --- lirc-0.9.3/lib/lirc_config.h.orig	2015-09-02 21:43:49.000000000 +0200
 +++ lirc-0.9.3/lib/lirc_config.h	2015-10-04 20:23:15.392722256 +0200
 @@ -45,7 +45,7 @@
- #endif /* LIRC_HAVE_DEVFS */
+ #define LIRC_DRIVER_DEVICE      "/dev/lirc/0"
  
  /** Complete lircd socket path. */
 -#define LIRCD                   VARRUNDIR "/" PACKAGE "/" DEV_LIRCD
@@ -12,7 +12,7 @@
 --- lirc-0.9.3/lib/lirc/lirc_config.h.orig	2015-09-03 13:19:20.000000000 +0200
 +++ lirc-0.9.3/lib/lirc/lirc_config.h	2015-10-04 20:23:56.489387202 +0200
 @@ -45,7 +45,7 @@
- #endif /* LIRC_HAVE_DEVFS */
+ #define LIRC_DRIVER_DEVICE      "/dev/lirc/0"
  
  /** Complete lircd socket path. */
 -#define LIRCD                   VARRUNDIR "/" PACKAGE "/" DEV_LIRCD

@@ -1,13 +1,13 @@
 --- lirc-0.9.3/lib/Makefile.am.orig	2015-09-02 21:43:49.000000000 +0200
 +++ lirc-0.9.3/lib/Makefile.am	2015-10-06 16:26:21.296067036 +0200
 @@ -31,6 +31,7 @@
-                               util.c
+                               transmit.c
  
- libirrecord_la_SOURCES      = irrecord.c
+ libirrecord_la_LIBADD       = liblirc.la
 +libirrecord_la_LIBADD = liblirc.la
+ libirrecord_la_SOURCES      = irrecord.c
  
- liblirc_client_la_LDFLAGS   = -version-info 3:0:3
- liblirc_client_la_SOURCES   = lirc_client.c lirc_client.h lirc_log.c lirc_log.h
+ liblirc_client_la_LDFLAGS   = -version-info 6:0:6
 @@ -49,6 +50,7 @@
                                serial.c \
                                transmit.c \
