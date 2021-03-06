@@ -1,0 +1,23 @@
+--- lirc-0.10.1/tools/Makefile.am~	2021-03-06 09:25:51.000000000 +0100
++++ lirc-0.10.1/tools/Makefile.am	2021-03-06 09:30:25.756693060 +0100
+@@ -100,20 +100,8 @@
+ 	$(SED) -i -e 's/@version@/$(VERSION)/' \
+ 	    $(DESTDIR)$(bindir)/lirc-config-tool \
+ 	    $(DESTDIR)$(bindir)/irdb-get
+-	cd $(DESTDIR)$(bindir);  \
+-	    $(SED) -i '\|^#!/usr/bin/env|s|python3|$(PYTHON)|' \
+-	    irdb-get \
+-	    irtext2udp \
+-	    lirc-init-db \
+-	    pronto2lirc
+-	cd $(DESTDIR)$(sbindir);  \
+-	    $(SED) -i '\|^#!/usr/bin/env|s|python3|$(PYTHON)|' lircd-setup
+-
+ 
+ install-data-hook:
+-	cd $(DESTDIR)/$(setupdir);  \
+-	    $(SED) -i '1s|python3[0-9\.]*|$(PYTHON)|' \
+-	        $(notdir $(dist_setup_SCRIPTS))
+ 	$(PYTHON) $(srcdir)/make_rel_symlink.py \
+ 	    $(DESTDIR)/$(setupdir)/lirc-setup \
+ 	    $(DESTDIR)/$(bindir)/lirc-setup

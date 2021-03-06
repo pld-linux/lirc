@@ -12,7 +12,7 @@ Summary:	Linux Infrared Remote Control daemons
 Summary(pl.UTF-8):	Demony do zdalnego sterowania Linuksem za pomocą podczerwieni
 Name:		lirc
 Version:	0.10.1
-Release:	7
+Release:	8
 License:	GPL v2+
 Group:		Daemons
 Source0:	http://downloads.sourceforge.net/lirc/%{name}-%{version}.tar.bz2
@@ -26,6 +26,7 @@ Source5:	%{name}.tmpfiles
 Patch0:		%{name}-tmp.patch
 Patch1:		%{name}-remotes.patch
 Patch2:		%{name}-link.patch
+Patch3:		no-python-shebang-munge.patch
 URL:		http://www.lirc.org/
 BuildRequires:	alsa-lib-devel
 BuildRequires:	autoconf >= 2.50
@@ -148,6 +149,7 @@ Dokumentacja LIRC-a.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 grep -rl /usr/bin/env tools | xargs sed -i -e '1{
 	s,^#!.*bin/env .*python3,#!%{__python3},
