@@ -212,11 +212,6 @@ cp -p %{SOURCE5} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%pretrans
-if [ -L %{_includedir}/lirc/media ]; then
-	rm -f %{_includedir}/lirc/media
-fi
-
 %post
 /sbin/chkconfig --add lircd
 /sbin/chkconfig --add lircmd
@@ -241,6 +236,11 @@ fi
 
 %post	libs -p /sbin/ldconfig
 %postun	libs -p /sbin/ldconfig
+
+%pretrans devel
+if [ -L %{_includedir}/lirc/media ]; then
+	rm -f %{_includedir}/lirc/media
+fi
 
 %files
 %defattr(644,root,root,755)
