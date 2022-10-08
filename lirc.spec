@@ -212,8 +212,10 @@ cp -p %{SOURCE5} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post	libs -p /sbin/ldconfig
-%postun	libs -p /sbin/ldconfig
+%pretrans
+if [ -L %{_includedir}/lirc/media ]; then
+	rm -f %{_includedir}/lirc/media
+fi
 
 %post
 /sbin/chkconfig --add lircd
@@ -236,6 +238,9 @@ fi
 if [ -f %{_sysconfdir}/lircmd.conf.rpmsave ]; then
 	mv -f %{_sysconfdir}/lircmd.conf.rpmsave %{_sysconfdir}/lirc/lircmd.conf
 fi
+
+%post	libs -p /sbin/ldconfig
+%postun	libs -p /sbin/ldconfig
 
 %files
 %defattr(644,root,root,755)
