@@ -1,6 +1,6 @@
---- lirc-0.10.1/tools/Makefile.am~	2021-03-06 09:25:51.000000000 +0100
-+++ lirc-0.10.1/tools/Makefile.am	2021-03-06 09:30:25.756693060 +0100
-@@ -100,20 +100,8 @@
+--- lirc-0.10.2/tools/Makefile.am.orig	2022-10-08 10:26:12.255237014 +0200
++++ lirc-0.10.2/tools/Makefile.am	2022-10-08 10:27:13.968584868 +0200
+@@ -100,21 +100,8 @@
  	$(SED) -i -e 's/@version@/$(VERSION)/' \
  	    $(DESTDIR)$(bindir)/lirc-config-tool \
  	    $(DESTDIR)$(bindir)/irdb-get
@@ -9,6 +9,7 @@
 -	    irdb-get \
 -	    irtext2udp \
 -	    lirc-init-db \
+-	    lirc-postinstall \
 -	    pronto2lirc
 -	cd $(DESTDIR)$(sbindir);  \
 -	    $(SED) -i '\|^#!/usr/bin/env|s|python3|$(PYTHON)|' lircd-setup

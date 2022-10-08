@@ -11,14 +11,14 @@
 Summary:	Linux Infrared Remote Control daemons
 Summary(pl.UTF-8):	Demony do zdalnego sterowania Linuksem za pomocą podczerwieni
 Name:		lirc
-Version:	0.10.1
-Release:	11
+Version:	0.10.2
+Release:	1
 License:	GPL v2+
 Group:		Daemons
 Source0:	http://downloads.sourceforge.net/lirc/%{name}-%{version}.tar.bz2
-# Source0-md5:	86c3f8e4efaba10571addb8313d1e040
+# Source0-md5:	cb96cfb0af8067c0062e2f5a100f426a
 Source1:	http://lirc.sourceforge.net/remotes.tar.bz2
-# Source1-md5:	238d1773d3c405acc02813674f5a55f8
+# Source1-md5:	10f2fbb1b5190d5635ebe2761c479deb
 Source2:	%{name}d.sysconfig
 Source3:	%{name}d.init
 Source4:	%{name}md.init
@@ -252,6 +252,7 @@ fi
 %attr(755,root,root) %{_bindir}/irtext2udp
 %attr(755,root,root) %{_bindir}/irw
 %attr(755,root,root) %{_bindir}/lirc-config-tool
+%attr(755,root,root) %{_bindir}/lirc-data2table
 %attr(755,root,root) %{_bindir}/lirc-init-db
 %attr(755,root,root) %{_bindir}/lirc-lsremotes
 %attr(755,root,root) %{_bindir}/lirc-make-devinput
@@ -322,7 +323,6 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/lirc/lircmd.conf
 %dir %{_datadir}/lirc
 %{_datadir}/lirc/configs
-%{_datadir}/lirc/lirc.hwdb
 %dir %{_docdir}/lirc
 %dir %{_docdir}/lirc/plugindocs
 %{_mandir}/man1/ircat.1*
