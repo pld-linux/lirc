@@ -1,0 +1,11 @@
+--- lirc-0.10.2/plugins/devinput.c~	2022-10-01 13:35:46.000000000 +0200
++++ lirc-0.10.2/plugins/devinput.c	2025-05-29 04:12:12.486662061 +0200
+@@ -458,7 +458,7 @@
+ 		return 0;
+ 	}
+ 
+-	log_trace("time %ld.%06ld  type %d  code %d  value %d", event.time.tv_sec, event.time.tv_usec, event.type,
++	log_trace("time %ld.%06ld  type %d  code %d  value %d", event.input_event_sec, event.input_event_usec, event.type,
+ 		  event.code, event.value);
+ 
+ 	value = (unsigned)event.value;
